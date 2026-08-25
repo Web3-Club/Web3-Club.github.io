@@ -1,0 +1,27 @@
+# 不可变
+
+对应英文原页：https://solidity-by-example.org/immutable
+
+不可变（immutable）变量类似于常量。不可变变量的值可以在构造函数中设置，但之后不能再修改。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract Immutable {
+    address public immutable myAddr;
+    uint256 public immutable myUint;
+
+    constructor(uint256 _myUint) {
+        myAddr = msg.sender;
+        myUint = _myUint;
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

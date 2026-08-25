@@ -1,0 +1,34 @@
+# 读写状态变量
+
+对应英文原页：https://solidity-by-example.org/state-variables
+
+要写入或更新状态变量，你需要发送一笔交易。
+
+另一方面，你可以免费读取状态变量，无需支付任何交易费用。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract SimpleStorage {
+    // 用于存储数字的状态变量
+    uint256 public num;
+
+    // 写入状态变量需要发送一笔交易。
+    function set(uint256 _num) public {
+        num = _num;
+    }
+
+    // 读取状态变量无需发送交易。
+    function get() public view returns (uint256) {
+        return num;
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

@@ -1,0 +1,40 @@
+# 变量
+
+对应英文原页：https://solidity-by-example.org/variables
+
+Solidity 中有 3 种变量：
+
+- **局部变量（local）**
+  - 在函数内声明
+  - 不存储在区块链上
+- **状态变量（state）**
+  - 在函数外声明
+  - 存储在区块链上
+- **全局变量（global）**（提供有关区块链的信息）
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract Variables {
+    // 状态变量存储在区块链上。
+    string public text = "Hello";
+    uint256 public num = 123;
+
+    function doSomething() public view {
+        // 局部变量不会保存到区块链上。
+        uint256 i = 456;
+
+        // 下面是一些全局变量
+        uint256 timestamp = block.timestamp; // 当前区块时间戳
+        address sender = msg.sender; // 调用者的地址
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

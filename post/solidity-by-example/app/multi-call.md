@@ -1,0 +1,54 @@
+# 多调用
+
+对应英文原页：https://solidity-by-example.org/app/multi-call
+
+使用 `for` 循环和 `staticcall` 聚合多次查询的合约示例。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract MultiCall {
+    function multiCall(address[] calldata targets, bytes[] calldata data)
+        external
+        view
+        returns (bytes[] memory)
+    {
+        require(targets.length == data.length, "target length != data length");
+
+        bytes[] memory results = new bytes[](data.length);
+
+        for (uint256 i; i < targets.length; i++) {
+            (bool success, bytes memory result) = targets[i].staticcall(data[i]);
+            require(success, "call failed");
+            results[i] = result;
+        }
+
+        return results;
+    }
+}
+```
+
+用于测试 `MultiCall` 的合约
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract TestMultiCall {
+    function test(uint256 _i) external pure returns (uint256) {
+        return _i;
+    }
+
+    function getData(uint256 _i) external pure returns (bytes memory) {
+        return abi.encodeWithSelector(this.test.selector, _i);
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

