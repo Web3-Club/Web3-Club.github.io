@@ -1,0 +1,26 @@
+# 常量
+
+对应英文原页：https://solidity-by-example.org/constants
+
+常量（constant）是无法修改的变量。
+
+它们的值是硬编码的，使用常量可以节省 gas 费用。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract Constants {
+    // 编码惯例：常量变量使用全大写
+    address public constant MY_ADDRESS =
+        0x777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc;
+    uint256 public constant MY_UINT = 123;
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

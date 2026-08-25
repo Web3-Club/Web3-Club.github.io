@@ -1,0 +1,318 @@
+# 签名重放
+
+对应英文原页：https://solidity-by-example.org/hacks/signature-replay
+
+在链下签署消息，并让合约在执行函数之前要求该签名，
+是一种有用的技术。
+
+例如，这种技术可用于：
+
+- 减少链上交易数量
+- 无 gas 交易，称为 `meta transaction`（元交易）
+
+## 漏洞
+
+同一签名可以被多次用来执行函数。如果签名者的意图是只批准一次交易，这可能造成危害。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import "./ECDSA.sol";
+
+contract MultiSigWallet {
+    using ECDSA for bytes32;
+
+    address[2] public owners;
+
+    constructor(address[2] memory _owners) payable {
+        owners = _owners;
+    }
+
+    function deposit() external payable {}
+
+    function transfer(address _to, uint256 _amount, bytes[2] memory _sigs)
+        external
+    {
+        bytes32 txHash = getTxHash(_to, _amount);
+        require(_checkSigs(_sigs, txHash), "invalid sig");
+
+        (bool sent,) = _to.call{value: _amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    function getTxHash(address _to, uint256 _amount)
+        public
+        view
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_to, _amount));
+    }
+
+    function _checkSigs(bytes[2] memory _sigs, bytes32 _txHash)
+        private
+        view
+        returns (bool)
+    {
+        bytes32 ethSignedHash = _txHash.toEthSignedMessageHash();
+
+        for (uint256 i = 0; i < _sigs.length; i++) {
+            address signer = ethSignedHash.recover(_sigs[i]);
+            bool valid = signer == owners[i];
+
+            if (!valid) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+## 预防措施
+
+用 `nonce` 和合约地址来签名消息。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import "./ECDSA.sol";
+
+contract MultiSigWallet {
+    using ECDSA for bytes32;
+
+    address[2] public owners;
+    mapping(bytes32 => bool) public executed;
+
+    constructor(address[2] memory _owners) payable {
+        owners = _owners;
+    }
+
+    function deposit() external payable {}
+
+    function transfer(
+        address _to,
+        uint256 _amount,
+        uint256 _nonce,
+        bytes[2] memory _sigs
+    ) external {
+        bytes32 txHash = getTxHash(_to, _amount, _nonce);
+        require(!executed[txHash], "tx executed");
+        require(_checkSigs(_sigs, txHash), "invalid sig");
+
+        executed[txHash] = true;
+
+        (bool sent,) = _to.call{value: _amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    function getTxHash(address _to, uint256 _amount, uint256 _nonce)
+        public
+        view
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(address(this), _to, _amount, _nonce));
+    }
+
+    function _checkSigs(bytes[2] memory _sigs, bytes32 _txHash)
+        private
+        view
+        returns (bool)
+    {
+        bytes32 ethSignedHash = _txHash.toEthSignedMessageHash();
+
+        for (uint256 i = 0; i < _sigs.length; i++) {
+            address signer = ethSignedHash.recover(_sigs[i]);
+            bool valid = signer == owners[i];
+
+            if (!valid) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+/*
+// 所有者
+0xe19aea93F6C1dBef6A3776848bE099A7c3253ac8
+0xfa854FE5339843b3e9Bfd8554B38BD042A42e340
+
+// 接收方
+0xe10422cc61030C8B3dBCD36c7e7e8EC3B527E0Ac
+// 数量
+100
+// nonce
+0
+// 交易哈希
+0x12a095462ebfca27dc4d99feef885bfe58344fb6bb42c3c52a7c0d6836d11448
+
+// 签名
+0x120f8ed8f2fa55498f2ef0a22f26e39b9b51ed29cc93fe0ef3ed1756f58fad0c6eb5a1d6f3671f8d5163639fdc40bb8720de6d8f2523077ad6d1138a60923b801c
+0xa240a487de1eb5bb971e920cb0677a47ddc6421e38f7b048f8aa88266b2c884a10455a52dc76a203a1a9a953418469f9eec2c59e87201bbc8db0e4d9796935cb1b
+*/
+```
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+// OpenZeppelin Contracts（最后更新于 v4.5.0）（utils/cryptography/ECDSA.sol）
+
+library ECDSA {
+    enum RecoverError {
+        NoError,
+        InvalidSignature,
+        InvalidSignatureLength,
+        InvalidSignatureS,
+        InvalidSignatureV
+    }
+
+    function _throwError(RecoverError error) private pure {
+        if (error == RecoverError.NoError) {
+            return; // 没有错误：什么也不做
+        } else if (error == RecoverError.InvalidSignature) {
+            revert("ECDSA: invalid signature");
+        } else if (error == RecoverError.InvalidSignatureLength) {
+            revert("ECDSA: invalid signature length");
+        } else if (error == RecoverError.InvalidSignatureS) {
+            revert("ECDSA: invalid signature 's' value");
+        } else if (error == RecoverError.InvalidSignatureV) {
+            revert("ECDSA: invalid signature 'v' value");
+        }
+    }
+
+    function tryRecover(bytes32 hash, bytes memory signature)
+        internal
+        pure
+        returns (address, RecoverError)
+    {
+        // 检查签名长度
+        // - 情况 65：r,s,v 签名（标准）
+        // - 情况 64：r,vs 签名（参见 https://eips.ethereum.org/EIPS/eip-2098）_自 v4.1 起可用_
+        if (signature.length == 65) {
+            bytes32 r;
+            bytes32 s;
+            uint8 v;
+            // ecrecover 需要签名参数，目前获取它们的
+            // 唯一方式是使用汇编。
+            assembly {
+                r := mload(add(signature, 0x20))
+                s := mload(add(signature, 0x40))
+                v := byte(0, mload(add(signature, 0x60)))
+            }
+            return tryRecover(hash, v, r, s);
+        } else if (signature.length == 64) {
+            bytes32 r;
+            bytes32 vs;
+            // ecrecover 需要签名参数，目前获取它们的
+            // 唯一方式是使用汇编。
+            assembly {
+                r := mload(add(signature, 0x20))
+                vs := mload(add(signature, 0x40))
+            }
+            return tryRecover(hash, r, vs);
+        } else {
+            return (address(0), RecoverError.InvalidSignatureLength);
+        }
+    }
+
+    function recover(bytes32 hash, bytes memory signature)
+        internal
+        pure
+        returns (address)
+    {
+        (address recovered, RecoverError error) = tryRecover(hash, signature);
+        _throwError(error);
+        return recovered;
+    }
+
+    function tryRecover(bytes32 hash, bytes32 r, bytes32 vs)
+        internal
+        pure
+        returns (address, RecoverError)
+    {
+        bytes32 s = vs
+            & bytes32(
+                0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+            );
+        uint8 v = uint8((uint256(vs) >> 255) + 27);
+        return tryRecover(hash, v, r, s);
+    }
+
+    function recover(bytes32 hash, bytes32 r, bytes32 vs)
+        internal
+        pure
+        returns (address)
+    {
+        (address recovered, RecoverError error) = tryRecover(hash, r, vs);
+        _throwError(error);
+        return recovered;
+    }
+
+    function tryRecover(bytes32 hash, uint8 v, bytes32 r, bytes32 s)
+        internal
+        pure
+        returns (address, RecoverError)
+    {
+        // EIP-2 仍然允许 ecrecover() 出现签名可塑性。移除这种可能并让签名
+        // 唯一。以太坊黄皮书附录 F（https://ethereum.github.io/yellowpaper/paper.pdf）定义了
+        // s 的有效范围（301）：0 < s < secp256k1n ÷ 2 + 1，以及 v 的有效范围（302）：v ∈ {27, 28}。当前
+        // 大多数库生成的签名，其 s 值位于下半区，因此是唯一的。
+        //
+        // 如果你的库生成可塑性签名，例如 s 值位于上半区，请用
+        // 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 - s1 计算新的 s 值，并将 v 从 27 翻转到 28，或
+        // 反过来。如果你的库还生成 v 为 0/1 而不是 27/28 的签名，请给 v 加上 27 以接受
+        // 这些可塑性签名。
+        if (
+            uint256(s)
+                > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0
+        ) {
+            return (address(0), RecoverError.InvalidSignatureS);
+        }
+        if (v != 27 && v != 28) {
+            return (address(0), RecoverError.InvalidSignatureV);
+        }
+
+        // 如果签名有效（且不可塑），返回签名者地址
+        address signer = ecrecover(hash, v, r, s);
+        if (signer == address(0)) {
+            return (address(0), RecoverError.InvalidSignature);
+        }
+
+        return (signer, RecoverError.NoError);
+    }
+
+    function recover(bytes32 hash, uint8 v, bytes32 r, bytes32 s)
+        internal
+        pure
+        returns (address)
+    {
+        (address recovered, RecoverError error) = tryRecover(hash, v, r, s);
+        _throwError(error);
+        return recovered;
+    }
+
+    function toEthSignedMessageHash(bytes32 hash)
+        internal
+        pure
+        returns (bytes32)
+    {
+        // 32 是哈希的字节长度，
+        // 由上面的类型签名保证
+        return keccak256(
+            abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
+        );
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

@@ -1,0 +1,90 @@
+# 枚举
+
+对应英文原页：https://solidity-by-example.org/enum
+
+Solidity 支持枚举（enum），它们适合用来建模选择并跟踪状态。
+
+枚举可以在合约外部声明。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract Enum {
+    // 表示物流状态的枚举
+    enum Status {
+        Pending,
+        Shipped,
+        Accepted,
+        Rejected,
+        Canceled
+    }
+
+    // 默认值是类型定义中列出的第一个元素，
+    // 本例中为 "Pending"
+    Status public status;
+
+    // 返回 uint
+    // Pending  - 0
+    // Shipped  - 1
+    // Accepted - 2
+    // Rejected - 3
+    // Canceled - 4
+    function get() public view returns (Status) {
+        return status;
+    }
+
+    // 通过向输入传入 uint 来更新状态
+    function set(Status _status) public {
+        status = _status;
+    }
+
+    // 可以像这样更新为某个具体的枚举值
+    function cancel() public {
+        status = Status.Canceled;
+    }
+
+    // delete 会将枚举重置为第一个值 0
+    function reset() public {
+        delete status;
+    }
+}
+```
+
+### 声明并导入枚举
+
+声明枚举的文件
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+// 此文件保存为 'EnumDeclaration.sol'
+
+enum Status {
+    Pending,
+    Shipped,
+    Accepted,
+    Rejected,
+    Canceled
+}
+```
+
+导入上述枚举的文件
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import "./EnumDeclaration.sol";
+
+contract Enum {
+    Status public status;
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

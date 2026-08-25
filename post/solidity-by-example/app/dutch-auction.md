@@ -1,0 +1,83 @@
+# 荷兰式拍卖
+
+对应英文原页：https://solidity-by-example.org/app/dutch-auction
+
+NFT 的荷兰式拍卖。
+
+### 拍卖
+
+1. NFT 卖方部署此合约，并为 NFT 设定起始价格。
+2. 拍卖持续 7 天。
+3. NFT 价格随时间下降。
+4. 参与者可以通过存入高于智能合约计算出的当前价格的 ETH 来购买。
+5. 买家买下 NFT 后拍卖结束。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+interface IERC721 {
+    function transferFrom(address _from, address _to, uint256 _nftId)
+        external;
+}
+
+contract DutchAuction {
+    uint256 private constant DURATION = 7 days;
+
+    IERC721 public immutable nft;
+    uint256 public immutable nftId;
+
+    address payable public immutable seller;
+    uint256 public immutable startingPrice;
+    uint256 public immutable startAt;
+    uint256 public immutable expiresAt;
+    uint256 public immutable discountRate;
+
+    constructor(
+        uint256 _startingPrice,
+        uint256 _discountRate,
+        address _nft,
+        uint256 _nftId
+    ) {
+        seller = payable(msg.sender);
+        startingPrice = _startingPrice;
+        startAt = block.timestamp;
+        expiresAt = block.timestamp + DURATION;
+        discountRate = _discountRate;
+
+        require(
+            _startingPrice >= _discountRate * DURATION, "starting price < min"
+        );
+
+        nft = IERC721(_nft);
+        nftId = _nftId;
+    }
+
+    function getPrice() public view returns (uint256) {
+        uint256 timeElapsed = block.timestamp - startAt;
+        uint256 discount = discountRate * timeElapsed;
+        return startingPrice - discount;
+    }
+
+    function buy() external payable {
+        require(block.timestamp < expiresAt, "auction expired");
+
+        uint256 price = getPrice();
+        require(msg.value >= price, "ETH < price");
+
+        nft.transferFrom(seller, msg.sender, nftId);
+        uint256 refund = msg.value - price;
+        if (refund > 0) {
+            payable(msg.sender).transfer(refund);
+        }
+        selfdestruct(seller);
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

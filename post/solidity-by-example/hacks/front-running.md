@@ -1,0 +1,204 @@
+# 抢跑
+
+对应英文原页：https://solidity-by-example.org/hacks/front-running
+
+## 漏洞
+
+交易在被打包进区块之前需要一段时间。攻击者可以观察交易池，
+并发送一笔交易，让它在原始交易之前被包含进区块。
+这种机制可以被滥用，按攻击者有利的顺序重排交易。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/*
+Alice 创建了一个猜谜游戏。
+如果你能找到正确的字符串，使其哈希等于目标
+哈希，就能赢得 10 ether。让我们看看这个合约如何容易受到抢跑（front running）攻击。
+*/
+
+/*
+1. Alice 部署 FindThisHash 并放入 10 Ether。
+2. Bob 找到了会哈希到目标哈希的正确字符串。（"Ethereum"）
+3. Bob 以 15 gwei 的 gas price 调用 solve("Ethereum")。
+4. Eve 正在观察交易池，等待答案被提交。
+5. Eve 看到 Bob 的答案，并以比 Bob 更高的 gas price
+   （100 gwei）调用 solve("Ethereum")。
+6. Eve 的交易在 Bob 的交易之前被打包。
+   Eve 赢得了 10 ether 奖励。
+
+发生了什么？
+交易在被打包之前需要一段时间。
+尚未打包的交易会进入交易池。
+gas price 更高的交易通常会先被打包。
+攻击者可以从交易池中获取答案，再发送一笔
+gas price 更高的交易，使其在原始交易之前被包含进区块。
+*/
+
+contract FindThisHash {
+    bytes32 public constant hash =
+        0x564ccaf7594d66b1eaaea24fe01f0585bf52ee70852af4eac0cc4b04711cd0e2;
+
+    constructor() payable {}
+
+    function solve(string memory solution) public {
+        require(
+            hash == keccak256(abi.encodePacked(solution)), "Incorrect answer"
+        );
+
+        (bool sent,) = msg.sender.call{value: 10 ether}("");
+        require(sent, "Failed to send Ether");
+    }
+}
+```
+
+## 预防措施
+
+- 使用提交-揭示方案（commit-reveal scheme）（https://medium.com/swlh/exploring-commit-reveal-schemes-on-ethereum-c4ff5a777db8）
+- 使用 submarine send（https://libsubmarine.org/）
+
+## 提交-揭示方案
+
+承诺方案（commitment scheme）是一种密码学算法，允许某人承诺一个值，同时对他人保密，并在之后揭示该值。承诺方案中的值具有约束力，一旦提交就不能更改。该方案分为两个阶段：选择并指定值的提交（commit）阶段，以及揭示并校验该值的揭示（reveal）阶段。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/*
+   现在让我们看看如何使用提交-揭示方案来防止抢跑。
+*/
+
+/*
+1. Alice 部署 SecuredFindThisHash 并放入 10 Ether。
+2. Bob 找到会哈希到目标哈希的正确字符串。（"Ethereum"）。
+3. Bob 随后计算 keccak256(小写地址 + 答案 + 密钥)。
+   地址是他钱包地址的小写形式，答案是 "Ethereum"，密钥类似密码（"mysecret"），
+   只有 Bob 知道，Bob 用它来提交和揭示答案。
+   keccak256("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266Ethereummysecret") = '0xf95b1dd61edc3bd962cdea3987c6f55bcb714a02a2c3eb73bd960d6b4387fc36'
+4. Bob 然后调用 commitSolution("0xf95b1dd61edc3bd962cdea3987c6f55bcb714a02a2c3eb73bd960d6b4387fc36")，
+   提交计算出的答案哈希，gas price 设为 15 gwei。
+5. Eve 正在观察交易池，等待答案被提交。
+6. Eve 看到 Bob 的答案，也调用 commitSolution("0xf95b1dd61edc3bd962cdea3987c6f55bcb714a02a2c3eb73bd960d6b4387fc36")，
+   gas price 高于 Bob（100 gwei）。
+7. Eve 的交易在 Bob 之前被打包，但 Eve 还没有拿到奖励。
+   Eve 需要用确切的密钥和答案调用 revealSolution()，所以假设 Eve 正在观察交易池，
+   像之前一样抢跑 Bob
+8. 然后 Bob 以 15 gwei 的 gas price 调用 revealSolution("Ethereum", "mysecret")；
+9. 假设正在观察交易池的 Eve 发现了 Bob 的揭示交易，也以高于 Bob 的 gas price
+   （100 gwei）调用 revealSolution("Ethereum", "mysecret")
+10. 假设这次 Eve 的揭示交易也在 Bob 之前被打包，但 Eve 会
+   因 "Hash doesn't match" 错误而回滚。因为 revealSolution() 使用
+   keccak256(msg.sender + solution + secret) 检查哈希。所以这次 Eve 无法赢得奖励。
+11. 但 Bob 的 revealSolution("Ethereum", "mysecret") 通过了哈希检查，并获得 10 ether 奖励。
+*/
+
+contract SecuredFindThisHash {
+    // 用结构体存储提交详情
+    struct Commit {
+        bytes32 solutionHash;
+        uint256 commitTime;
+        bool revealed;
+    }
+
+    // 需要解开的哈希
+    bytes32 public hash =
+        0x564ccaf7594d66b1eaaea24fe01f0585bf52ee70852af4eac0cc4b04711cd0e2;
+
+    // 获胜者地址
+    address public winner;
+
+    // 奖励金额
+    uint256 public reward;
+
+    // 游戏状态
+    bool public ended;
+
+    // 用映射按地址存储提交详情
+    mapping(address => Commit) commits;
+
+    // 检查游戏是否仍在进行的修饰符
+    modifier gameActive() {
+        require(!ended, "Already ended");
+        _;
+    }
+
+    constructor() payable {
+        reward = msg.value;
+    }
+
+    /*
+       提交函数，用于存储用 keccak256(小写地址 + 答案 + 密钥) 计算出的哈希。
+       用户只能提交一次，且游戏必须仍在进行。
+    */
+    function commitSolution(bytes32 _solutionHash) public gameActive {
+        Commit storage commit = commits[msg.sender];
+        require(commit.commitTime == 0, "Already committed");
+        commit.solutionHash = _solutionHash;
+        commit.commitTime = block.timestamp;
+        commit.revealed = false;
+    }
+
+    /*
+        获取提交详情的函数。返回 (solutionHash, commitTime, revealStatus) 元组；
+        只有游戏仍在进行且已提交 solutionHash 的用户才能获取
+    */
+    function getMySolution()
+        public
+        view
+        gameActive
+        returns (bytes32, uint256, bool)
+    {
+        Commit storage commit = commits[msg.sender];
+        require(commit.commitTime != 0, "Not committed yet");
+        return (commit.solutionHash, commit.commitTime, commit.revealed);
+    }
+    /*
+        揭示提交并领取奖励的函数。
+        只有游戏仍在进行、用户已在当前区块之前提交 solutionHash、且尚未揭示时，才能揭示。
+        它会生成 keccak256(msg.sender + solution + secret)，并与先前提交的哈希比较。
+        假设提交已经上链，抢跑者将无法通过该检查，因为 msg.sender 不同。
+        然后用 keccak256(solution) 检查真正的答案，如果匹配，则宣布获胜者，
+        游戏结束，奖励金额发送给获胜者。
+    */
+
+    function revealSolution(string memory _solution, string memory _secret)
+        public
+        gameActive
+    {
+        Commit storage commit = commits[msg.sender];
+        require(commit.commitTime != 0, "Not committed yet");
+        require(
+            commit.commitTime < block.timestamp,
+            "Cannot reveal in the same block"
+        );
+        require(!commit.revealed, "Already committed and revealed");
+
+        bytes32 solutionHash =
+            keccak256(abi.encodePacked(msg.sender, _solution, _secret));
+        require(solutionHash == commit.solutionHash, "Hash doesn't match");
+
+        require(
+            keccak256(abi.encodePacked(_solution)) == hash, "Incorrect answer"
+        );
+
+        winner = msg.sender;
+        ended = true;
+
+        (bool sent,) = payable(msg.sender).call{value: reward}("");
+        if (!sent) {
+            winner = address(0);
+            ended = false;
+            revert("Failed to send ether.");
+        }
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)

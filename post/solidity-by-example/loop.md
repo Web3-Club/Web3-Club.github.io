@@ -1,0 +1,43 @@
+# 循环语句
+
+对应英文原页：https://solidity-by-example.org/loop
+
+Solidity 支持 `for`、`while` 和 `do while` 循环。
+
+不要编写无界循环，因为这可能会触及 gas 上限，导致交易失败。
+
+正因如此，`while` 和 `do while` 循环很少使用。
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract Loop {
+    function loop() public pure {
+        // for 循环
+        for (uint256 i = 0; i < 10; i++) {
+            if (i == 3) {
+                // 使用 continue 跳到下一次迭代
+                continue;
+            }
+            if (i == 5) {
+                // 使用 break 退出循环
+                break;
+            }
+        }
+
+        // while 循环
+        uint256 j;
+        while (j < 10) {
+            j++;
+        }
+    }
+}
+```
+
+---
+## 关注我们
+[Yanbo的Twitter](https://x.com/Yanbo2004)｜[Web3Club的Twitter](https://twitter.com/Web3ClubCN)
+
+
+[加入我们](https://github.com/Web3-Club/Intro./blob/main/Join%20club.md)
