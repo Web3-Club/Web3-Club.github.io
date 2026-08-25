@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EVM 存储布局 | Solidity by Example | 0.8.26</title>
+  <meta name="description" content="Solidity by Example 简体中文译本，对照 solidity-by-example.org v0.8.26。">
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body class="light">
+  <div class="layout">
+    <aside class="side-nav">
+      <h3 class="nav-category">Basic</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hello-world/">Hello World</a></li>
+<li class="nav-item"><a class="nav-link" href="../../first-app/">第一个应用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../primitives/">基本数据类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../variables/">变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constants/">常量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../immutable/">不可变</a></li>
+<li class="nav-item"><a class="nav-link" href="../../state-variables/">读写状态变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../ether-units/">以太币和 Wei</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas/">Gas 与 Gas Price</a></li>
+<li class="nav-item"><a class="nav-link" href="../../if-else/">条件判断</a></li>
+<li class="nav-item"><a class="nav-link" href="../../loop/">循环语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../mapping/">映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../array/">数组</a></li>
+<li class="nav-item"><a class="nav-link" href="../../enum/">枚举</a></li>
+<li class="nav-item"><a class="nav-link" href="../../user-defined-value-types/">用户自定义值类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../structs/">结构体</a></li>
+<li class="nav-item"><a class="nav-link" href="../../data-locations/">数据位置</a></li>
+<li class="nav-item"><a class="nav-link" href="../../transient-storage/">瞬时存储</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function/">函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../view-and-pure-functions/">View 和 Pure 函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../error/">错误或异常</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-modifier/">函数修饰符</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events-advanced/">高级事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constructor/">构造函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../inheritance/">继承</a></li>
+<li class="nav-item"><a class="nav-link" href="../../shadowing-inherited-state-variables/">继承状态变量的屏蔽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../super/">调用父合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../visibility/">可见性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../interface/">接口</a></li>
+<li class="nav-item"><a class="nav-link" href="../../payable/">Payable</a></li>
+<li class="nav-item"><a class="nav-link" href="../../sending-ether/">发送以太币</a></li>
+<li class="nav-item"><a class="nav-link" href="../../fallback/">回退函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../call/">Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../delegatecall/">Delegatecall</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-selector/">函数选择器</a></li>
+<li class="nav-item"><a class="nav-link" href="../../calling-contract/">调用其他合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../new-contract/">从合约创建合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../try-catch/">Try / Catch</a></li>
+<li class="nav-item"><a class="nav-link" href="../../import/">导入</a></li>
+<li class="nav-item"><a class="nav-link" href="../../library/">库</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-encode/">ABI 编码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-decode/">ABI 解码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hashing/">Keccak256 哈希</a></li>
+<li class="nav-item"><a class="nav-link" href="../../signature/">验证签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas-golf/">Gas 优化</a></li>
+<li class="nav-item"><a class="nav-link" href="../../bitwise/">位运算</a></li>
+<li class="nav-item"><a class="nav-link" href="../../unchecked-math/">Unchecked Math</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-variable/">汇编变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-if/">汇编条件语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-loop/">汇编循环</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-error/">汇编错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-math/">汇编数学运算</a></li>
+</ul>
+<h3 class="nav-title">Applications</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../app/ether-wallet/">以太钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-sig-wallet/">多签钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/merkle-tree/">默克尔树</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/iterable-mapping/">可迭代映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc20/">ERC20</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc721/">ERC721</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc1155/">ERC1155</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/gasless-token-transfer/">无 Gas 代币转账</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/simple-bytecode-contract/">简单字节码合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/create2/">使用 Create2 预计算合约地址</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/minimal-proxy/">最小代理合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/upgradeable-proxy/">可升级代理</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/deploy-any-contract/">部署任意合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/write-to-any-slot/">写入任意存储槽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/uni-directional-payment-channel/">单向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/bi-directional-payment-channel/">双向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/english-auction/">英式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/dutch-auction/">荷兰式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/crowd-fund/">众筹基金</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-call/">多调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-delegatecall/">多委托调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/time-lock/">定时锁</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/assembly-bin-exp/">汇编中的二进制求幂</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/airdrop/">默克尔空投</a></li>
+</ul>
+<h3 class="nav-title">Hacks</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hacks/re-entrancy/">重入攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/overflow/">算术溢出与下溢</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/self-destruct/">自毁函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/accessing-private-data/">访问私有数据</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/delegatecall/">Delegatecall 攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/randomness/">随机数预测</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/denial-of-service/">拒绝服务攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/phishing-with-tx-origin/">tx.origin 钓鱼</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/hiding-malicious-code-with-external-contract/">使用外部合约隐藏恶意代码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/honeypot/">蜜罐</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/front-running/">抢跑</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/block-timestamp-manipulation/">区块时间戳操纵</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/signature-replay/">签名重放</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/contract-size/">绕过合约大小检查</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/deploy-different-contracts-same-address/">在同一地址部署不同合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/vault-inflation/">金库通货膨胀攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/weth-permit/">WETH Permit</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/63-64-gas-rule/">63 / 64 Gas 规则</a></li>
+</ul>
+<h3 class="nav-title">EVM</h3>
+<ul class="nav-list">
+<li class="nav-item-active"><a class="nav-link" href="../../evm/storage/">EVM 存储布局</a></li>
+<li class="nav-item"><a class="nav-link" href="../../evm/memory/">EVM 内存布局</a></li>
+</ul>
+<h3 class="nav-title">Tests</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../tests/echidna/">Echidna</a></li>
+</ul>
+<h3 class="nav-title">Foundry</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../foundry/basic/">Foundry 基础</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/auth/">授权</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/error/">错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/event/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/send/">发送</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/time/">时间</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/sign/">签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/label/">标签</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/mock-call/">Mock Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/vm-store/">Store</a></li>
+</ul>
+<h3 class="nav-title">DeFi</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2/">Uniswap V2 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-optimal-one-sided-supply/">Uniswap V2 最优单边供给</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-flash-swap/">Uniswap V2 Flash Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-swap/">Uniswap V3 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-liquidity/">Uniswap V3 流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash/">Uniswap V3 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash-swap/">Uniswap V3 Flash Swap 套利</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-swap/">Uniswap V4 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-flash/">Uniswap V4 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-limit-order/">Uniswap V4 限价单</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chronicle-price-oracle/">Chronicle 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/dai-proxy/">DAI Proxy</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/staking-rewards/">质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/discrete-staking-rewards/">离散质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/vault/">Vault</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/token-lock/">Token Lock</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-sum-amm/">恒定和 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-product-amm/">恒定乘积 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/stable-swap-amm/">Stable Swap AMM</a></li>
+</ul>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <button class="hamburger" data-toggle-nav aria-label="菜单"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" width="20" height="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+</svg></button>
+        <div class="header-center">
+          <div class="header-center-inner">
+            <a href="../../"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1300" width="30" height="30" class="logo" data-logo>
+  <path opacity="0.45" d="M773.772 253.308 643.068 485.61H381.842l130.614-232.302h261.316"/>
+  <path opacity="0.6" d="M643.068 485.61h261.318L773.772 253.308H512.456L643.068 485.61z"/>
+  <path opacity="0.8" d="M512.456 717.822 643.068 485.61 512.456 253.308 381.842 485.61l130.614 232.212z"/>
+  <path opacity="0.45" d="m513.721 1066.275 130.704-232.303h261.318l-130.705 232.303H513.721"/>
+  <path opacity="0.6" d="M644.424 833.973H383.107l130.613 232.303h261.317L644.424 833.973z"/>
+  <path opacity="0.8" d="M775.038 601.761 644.424 833.973l130.614 232.303 130.704-232.303-130.704-232.212z"/>
+</svg></a>
+            <h3><a href="../../">Solidity by Example</a></h3>
+          </div>
+          <div class="zh-badge">中文译本 · Web3-Club</div>
+        </div>
+        <button class="mode-btn" data-toggle-theme aria-label="切换主题"><svg data-icon="dark" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 438.277 438.277" width="20" height="20"><path d="M428.756 300.104c-.664-3.81-2.334-7.047-4.996-9.713-5.9-5.903-12.752-7.142-20.554-3.716-20.937 9.708-42.641 14.558-65.097 14.558-28.171 0-54.152-6.94-77.943-20.838-23.791-13.894-42.631-32.736-56.525-56.53-13.899-23.793-20.844-49.773-20.844-77.945 0-21.888 4.333-42.683 12.991-62.384 8.66-19.7 21.176-36.973 37.543-51.82 6.283-5.898 7.713-12.752 4.287-20.557-3.236-7.801-9.041-11.511-17.415-11.132-29.121 1.141-56.72 7.664-82.797 19.556C111.33 31.478 88.917 47.13 70.168 66.548c-18.747 19.414-33.595 42.399-44.54 68.95-10.942 26.553-16.416 54.39-16.416 83.511 0 29.694 5.806 58.054 17.416 85.082 11.613 27.028 27.218 50.344 46.824 69.949 19.604 19.599 42.92 35.207 69.951 46.822 27.028 11.607 55.384 17.415 85.075 17.415 42.64 0 81.987-11.563 118.054-34.69 36.069-23.124 63.05-54.006 80.944-92.645 1.524-3.423 1.951-7.036 1.28-10.838z"/></svg><svg data-icon="light" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.4 302.4" width="20" height="20"><circle cx="151.2" cy="151.2" r="48" fill="none" stroke="#252519" stroke-width="16"/><g stroke="#252519" stroke-width="12" stroke-linecap="round"><path d="M151.2 20 v32M151.2 250 v32M20 151.2 h32M250 151.2 h32M55 55 l22 22M225 225 l22 22M55 247 l22 -22M225 77 l22 -22"/></g></svg></button>
+      </header>
+      <div class="children">
+        
+    <article class="article">
+      <div class="article-content">
+        <h2>EVM 存储布局</h2>
+        <div class="en-link">英文原页：<a href="https://solidity-by-example.org/evm/storage" target="_blank" rel="noreferrer">https://solidity-by-example.org/evm/storage</a></div>
+        <p>示例如下</p>
+<ul><li>使用 <code>assembly</code> 读写存储</li><li>不同数据类型的存储布局</li></ul>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+// Yul —— 用于 Solidity 内联汇编的语言
+contract YulIntro {
+    // Yul 赋值
+    function test_yul_var() public pure returns (uint256) {
+        uint256 s = 0;
+
+        assembly {
+            // 声明变量
+            let x := 1
+            // 重新赋值
+            x := 2
+            // 赋给 Solidity 变量
+            s := 2
+        }
+
+        return s;
+    }
+
+    // Yul 类型（一切都是 bytes32）
+    function test_yul_types()
+        public
+        pure
+        returns (bool x, uint256 y, bytes32 z)
+    {
+        assembly {
+            x := 1
+            y := 0xaaa
+            z := &quot;Hello Yul&quot;
+        }
+
+        return (x, y, z);
+    }
+}
+
+contract EVMStorageSingleSlot {
+    // EVM 存储
+    // 2**256 个槽，每个槽最多存储 32 字节
+    // 槽按状态变量声明的顺序分配
+    // 小于 32 字节的数据会打包进同一个槽（从右到左）
+    // sstore(k, v) = 将 v 存入槽 k
+    // sload(k) = 从槽 k 加载 32 字节
+
+    // 单个变量存储在一个槽中
+    // 槽 0
+    uint256 public s_x;
+    // 槽 1
+    uint256 public s_y;
+    // 槽 2
+    bytes32 public s_z;
+
+    function test_sstore() public {
+        assembly {
+            sstore(0, 111)
+            sstore(1, 222)
+            sstore(2, 0xababab)
+        }
+    }
+
+    function test_sstore_again() public {
+        // 使用 .slot 访问槽
+        assembly {
+            sstore(s_x.slot, 123)
+            sstore(s_y.slot, 456)
+            sstore(s_z.slot, 0xcdcdcd)
+        }
+    }
+
+    function test_sload()
+        public
+        view
+        returns (uint256 x, uint256 y, bytes32 z)
+    {
+        assembly {
+            x := sload(0)
+            y := sload(1)
+            z := sload(2)
+        }
+
+        return (x, y, z);
+    }
+
+    function test_sload_again()
+        public
+        view
+        returns (uint256 x, uint256 y, bytes32 z)
+    {
+        assembly {
+            x := sload(s_x.slot)
+            y := sload(s_y.slot)
+            z := sload(s_z.slot)
+        }
+
+        return (x, y, z);
+    }
+}
+
+contract EVMStoragePackedSlotBytes {
+    // 槽 0（从右到左打包）
+    bytes4 public b4 = 0xabababab;
+    bytes2 public b2 = 0xcdcd;
+
+    function get() public view returns (bytes32 b32) {
+        assembly {
+            b32 := sload(0)
+        }
+    }
+}
+
+contract BitMasking {
+    function test_mask() public pure returns (bytes32 mask) {
+        assembly {
+            // |       256 bits        |
+            // 000 ... 000 | 111 ... 111
+            //             | 16 bits
+            // 0x000000000000000000000000000000000000000000000000000000000000ffff
+            mask := sub(shl(16, 1), 1)
+        }
+    }
+
+    function test_shift_mask() public pure returns (bytes32 mask) {
+        assembly {
+            // |               256 bits                |
+            // 000 ... 000 | 111 ... 111 | 000 ... 000 |
+            //             | 16 bits     | 32 bits
+            // 0x0000000000000000000000000000000000000000000000000000ffff00000000
+            mask := shl(32, sub(shl(16, 1), 1))
+        }
+    }
+
+    function test_not_mask() public pure returns (bytes32 mask) {
+        assembly {
+            // |               256 bits                |
+            // 111 ... 111 | 000 ... 000 | 111 ... 111 |
+            //             | 16 bits     | 32 bits
+            // 0xffffffffffffffffffffffffffffffffffffffffffffffffffff0000ffffffff
+            mask := not(shl(32, sub(shl(16, 1), 1)))
+        }
+    }
+}
+
+contract EVMStoragePackedSlot {
+    // 小于 32 字节的数据会打包进同一个槽
+    // 位掩码（如何构造 111...111）
+    // slot, offset
+
+    // 槽 0
+    uint128 public s_a;
+    uint64 public s_b;
+    uint32 public s_c;
+    uint32 public s_d;
+    // 槽 1
+    // 20 字节 = 160 位
+    address public s_addr;
+    // 96 位
+    uint64 public s_x;
+    uint32 public s_y;
+
+    function test_sstore() public {
+        assembly {
+            // 从槽 0 加载 32 字节
+            let v := sload(0)
+
+            // s_d | s_c | s_b | s_a
+            // 32  | 32  | 64  | 128 bits
+
+            // 设置 s_a = 11
+            // mask = 从右边数第 128 位及其左侧全为 1
+            //        111 ... 111 | 000 ... 000
+            //                    |    128 bits
+            let mask_a := not(sub(shl(128, 1), 1))
+            // 将最左侧 128 位设为 0
+            v := and(v, mask_a)
+            // 设置 s_a = 11
+            v := or(v, 11)
+
+            // 设置 s_b = 22
+            // mask = 111...111 | 000 ... 000 | 111 ... 111
+            //                  |     64 bits |    128 bits
+            let mask_b := not(shl(128, sub(shl(64, 1), 1)))
+            // 将第 128 到 191 位清零，清除 s_b 的旧值
+            v := and(v, mask_b)
+            v := or(v, shl(128, 22))
+
+            // 设置 s_c = 33
+            // mask = 111...111 | 000...000 | 111 ... 111 | 111 ... 111
+            //                  |   32 bits |     64 bits |    128 bits
+            let mask_c := not(shl(192, sub(shl(32, 1), 1)))
+            // 将第 192 到 223 位清零，清除 s_c 的旧值
+            v := and(v, mask_c)
+            v := or(v, shl(192, 33))
+
+            // 设置 s_d = 44
+            // mask = 000...000 | 111...111 | 111 ... 111 | 111 ... 111
+            //                  |   32 bits |     64 bits |    128 bits
+            let mask_d := not(shl(224, sub(shl(32, 1), 1)))
+            // 将第 224 到 255 位清零，清除 s_d 的旧值
+            v := and(v, mask_d)
+            v := or(v, shl(224, 44))
+
+            // 将新值存入槽 0
+            sstore(0, v)
+        }
+    }
+
+    function test_slot_0_offset()
+        public
+        pure
+        returns (
+            uint256 a_offset,
+            uint256 b_offset,
+            uint256 c_offset,
+            uint256 d_offset
+        )
+    {
+        // a_offset =  0 =  0 * 8 =   0 bits
+        // b_offset = 16 = 16 * 8 = 128 bits
+        // c_offset = 24 = 24 * 8 = 192 bits
+        // d_offset = 28 = 28 * 8 = 224 bits
+        assembly {
+            a_offset := s_a.offset
+            b_offset := s_b.offset
+            c_offset := s_c.offset
+            d_offset := s_d.offset
+        }
+    }
+
+    function test_slot_1_offset()
+        public
+        pure
+        returns (uint256 addr_offset, uint256 x_offset, uint256 y_offset)
+    {
+        // addr_offset = 0
+        // x_offset = 20
+        // y_offset = 28
+        assembly {
+            addr_offset := s_addr.offset
+            x_offset := s_x.offset
+            y_offset := s_y.offset
+        }
+    }
+
+    // slot 和 offset
+    function test_sstore_using_offset() public {
+        // a_offset =  0 =  0 * 8 =   0 bits
+        // b_offset = 16 = 16 * 8 = 128 bits
+        // c_offset = 24 = 24 * 8 = 192 bits
+        // d_offset = 28 = 28 * 8 = 224 bits
+        assembly {
+            // 从槽 0 加载 32 字节
+            let v := sload(s_a.slot)
+
+            // s_d | s_c | s_b | s_a
+            // 32  | 32  | 64  | 128 bits
+
+            // 设置 s_a = 111
+            // mask = 从右边数第 128 位及其左侧全为 1
+            //        111 ... 111 | 000 ... 000
+            //                    |    128 bits
+            let mask_a := not(sub(shl(128, 1), 1))
+            // 将最左侧 128 位设为 0
+            v := and(v, mask_a)
+            // 设置 s_a = 1
+            v := or(v, 111)
+
+            // 设置 s_b = 222
+            // mask = 111...111 | 000 ... 000 | 111 ... 111
+            //                  |     64 bits |    128 bits
+            let mask_b := not(shl(mul(s_b.offset, 8), sub(shl(64, 1), 1)))
+            // 将第 128 到 191 位清零，清除 s_b 的旧值
+            v := and(v, mask_b)
+            v := or(v, shl(mul(s_b.offset, 8), 222))
+
+            // 设置 s_c = 333
+            // mask = 111...111 | 000...000 | 111 ... 111 | 111 ... 111
+            //                  |   32 bits |     64 bits |    128 bits
+            let mask_c := not(shl(mul(s_c.offset, 8), sub(shl(32, 1), 1)))
+            // 将第 192 到 223 位清零，清除 s_c 的旧值
+            v := and(v, mask_c)
+            v := or(v, shl(mul(s_c.offset, 8), 333))
+
+            // 设置 s_d = 444
+            // mask = 000...000 | 111...111 | 111 ... 111 | 111 ... 111
+            //                  |   32 bits |     64 bits |    128 bits
+            let mask_d := not(shl(mul(s_d.offset, 8), sub(shl(32, 1), 1)))
+            // 将第 224 到 255 位清零，清除 s_d 的旧值
+            v := and(v, mask_d)
+            v := or(v, shl(mul(s_d.offset, 8), 444))
+
+            // 将新值存入槽 0
+            sstore(s_a.slot, v)
+        }
+    }
+}
+
+contract EVMStorageStruct {
+    struct SingleSlot {
+        uint128 x;
+        uint64 y;
+        uint64 z;
+    }
+
+    struct MultipleSlots {
+        uint256 a;
+        uint256 b;
+        uint256 c;
+    }
+
+    // 槽 0
+    SingleSlot public single = SingleSlot({x: 1, y: 2, z: 3});
+    // 槽 1、2、3
+    MultipleSlots public multi = MultipleSlots({a: 11, b: 22, c: 33});
+
+    function test_get_single_slot_struct()
+        public
+        view
+        returns (uint128 x, uint64 y, uint64 z)
+    {
+        assembly {
+            let s := sload(0)
+            //  z |  y | x
+            // 64 | 64 | 128 bits
+            // 类型转换会截掉左侧的位
+            x := s
+            y := shr(128, s)
+            z := shr(192, s)
+        }
+    }
+
+    function test_get_multiple_slots_struct()
+        public
+        view
+        returns (uint256 a, uint256 b, uint256 c)
+    {
+        assembly {
+            a := sload(1)
+            b := sload(2)
+            c := sload(3)
+        }
+    }
+}
+
+contract EVMStorageConstants {
+    // 槽 0
+    uint256 public s0 = 1;
+    // 常量和不可变量不使用存储
+    uint256 public constant X = 123;
+    address public immutable owner;
+    // 槽 1
+    uint256 public s1 = 2;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function test_get_slots() public view returns (uint256 v0, uint256 v1) {
+        assembly {
+            v0 := sload(0)
+            v1 := sload(1)
+        }
+    }
+}
+
+contract EVMStorageFixedArray {
+    // 元素为 32 字节的定长数组，元素槽位 = 数组声明所在槽 + 数组元素下标
+    // 槽 0、1、2
+    uint256[3] private arr_0 = [1, 2, 3];
+    // 槽 3、4、5
+    uint256[3] private arr_1 = [4, 5, 6];
+    // 槽 + 打包数据的下标
+    // 槽 6、6、7、7、8
+    uint128[5] private arr_2 = [7, 8, 9, 10, 11];
+
+    function test_arr_0(uint256 i) public view returns (uint256 v) {
+        assembly {
+            // arr_0 从槽 0 开始
+            v := sload(add(0, i))
+        }
+    }
+
+    function test_arr_1(uint256 i) public view returns (uint256 v) {
+        assembly {
+            // arr_1 从槽 3 开始
+            v := sload(add(3, i))
+        }
+    }
+
+    function test_arr_2(uint256 i) public view returns (uint128 v) {
+        assembly {
+            // arr_2 从槽 6 开始
+            let b32 := sload(add(6, div(i, 2)))
+            // 槽 6 = 第 1 个元素 | 第 0 个元素
+            // 槽 7 = 第 3 个元素 | 第 2 个元素
+            // 槽 8 = 000 ... 000 | 第 4 个元素
+
+            // i 为偶数 =&gt; 取右侧 128 位 =&gt; 将 bytes32 转为 uint128（截掉左侧 128 位）
+            // i 为奇数  =&gt; 取左侧 128 位  =&gt; 右移 128 位
+
+            switch mod(i, 2)
+            case 1 { v := shr(128, b32) }
+            default { v := b32 }
+        }
+    }
+}
+
+contract EVMStorageDynamicArray {
+    // 元素槽位 = keccak256(该数组声明所在槽) + 元素大小 * 元素下标
+    // keccak256(0) + 1 * index
+    uint256[] private arr = [11, 22, 33];
+    // keccak256(1) + 1 / 2 * index
+    uint128[] private arr_2 = [1, 2, 3];
+
+    function test_arr(uint256 slot, uint256 i)
+        public
+        view
+        returns (uint256 v, bytes32 b32, uint256 len)
+    {
+        bytes32 start = keccak256(abi.encode(slot));
+
+        assembly {
+            len := sload(slot)
+            v := sload(add(start, i))
+            b32 := v
+        }
+    }
+}
+
+contract EVMStorageMapping {
+    // 值的槽位 = keccak256(key, mapping 声明所在槽)
+    mapping(address =&gt; uint256) public map;
+
+    address public constant ADDR_1 = address(1);
+    address public constant ADDR_2 = address(2);
+    address public constant ADDR_3 = address(3);
+
+    constructor() {
+        map[ADDR_1] = 11;
+        map[ADDR_2] = 22;
+        map[ADDR_3] = 33;
+    }
+
+    function test_mapping(address key) public view returns (uint256 v) {
+        uint256 slot = 0;
+        bytes32 slot_v = keccak256(abi.encode(key, slot));
+
+        assembly {
+            v := sload(slot_v)
+        }
+    }
+}
+
+contract EVMStorageNestedMapping {
+    // key0 =&gt; key1 =&gt; val
+    // 值的槽位 = keccak256(key1, keccak256(key0, 嵌套 mapping 声明所在槽))
+    mapping(address =&gt; mapping(address =&gt; uint256)) public map;
+
+    address public constant ADDR_1 = address(1);
+    address public constant ADDR_2 = address(2);
+    address public constant ADDR_3 = address(3);
+
+    constructor() {
+        map[ADDR_1][ADDR_2] = 11;
+        map[ADDR_2][ADDR_3] = 22;
+        map[ADDR_3][ADDR_1] = 33;
+    }
+
+    function test_nested_mapping(address key_0, address key_1)
+        public
+        view
+        returns (uint256 v)
+    {
+        uint256 slot = 0;
+        bytes32 s0 = keccak256(abi.encode(key_0, slot));
+        bytes32 s1 = keccak256(abi.encode(key_1, s0));
+
+        assembly {
+            v := sload(s1)
+        }
+    }
+}
+
+contract EVMStorageMappingArray {
+    // mapping 中值的槽位 = keccak256(key, slot)
+    // 数组元素槽位 = keccak256(slot) + index
+    // mapping -&gt; array -&gt; keccak256(keccak256(key, mapping 声明所在槽)) + index
+    mapping(address =&gt; uint256[]) public map;
+
+    address public constant ADDR_1 = address(1);
+    address public constant ADDR_2 = address(2);
+
+    constructor() {
+        map[ADDR_1].push(11);
+        map[ADDR_1].push(22);
+        map[ADDR_1].push(33);
+        map[ADDR_2].push(44);
+        map[ADDR_2].push(55);
+        map[ADDR_2].push(66);
+    }
+
+    function test_map_arr(address addr, uint256 i)
+        public
+        view
+        returns (uint256 v, uint256 len)
+    {
+        uint256 map_slot = 0;
+        bytes32 map_hash = keccak256(abi.encode(addr, map_slot));
+        bytes32 arr_hash = keccak256(abi.encode(map_hash));
+
+        assembly {
+            len := sload(map_hash)
+            v := sload(add(arr_hash, i))
+        }
+    }
+}
+
+contract EVMStorageDynamicArrayStruct {
+    struct Point {
+        uint256 x;
+        uint128 y;
+        uint128 z;
+    }
+
+    // 元素槽位 = keccak256(该数组声明所在槽) + 元素下标
+    // keccak256(0) + index * struct 大小
+    Point[] private arr;
+
+    constructor() {
+        arr.push(Point(11, 22, 33));
+        arr.push(Point(44, 55, 66));
+        arr.push(Point(77, 88, 99));
+    }
+
+    function test_struct_arr(uint256 i)
+        public
+        view
+        returns (uint256 x, uint128 y, uint128 z, uint256 len)
+    {
+        uint256 slot = 0;
+        bytes32 start = keccak256(abi.encode(slot));
+
+        assembly {
+            len := sload(slot)
+            // s0 = keccak256(0)
+            // index | slot        | values
+            //     0 | slot s0 + 0 | arr[0].x
+            //     0 | slot s0 + 1 | arr[0].z | arr[0].y
+            //     1 | slot s0 + 2 | arr[1].x
+            //     1 | slot s0 + 3 | arr[1].z | arr[1].y
+            //     2 | slot s0 + 4 | arr[2].x
+            //     2 | slot s0 + 5 | arr[2].z | arr[2].y
+            x := sload(add(start, mul(i, 2)))
+            let zy := sload(add(start, add(mul(i, 2), 1)))
+            // uint128 会从 32 字节中截掉最左侧 128 位
+            y := zy
+            z := shr(128, zy)
+        }
+    }
+}
+</code></pre>
+        <div class="prev-next"><a href="../../hacks/63-64-gas-rule/">&lt; 63 / 64 Gas 规则</a><a href="../../evm/memory/">EVM 内存布局 &gt;</a></div>
+        <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8vIFl1bCDigJTigJQg55So5LqOIFNvbGlkaXR5IOWGheiBlOaxh+e8lueahOivreiogApjb250cmFjdCBZdWxJbnRybyB7CiAgICAvLyBZdWwg6LWL5YC8CiAgICBmdW5jdGlvbiB0ZXN0X3l1bF92YXIoKSBwdWJsaWMgcHVyZSByZXR1cm5zICh1aW50MjU2KSB7CiAgICAgICAgdWludDI1NiBzID0gMDsKCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyDlo7DmmI7lj5jph48KICAgICAgICAgICAgbGV0IHggOj0gMQogICAgICAgICAgICAvLyDph43mlrDotYvlgLwKICAgICAgICAgICAgeCA6PSAyCiAgICAgICAgICAgIC8vIOi1i+e7mSBTb2xpZGl0eSDlj5jph48KICAgICAgICAgICAgcyA6PSAyCiAgICAgICAgfQoKICAgICAgICByZXR1cm4gczsKICAgIH0KCiAgICAvLyBZdWwg57G75Z6L77yI5LiA5YiH6YO95pivIGJ5dGVzMzLvvIkKICAgIGZ1bmN0aW9uIHRlc3RfeXVsX3R5cGVzKCkKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAoYm9vbCB4LCB1aW50MjU2IHksIGJ5dGVzMzIgeikKICAgIHsKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIHggOj0gMQogICAgICAgICAgICB5IDo9IDB4YWFhCiAgICAgICAgICAgIHogOj0gIkhlbGxvIFl1bCIKICAgICAgICB9CgogICAgICAgIHJldHVybiAoeCwgeSwgeik7CiAgICB9Cn0KCmNvbnRyYWN0IEVWTVN0b3JhZ2VTaW5nbGVTbG90IHsKICAgIC8vIEVWTSDlrZjlgqgKICAgIC8vIDIqKjI1NiDkuKrmp73vvIzmr4/kuKrmp73mnIDlpJrlrZjlgqggMzIg5a2X6IqCCiAgICAvLyDmp73mjInnirbmgIHlj5jph4/lo7DmmI7nmoTpobrluo/liIbphY0KICAgIC8vIOWwj+S6jiAzMiDlrZfoioLnmoTmlbDmja7kvJrmiZPljIXov5vlkIzkuIDkuKrmp73vvIjku47lj7PliLDlt6bvvIkKICAgIC8vIHNzdG9yZShrLCB2KSA9IOWwhiB2IOWtmOWFpeanvSBrCiAgICAvLyBzbG9hZChrKSA9IOS7juanvSBrIOWKoOi9vSAzMiDlrZfoioIKCiAgICAvLyDljZXkuKrlj5jph4/lrZjlgqjlnKjkuIDkuKrmp73kuK0KICAgIC8vIOanvSAwCiAgICB1aW50MjU2IHB1YmxpYyBzX3g7CiAgICAvLyDmp70gMQogICAgdWludDI1NiBwdWJsaWMgc195OwogICAgLy8g5qe9IDIKICAgIGJ5dGVzMzIgcHVibGljIHNfejsKCiAgICBmdW5jdGlvbiB0ZXN0X3NzdG9yZSgpIHB1YmxpYyB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBzc3RvcmUoMCwgMTExKQogICAgICAgICAgICBzc3RvcmUoMSwgMjIyKQogICAgICAgICAgICBzc3RvcmUoMiwgMHhhYmFiYWIpCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3Rfc3N0b3JlX2FnYWluKCkgcHVibGljIHsKICAgICAgICAvLyDkvb/nlKggLnNsb3Qg6K6/6Zeu5qe9CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBzc3RvcmUoc194LnNsb3QsIDEyMykKICAgICAgICAgICAgc3N0b3JlKHNfeS5zbG90LCA0NTYpCiAgICAgICAgICAgIHNzdG9yZShzX3ouc2xvdCwgMHhjZGNkY2QpCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3Rfc2xvYWQoKQogICAgICAgIHB1YmxpYwogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MjU2IHgsIHVpbnQyNTYgeSwgYnl0ZXMzMiB6KQogICAgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgeCA6PSBzbG9hZCgwKQogICAgICAgICAgICB5IDo9IHNsb2FkKDEpCiAgICAgICAgICAgIHogOj0gc2xvYWQoMikKICAgICAgICB9CgogICAgICAgIHJldHVybiAoeCwgeSwgeik7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9zbG9hZF9hZ2FpbigpCiAgICAgICAgcHVibGljCiAgICAgICAgdmlldwogICAgICAgIHJldHVybnMgKHVpbnQyNTYgeCwgdWludDI1NiB5LCBieXRlczMyIHopCiAgICB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICB4IDo9IHNsb2FkKHNfeC5zbG90KQogICAgICAgICAgICB5IDo9IHNsb2FkKHNfeS5zbG90KQogICAgICAgICAgICB6IDo9IHNsb2FkKHNfei5zbG90KQogICAgICAgIH0KCiAgICAgICAgcmV0dXJuICh4LCB5LCB6KTsKICAgIH0KfQoKY29udHJhY3QgRVZNU3RvcmFnZVBhY2tlZFNsb3RCeXRlcyB7CiAgICAvLyDmp70gMO+8iOS7juWPs+WIsOW3puaJk+WMhe+8iQogICAgYnl0ZXM0IHB1YmxpYyBiNCA9IDB4YWJhYmFiYWI7CiAgICBieXRlczIgcHVibGljIGIyID0gMHhjZGNkOwoKICAgIGZ1bmN0aW9uIGdldCgpIHB1YmxpYyB2aWV3IHJldHVybnMgKGJ5dGVzMzIgYjMyKSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBiMzIgOj0gc2xvYWQoMCkKICAgICAgICB9CiAgICB9Cn0KCmNvbnRyYWN0IEJpdE1hc2tpbmcgewogICAgZnVuY3Rpb24gdGVzdF9tYXNrKCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMzMiBtYXNrKSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyB8ICAgICAgIDI1NiBiaXRzICAgICAgICB8CiAgICAgICAgICAgIC8vIDAwMCAuLi4gMDAwIHwgMTExIC4uLiAxMTEKICAgICAgICAgICAgLy8gICAgICAgICAgICAgfCAxNiBiaXRzCiAgICAgICAgICAgIC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwZmZmZgogICAgICAgICAgICBtYXNrIDo9IHN1YihzaGwoMTYsIDEpLCAxKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3NoaWZ0X21hc2soKSBwdWJsaWMgcHVyZSByZXR1cm5zIChieXRlczMyIG1hc2spIHsKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIC8vIHwgICAgICAgICAgICAgICAyNTYgYml0cyAgICAgICAgICAgICAgICB8CiAgICAgICAgICAgIC8vIDAwMCAuLi4gMDAwIHwgMTExIC4uLiAxMTEgfCAwMDAgLi4uIDAwMCB8CiAgICAgICAgICAgIC8vICAgICAgICAgICAgIHwgMTYgYml0cyAgICAgfCAzMiBiaXRzCiAgICAgICAgICAgIC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMGZmZmYwMDAwMDAwMAogICAgICAgICAgICBtYXNrIDo9IHNobCgzMiwgc3ViKHNobCgxNiwgMSksIDEpKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X25vdF9tYXNrKCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMzMiBtYXNrKSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyB8ICAgICAgICAgICAgICAgMjU2IGJpdHMgICAgICAgICAgICAgICAgfAogICAgICAgICAgICAvLyAxMTEgLi4uIDExMSB8IDAwMCAuLi4gMDAwIHwgMTExIC4uLiAxMTEgfAogICAgICAgICAgICAvLyAgICAgICAgICAgICB8IDE2IGJpdHMgICAgIHwgMzIgYml0cwogICAgICAgICAgICAvLyAweGZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmYwMDAwZmZmZmZmZmYKICAgICAgICAgICAgbWFzayA6PSBub3Qoc2hsKDMyLCBzdWIoc2hsKDE2LCAxKSwgMSkpKQogICAgICAgIH0KICAgIH0KfQoKY29udHJhY3QgRVZNU3RvcmFnZVBhY2tlZFNsb3QgewogICAgLy8g5bCP5LqOIDMyIOWtl+iKgueahOaVsOaNruS8muaJk+WMhei/m+WQjOS4gOS4quanvQogICAgLy8g5L2N5o6p56CB77yI5aaC5L2V5p6E6YCgIDExMS4uLjExMe+8iQogICAgLy8gc2xvdCwgb2Zmc2V0CgogICAgLy8g5qe9IDAKICAgIHVpbnQxMjggcHVibGljIHNfYTsKICAgIHVpbnQ2NCBwdWJsaWMgc19iOwogICAgdWludDMyIHB1YmxpYyBzX2M7CiAgICB1aW50MzIgcHVibGljIHNfZDsKICAgIC8vIOanvSAxCiAgICAvLyAyMCDlrZfoioIgPSAxNjAg5L2NCiAgICBhZGRyZXNzIHB1YmxpYyBzX2FkZHI7CiAgICAvLyA5NiDkvY0KICAgIHVpbnQ2NCBwdWJsaWMgc194OwogICAgdWludDMyIHB1YmxpYyBzX3k7CgogICAgZnVuY3Rpb24gdGVzdF9zc3RvcmUoKSBwdWJsaWMgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgLy8g5LuO5qe9IDAg5Yqg6L29IDMyIOWtl+iKggogICAgICAgICAgICBsZXQgdiA6PSBzbG9hZCgwKQoKICAgICAgICAgICAgLy8gc19kIHwgc19jIHwgc19iIHwgc19hCiAgICAgICAgICAgIC8vIDMyICB8IDMyICB8IDY0ICB8IDEyOCBiaXRzCgogICAgICAgICAgICAvLyDorr7nva4gc19hID0gMTEKICAgICAgICAgICAgLy8gbWFzayA9IOS7juWPs+i+ueaVsOesrCAxMjgg5L2N5Y+K5YW25bem5L6n5YWo5Li6IDEKICAgICAgICAgICAgLy8gICAgICAgIDExMSAuLi4gMTExIHwgMDAwIC4uLiAwMDAKICAgICAgICAgICAgLy8gICAgICAgICAgICAgICAgICAgIHwgICAgMTI4IGJpdHMKICAgICAgICAgICAgbGV0IG1hc2tfYSA6PSBub3Qoc3ViKHNobCgxMjgsIDEpLCAxKSkKICAgICAgICAgICAgLy8g5bCG5pyA5bem5L6nIDEyOCDkvY3orr7kuLogMAogICAgICAgICAgICB2IDo9IGFuZCh2LCBtYXNrX2EpCiAgICAgICAgICAgIC8vIOiuvue9riBzX2EgPSAxMQogICAgICAgICAgICB2IDo9IG9yKHYsIDExKQoKICAgICAgICAgICAgLy8g6K6+572uIHNfYiA9IDIyCiAgICAgICAgICAgIC8vIG1hc2sgPSAxMTEuLi4xMTEgfCAwMDAgLi4uIDAwMCB8IDExMSAuLi4gMTExCiAgICAgICAgICAgIC8vICAgICAgICAgICAgICAgICAgfCAgICAgNjQgYml0cyB8ICAgIDEyOCBiaXRzCiAgICAgICAgICAgIGxldCBtYXNrX2IgOj0gbm90KHNobCgxMjgsIHN1YihzaGwoNjQsIDEpLCAxKSkpCiAgICAgICAgICAgIC8vIOWwhuesrCAxMjgg5YiwIDE5MSDkvY3muIXpm7bvvIzmuIXpmaQgc19iIOeahOaXp+WAvAogICAgICAgICAgICB2IDo9IGFuZCh2LCBtYXNrX2IpCiAgICAgICAgICAgIHYgOj0gb3Iodiwgc2hsKDEyOCwgMjIpKQoKICAgICAgICAgICAgLy8g6K6+572uIHNfYyA9IDMzCiAgICAgICAgICAgIC8vIG1hc2sgPSAxMTEuLi4xMTEgfCAwMDAuLi4wMDAgfCAxMTEgLi4uIDExMSB8IDExMSAuLi4gMTExCiAgICAgICAgICAgIC8vICAgICAgICAgICAgICAgICAgfCAgIDMyIGJpdHMgfCAgICAgNjQgYml0cyB8ICAgIDEyOCBiaXRzCiAgICAgICAgICAgIGxldCBtYXNrX2MgOj0gbm90KHNobCgxOTIsIHN1YihzaGwoMzIsIDEpLCAxKSkpCiAgICAgICAgICAgIC8vIOWwhuesrCAxOTIg5YiwIDIyMyDkvY3muIXpm7bvvIzmuIXpmaQgc19jIOeahOaXp+WAvAogICAgICAgICAgICB2IDo9IGFuZCh2LCBtYXNrX2MpCiAgICAgICAgICAgIHYgOj0gb3Iodiwgc2hsKDE5MiwgMzMpKQoKICAgICAgICAgICAgLy8g6K6+572uIHNfZCA9IDQ0CiAgICAgICAgICAgIC8vIG1hc2sgPSAwMDAuLi4wMDAgfCAxMTEuLi4xMTEgfCAxMTEgLi4uIDExMSB8IDExMSAuLi4gMTExCiAgICAgICAgICAgIC8vICAgICAgICAgICAgICAgICAgfCAgIDMyIGJpdHMgfCAgICAgNjQgYml0cyB8ICAgIDEyOCBiaXRzCiAgICAgICAgICAgIGxldCBtYXNrX2QgOj0gbm90KHNobCgyMjQsIHN1YihzaGwoMzIsIDEpLCAxKSkpCiAgICAgICAgICAgIC8vIOWwhuesrCAyMjQg5YiwIDI1NSDkvY3muIXpm7bvvIzmuIXpmaQgc19kIOeahOaXp+WAvAogICAgICAgICAgICB2IDo9IGFuZCh2LCBtYXNrX2QpCiAgICAgICAgICAgIHYgOj0gb3Iodiwgc2hsKDIyNCwgNDQpKQoKICAgICAgICAgICAgLy8g5bCG5paw5YC85a2Y5YWl5qe9IDAKICAgICAgICAgICAgc3N0b3JlKDAsIHYpCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3Rfc2xvdF8wX29mZnNldCgpCiAgICAgICAgcHVibGljCiAgICAgICAgcHVyZQogICAgICAgIHJldHVybnMgKAogICAgICAgICAgICB1aW50MjU2IGFfb2Zmc2V0LAogICAgICAgICAgICB1aW50MjU2IGJfb2Zmc2V0LAogICAgICAgICAgICB1aW50MjU2IGNfb2Zmc2V0LAogICAgICAgICAgICB1aW50MjU2IGRfb2Zmc2V0CiAgICAgICAgKQogICAgewogICAgICAgIC8vIGFfb2Zmc2V0ID0gIDAgPSAgMCAqIDggPSAgIDAgYml0cwogICAgICAgIC8vIGJfb2Zmc2V0ID0gMTYgPSAxNiAqIDggPSAxMjggYml0cwogICAgICAgIC8vIGNfb2Zmc2V0ID0gMjQgPSAyNCAqIDggPSAxOTIgYml0cwogICAgICAgIC8vIGRfb2Zmc2V0ID0gMjggPSAyOCAqIDggPSAyMjQgYml0cwogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgYV9vZmZzZXQgOj0gc19hLm9mZnNldAogICAgICAgICAgICBiX29mZnNldCA6PSBzX2Iub2Zmc2V0CiAgICAgICAgICAgIGNfb2Zmc2V0IDo9IHNfYy5vZmZzZXQKICAgICAgICAgICAgZF9vZmZzZXQgOj0gc19kLm9mZnNldAogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3Nsb3RfMV9vZmZzZXQoKQogICAgICAgIHB1YmxpYwogICAgICAgIHB1cmUKICAgICAgICByZXR1cm5zICh1aW50MjU2IGFkZHJfb2Zmc2V0LCB1aW50MjU2IHhfb2Zmc2V0LCB1aW50MjU2IHlfb2Zmc2V0KQogICAgewogICAgICAgIC8vIGFkZHJfb2Zmc2V0ID0gMAogICAgICAgIC8vIHhfb2Zmc2V0ID0gMjAKICAgICAgICAvLyB5X29mZnNldCA9IDI4CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBhZGRyX29mZnNldCA6PSBzX2FkZHIub2Zmc2V0CiAgICAgICAgICAgIHhfb2Zmc2V0IDo9IHNfeC5vZmZzZXQKICAgICAgICAgICAgeV9vZmZzZXQgOj0gc195Lm9mZnNldAogICAgICAgIH0KICAgIH0KCiAgICAvLyBzbG90IOWSjCBvZmZzZXQKICAgIGZ1bmN0aW9uIHRlc3Rfc3N0b3JlX3VzaW5nX29mZnNldCgpIHB1YmxpYyB7CiAgICAgICAgLy8gYV9vZmZzZXQgPSAgMCA9ICAwICogOCA9ICAgMCBiaXRzCiAgICAgICAgLy8gYl9vZmZzZXQgPSAxNiA9IDE2ICogOCA9IDEyOCBiaXRzCiAgICAgICAgLy8gY19vZmZzZXQgPSAyNCA9IDI0ICogOCA9IDE5MiBiaXRzCiAgICAgICAgLy8gZF9vZmZzZXQgPSAyOCA9IDI4ICogOCA9IDIyNCBiaXRzCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyDku47mp70gMCDliqDovb0gMzIg5a2X6IqCCiAgICAgICAgICAgIGxldCB2IDo9IHNsb2FkKHNfYS5zbG90KQoKICAgICAgICAgICAgLy8gc19kIHwgc19jIHwgc19iIHwgc19hCiAgICAgICAgICAgIC8vIDMyICB8IDMyICB8IDY0ICB8IDEyOCBiaXRzCgogICAgICAgICAgICAvLyDorr7nva4gc19hID0gMTExCiAgICAgICAgICAgIC8vIG1hc2sgPSDku47lj7PovrnmlbDnrKwgMTI4IOS9jeWPiuWFtuW3puS+p+WFqOS4uiAxCiAgICAgICAgICAgIC8vICAgICAgICAxMTEgLi4uIDExMSB8IDAwMCAuLi4gMDAwCiAgICAgICAgICAgIC8vICAgICAgICAgICAgICAgICAgICB8ICAgIDEyOCBiaXRzCiAgICAgICAgICAgIGxldCBtYXNrX2EgOj0gbm90KHN1YihzaGwoMTI4LCAxKSwgMSkpCiAgICAgICAgICAgIC8vIOWwhuacgOW3puS+pyAxMjgg5L2N6K6+5Li6IDAKICAgICAgICAgICAgdiA6PSBhbmQodiwgbWFza19hKQogICAgICAgICAgICAvLyDorr7nva4gc19hID0gMQogICAgICAgICAgICB2IDo9IG9yKHYsIDExMSkKCiAgICAgICAgICAgIC8vIOiuvue9riBzX2IgPSAyMjIKICAgICAgICAgICAgLy8gbWFzayA9IDExMS4uLjExMSB8IDAwMCAuLi4gMDAwIHwgMTExIC4uLiAxMTEKICAgICAgICAgICAgLy8gICAgICAgICAgICAgICAgICB8ICAgICA2NCBiaXRzIHwgICAgMTI4IGJpdHMKICAgICAgICAgICAgbGV0IG1hc2tfYiA6PSBub3Qoc2hsKG11bChzX2Iub2Zmc2V0LCA4KSwgc3ViKHNobCg2NCwgMSksIDEpKSkKICAgICAgICAgICAgLy8g5bCG56ysIDEyOCDliLAgMTkxIOS9jea4hembtu+8jOa4hemZpCBzX2Ig55qE5pen5YC8CiAgICAgICAgICAgIHYgOj0gYW5kKHYsIG1hc2tfYikKICAgICAgICAgICAgdiA6PSBvcih2LCBzaGwobXVsKHNfYi5vZmZzZXQsIDgpLCAyMjIpKQoKICAgICAgICAgICAgLy8g6K6+572uIHNfYyA9IDMzMwogICAgICAgICAgICAvLyBtYXNrID0gMTExLi4uMTExIHwgMDAwLi4uMDAwIHwgMTExIC4uLiAxMTEgfCAxMTEgLi4uIDExMQogICAgICAgICAgICAvLyAgICAgICAgICAgICAgICAgIHwgICAzMiBiaXRzIHwgICAgIDY0IGJpdHMgfCAgICAxMjggYml0cwogICAgICAgICAgICBsZXQgbWFza19jIDo9IG5vdChzaGwobXVsKHNfYy5vZmZzZXQsIDgpLCBzdWIoc2hsKDMyLCAxKSwgMSkpKQogICAgICAgICAgICAvLyDlsIbnrKwgMTkyIOWIsCAyMjMg5L2N5riF6Zu277yM5riF6ZmkIHNfYyDnmoTml6flgLwKICAgICAgICAgICAgdiA6PSBhbmQodiwgbWFza19jKQogICAgICAgICAgICB2IDo9IG9yKHYsIHNobChtdWwoc19jLm9mZnNldCwgOCksIDMzMykpCgogICAgICAgICAgICAvLyDorr7nva4gc19kID0gNDQ0CiAgICAgICAgICAgIC8vIG1hc2sgPSAwMDAuLi4wMDAgfCAxMTEuLi4xMTEgfCAxMTEgLi4uIDExMSB8IDExMSAuLi4gMTExCiAgICAgICAgICAgIC8vICAgICAgICAgICAgICAgICAgfCAgIDMyIGJpdHMgfCAgICAgNjQgYml0cyB8ICAgIDEyOCBiaXRzCiAgICAgICAgICAgIGxldCBtYXNrX2QgOj0gbm90KHNobChtdWwoc19kLm9mZnNldCwgOCksIHN1YihzaGwoMzIsIDEpLCAxKSkpCiAgICAgICAgICAgIC8vIOWwhuesrCAyMjQg5YiwIDI1NSDkvY3muIXpm7bvvIzmuIXpmaQgc19kIOeahOaXp+WAvAogICAgICAgICAgICB2IDo9IGFuZCh2LCBtYXNrX2QpCiAgICAgICAgICAgIHYgOj0gb3Iodiwgc2hsKG11bChzX2Qub2Zmc2V0LCA4KSwgNDQ0KSkKCiAgICAgICAgICAgIC8vIOWwhuaWsOWAvOWtmOWFpeanvSAwCiAgICAgICAgICAgIHNzdG9yZShzX2Euc2xvdCwgdikKICAgICAgICB9CiAgICB9Cn0KCmNvbnRyYWN0IEVWTVN0b3JhZ2VTdHJ1Y3QgewogICAgc3RydWN0IFNpbmdsZVNsb3QgewogICAgICAgIHVpbnQxMjggeDsKICAgICAgICB1aW50NjQgeTsKICAgICAgICB1aW50NjQgejsKICAgIH0KCiAgICBzdHJ1Y3QgTXVsdGlwbGVTbG90cyB7CiAgICAgICAgdWludDI1NiBhOwogICAgICAgIHVpbnQyNTYgYjsKICAgICAgICB1aW50MjU2IGM7CiAgICB9CgogICAgLy8g5qe9IDAKICAgIFNpbmdsZVNsb3QgcHVibGljIHNpbmdsZSA9IFNpbmdsZVNsb3Qoe3g6IDEsIHk6IDIsIHo6IDN9KTsKICAgIC8vIOanvSAx44CBMuOAgTMKICAgIE11bHRpcGxlU2xvdHMgcHVibGljIG11bHRpID0gTXVsdGlwbGVTbG90cyh7YTogMTEsIGI6IDIyLCBjOiAzM30pOwoKICAgIGZ1bmN0aW9uIHRlc3RfZ2V0X3NpbmdsZV9zbG90X3N0cnVjdCgpCiAgICAgICAgcHVibGljCiAgICAgICAgdmlldwogICAgICAgIHJldHVybnMgKHVpbnQxMjggeCwgdWludDY0IHksIHVpbnQ2NCB6KQogICAgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgbGV0IHMgOj0gc2xvYWQoMCkKICAgICAgICAgICAgLy8gIHogfCAgeSB8IHgKICAgICAgICAgICAgLy8gNjQgfCA2NCB8IDEyOCBiaXRzCiAgICAgICAgICAgIC8vIOexu+Wei+i9rOaNouS8muaIquaOieW3puS+p+eahOS9jQogICAgICAgICAgICB4IDo9IHMKICAgICAgICAgICAgeSA6PSBzaHIoMTI4LCBzKQogICAgICAgICAgICB6IDo9IHNocigxOTIsIHMpCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3RfZ2V0X211bHRpcGxlX3Nsb3RzX3N0cnVjdCgpCiAgICAgICAgcHVibGljCiAgICAgICAgdmlldwogICAgICAgIHJldHVybnMgKHVpbnQyNTYgYSwgdWludDI1NiBiLCB1aW50MjU2IGMpCiAgICB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBhIDo9IHNsb2FkKDEpCiAgICAgICAgICAgIGIgOj0gc2xvYWQoMikKICAgICAgICAgICAgYyA6PSBzbG9hZCgzKQogICAgICAgIH0KICAgIH0KfQoKY29udHJhY3QgRVZNU3RvcmFnZUNvbnN0YW50cyB7CiAgICAvLyDmp70gMAogICAgdWludDI1NiBwdWJsaWMgczAgPSAxOwogICAgLy8g5bi46YeP5ZKM5LiN5Y+v5Y+Y6YeP5LiN5L2/55So5a2Y5YKoCiAgICB1aW50MjU2IHB1YmxpYyBjb25zdGFudCBYID0gMTIzOwogICAgYWRkcmVzcyBwdWJsaWMgaW1tdXRhYmxlIG93bmVyOwogICAgLy8g5qe9IDEKICAgIHVpbnQyNTYgcHVibGljIHMxID0gMjsKCiAgICBjb25zdHJ1Y3RvcigpIHsKICAgICAgICBvd25lciA9IG1zZy5zZW5kZXI7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9nZXRfc2xvdHMoKSBwdWJsaWMgdmlldyByZXR1cm5zICh1aW50MjU2IHYwLCB1aW50MjU2IHYxKSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICB2MCA6PSBzbG9hZCgwKQogICAgICAgICAgICB2MSA6PSBzbG9hZCgxKQogICAgICAgIH0KICAgIH0KfQoKY29udHJhY3QgRVZNU3RvcmFnZUZpeGVkQXJyYXkgewogICAgLy8g5YWD57Sg5Li6IDMyIOWtl+iKgueahOWumumVv+aVsOe7hO+8jOWFg+e0oOanveS9jSA9IOaVsOe7hOWjsOaYjuaJgOWcqOanvSArIOaVsOe7hOWFg+e0oOS4i+aghwogICAgLy8g5qe9IDDjgIEx44CBMgogICAgdWludDI1NlszXSBwcml2YXRlIGFycl8wID0gWzEsIDIsIDNdOwogICAgLy8g5qe9IDPjgIE044CBNQogICAgdWludDI1NlszXSBwcml2YXRlIGFycl8xID0gWzQsIDUsIDZdOwogICAgLy8g5qe9ICsg5omT5YyF5pWw5o2u55qE5LiL5qCHCiAgICAvLyDmp70gNuOAgTbjgIE344CBN+OAgTgKICAgIHVpbnQxMjhbNV0gcHJpdmF0ZSBhcnJfMiA9IFs3LCA4LCA5LCAxMCwgMTFdOwoKICAgIGZ1bmN0aW9uIHRlc3RfYXJyXzAodWludDI1NiBpKSBwdWJsaWMgdmlldyByZXR1cm5zICh1aW50MjU2IHYpIHsKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIC8vIGFycl8wIOS7juanvSAwIOW8gOWniwogICAgICAgICAgICB2IDo9IHNsb2FkKGFkZCgwLCBpKSkKICAgICAgICB9CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9hcnJfMSh1aW50MjU2IGkpIHB1YmxpYyB2aWV3IHJldHVybnMgKHVpbnQyNTYgdikgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgLy8gYXJyXzEg5LuO5qe9IDMg5byA5aeLCiAgICAgICAgICAgIHYgOj0gc2xvYWQoYWRkKDMsIGkpKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X2Fycl8yKHVpbnQyNTYgaSkgcHVibGljIHZpZXcgcmV0dXJucyAodWludDEyOCB2KSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyBhcnJfMiDku47mp70gNiDlvIDlp4sKICAgICAgICAgICAgbGV0IGIzMiA6PSBzbG9hZChhZGQoNiwgZGl2KGksIDIpKSkKICAgICAgICAgICAgLy8g5qe9IDYgPSDnrKwgMSDkuKrlhYPntKAgfCDnrKwgMCDkuKrlhYPntKAKICAgICAgICAgICAgLy8g5qe9IDcgPSDnrKwgMyDkuKrlhYPntKAgfCDnrKwgMiDkuKrlhYPntKAKICAgICAgICAgICAgLy8g5qe9IDggPSAwMDAgLi4uIDAwMCB8IOesrCA0IOS4quWFg+e0oAoKICAgICAgICAgICAgLy8gaSDkuLrlgbbmlbAgPT4g5Y+W5Y+z5L6nIDEyOCDkvY0gPT4g5bCGIGJ5dGVzMzIg6L2s5Li6IHVpbnQxMjjvvIjmiKrmjonlt6bkvqcgMTI4IOS9je+8iQogICAgICAgICAgICAvLyBpIOS4uuWlh+aVsCAgPT4g5Y+W5bem5L6nIDEyOCDkvY0gID0+IOWPs+enuyAxMjgg5L2NCgogICAgICAgICAgICBzd2l0Y2ggbW9kKGksIDIpCiAgICAgICAgICAgIGNhc2UgMSB7IHYgOj0gc2hyKDEyOCwgYjMyKSB9CiAgICAgICAgICAgIGRlZmF1bHQgeyB2IDo9IGIzMiB9CiAgICAgICAgfQogICAgfQp9Cgpjb250cmFjdCBFVk1TdG9yYWdlRHluYW1pY0FycmF5IHsKICAgIC8vIOWFg+e0oOanveS9jSA9IGtlY2NhazI1Nijor6XmlbDnu4Tlo7DmmI7miYDlnKjmp70pICsg5YWD57Sg5aSn5bCPICog5YWD57Sg5LiL5qCHCiAgICAvLyBrZWNjYWsyNTYoMCkgKyAxICogaW5kZXgKICAgIHVpbnQyNTZbXSBwcml2YXRlIGFyciA9IFsxMSwgMjIsIDMzXTsKICAgIC8vIGtlY2NhazI1NigxKSArIDEgLyAyICogaW5kZXgKICAgIHVpbnQxMjhbXSBwcml2YXRlIGFycl8yID0gWzEsIDIsIDNdOwoKICAgIGZ1bmN0aW9uIHRlc3RfYXJyKHVpbnQyNTYgc2xvdCwgdWludDI1NiBpKQogICAgICAgIHB1YmxpYwogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MjU2IHYsIGJ5dGVzMzIgYjMyLCB1aW50MjU2IGxlbikKICAgIHsKICAgICAgICBieXRlczMyIHN0YXJ0ID0ga2VjY2FrMjU2KGFiaS5lbmNvZGUoc2xvdCkpOwoKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIGxlbiA6PSBzbG9hZChzbG90KQogICAgICAgICAgICB2IDo9IHNsb2FkKGFkZChzdGFydCwgaSkpCiAgICAgICAgICAgIGIzMiA6PSB2CiAgICAgICAgfQogICAgfQp9Cgpjb250cmFjdCBFVk1TdG9yYWdlTWFwcGluZyB7CiAgICAvLyDlgLznmoTmp73kvY0gPSBrZWNjYWsyNTYoa2V5LCBtYXBwaW5nIOWjsOaYjuaJgOWcqOanvSkKICAgIG1hcHBpbmcoYWRkcmVzcyA9PiB1aW50MjU2KSBwdWJsaWMgbWFwOwoKICAgIGFkZHJlc3MgcHVibGljIGNvbnN0YW50IEFERFJfMSA9IGFkZHJlc3MoMSk7CiAgICBhZGRyZXNzIHB1YmxpYyBjb25zdGFudCBBRERSXzIgPSBhZGRyZXNzKDIpOwogICAgYWRkcmVzcyBwdWJsaWMgY29uc3RhbnQgQUREUl8zID0gYWRkcmVzcygzKTsKCiAgICBjb25zdHJ1Y3RvcigpIHsKICAgICAgICBtYXBbQUREUl8xXSA9IDExOwogICAgICAgIG1hcFtBRERSXzJdID0gMjI7CiAgICAgICAgbWFwW0FERFJfM10gPSAzMzsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X21hcHBpbmcoYWRkcmVzcyBrZXkpIHB1YmxpYyB2aWV3IHJldHVybnMgKHVpbnQyNTYgdikgewogICAgICAgIHVpbnQyNTYgc2xvdCA9IDA7CiAgICAgICAgYnl0ZXMzMiBzbG90X3YgPSBrZWNjYWsyNTYoYWJpLmVuY29kZShrZXksIHNsb3QpKTsKCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICB2IDo9IHNsb2FkKHNsb3RfdikKICAgICAgICB9CiAgICB9Cn0KCmNvbnRyYWN0IEVWTVN0b3JhZ2VOZXN0ZWRNYXBwaW5nIHsKICAgIC8vIGtleTAgPT4ga2V5MSA9PiB2YWwKICAgIC8vIOWAvOeahOanveS9jSA9IGtlY2NhazI1NihrZXkxLCBrZWNjYWsyNTYoa2V5MCwg5bWM5aWXIG1hcHBpbmcg5aOw5piO5omA5Zyo5qe9KSkKICAgIG1hcHBpbmcoYWRkcmVzcyA9PiBtYXBwaW5nKGFkZHJlc3MgPT4gdWludDI1NikpIHB1YmxpYyBtYXA7CgogICAgYWRkcmVzcyBwdWJsaWMgY29uc3RhbnQgQUREUl8xID0gYWRkcmVzcygxKTsKICAgIGFkZHJlc3MgcHVibGljIGNvbnN0YW50IEFERFJfMiA9IGFkZHJlc3MoMik7CiAgICBhZGRyZXNzIHB1YmxpYyBjb25zdGFudCBBRERSXzMgPSBhZGRyZXNzKDMpOwoKICAgIGNvbnN0cnVjdG9yKCkgewogICAgICAgIG1hcFtBRERSXzFdW0FERFJfMl0gPSAxMTsKICAgICAgICBtYXBbQUREUl8yXVtBRERSXzNdID0gMjI7CiAgICAgICAgbWFwW0FERFJfM11bQUREUl8xXSA9IDMzOwogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3RfbmVzdGVkX21hcHBpbmcoYWRkcmVzcyBrZXlfMCwgYWRkcmVzcyBrZXlfMSkKICAgICAgICBwdWJsaWMKICAgICAgICB2aWV3CiAgICAgICAgcmV0dXJucyAodWludDI1NiB2KQogICAgewogICAgICAgIHVpbnQyNTYgc2xvdCA9IDA7CiAgICAgICAgYnl0ZXMzMiBzMCA9IGtlY2NhazI1NihhYmkuZW5jb2RlKGtleV8wLCBzbG90KSk7CiAgICAgICAgYnl0ZXMzMiBzMSA9IGtlY2NhazI1NihhYmkuZW5jb2RlKGtleV8xLCBzMCkpOwoKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIHYgOj0gc2xvYWQoczEpCiAgICAgICAgfQogICAgfQp9Cgpjb250cmFjdCBFVk1TdG9yYWdlTWFwcGluZ0FycmF5IHsKICAgIC8vIG1hcHBpbmcg5Lit5YC855qE5qe95L2NID0ga2VjY2FrMjU2KGtleSwgc2xvdCkKICAgIC8vIOaVsOe7hOWFg+e0oOanveS9jSA9IGtlY2NhazI1NihzbG90KSArIGluZGV4CiAgICAvLyBtYXBwaW5nIC0+IGFycmF5IC0+IGtlY2NhazI1NihrZWNjYWsyNTYoa2V5LCBtYXBwaW5nIOWjsOaYjuaJgOWcqOanvSkpICsgaW5kZXgKICAgIG1hcHBpbmcoYWRkcmVzcyA9PiB1aW50MjU2W10pIHB1YmxpYyBtYXA7CgogICAgYWRkcmVzcyBwdWJsaWMgY29uc3RhbnQgQUREUl8xID0gYWRkcmVzcygxKTsKICAgIGFkZHJlc3MgcHVibGljIGNvbnN0YW50IEFERFJfMiA9IGFkZHJlc3MoMik7CgogICAgY29uc3RydWN0b3IoKSB7CiAgICAgICAgbWFwW0FERFJfMV0ucHVzaCgxMSk7CiAgICAgICAgbWFwW0FERFJfMV0ucHVzaCgyMik7CiAgICAgICAgbWFwW0FERFJfMV0ucHVzaCgzMyk7CiAgICAgICAgbWFwW0FERFJfMl0ucHVzaCg0NCk7CiAgICAgICAgbWFwW0FERFJfMl0ucHVzaCg1NSk7CiAgICAgICAgbWFwW0FERFJfMl0ucHVzaCg2Nik7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9tYXBfYXJyKGFkZHJlc3MgYWRkciwgdWludDI1NiBpKQogICAgICAgIHB1YmxpYwogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MjU2IHYsIHVpbnQyNTYgbGVuKQogICAgewogICAgICAgIHVpbnQyNTYgbWFwX3Nsb3QgPSAwOwogICAgICAgIGJ5dGVzMzIgbWFwX2hhc2ggPSBrZWNjYWsyNTYoYWJpLmVuY29kZShhZGRyLCBtYXBfc2xvdCkpOwogICAgICAgIGJ5dGVzMzIgYXJyX2hhc2ggPSBrZWNjYWsyNTYoYWJpLmVuY29kZShtYXBfaGFzaCkpOwoKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIGxlbiA6PSBzbG9hZChtYXBfaGFzaCkKICAgICAgICAgICAgdiA6PSBzbG9hZChhZGQoYXJyX2hhc2gsIGkpKQogICAgICAgIH0KICAgIH0KfQoKY29udHJhY3QgRVZNU3RvcmFnZUR5bmFtaWNBcnJheVN0cnVjdCB7CiAgICBzdHJ1Y3QgUG9pbnQgewogICAgICAgIHVpbnQyNTYgeDsKICAgICAgICB1aW50MTI4IHk7CiAgICAgICAgdWludDEyOCB6OwogICAgfQoKICAgIC8vIOWFg+e0oOanveS9jSA9IGtlY2NhazI1Nijor6XmlbDnu4Tlo7DmmI7miYDlnKjmp70pICsg5YWD57Sg5LiL5qCHCiAgICAvLyBrZWNjYWsyNTYoMCkgKyBpbmRleCAqIHN0cnVjdCDlpKflsI8KICAgIFBvaW50W10gcHJpdmF0ZSBhcnI7CgogICAgY29uc3RydWN0b3IoKSB7CiAgICAgICAgYXJyLnB1c2goUG9pbnQoMTEsIDIyLCAzMykpOwogICAgICAgIGFyci5wdXNoKFBvaW50KDQ0LCA1NSwgNjYpKTsKICAgICAgICBhcnIucHVzaChQb2ludCg3NywgODgsIDk5KSk7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9zdHJ1Y3RfYXJyKHVpbnQyNTYgaSkKICAgICAgICBwdWJsaWMKICAgICAgICB2aWV3CiAgICAgICAgcmV0dXJucyAodWludDI1NiB4LCB1aW50MTI4IHksIHVpbnQxMjggeiwgdWludDI1NiBsZW4pCiAgICB7CiAgICAgICAgdWludDI1NiBzbG90ID0gMDsKICAgICAgICBieXRlczMyIHN0YXJ0ID0ga2VjY2FrMjU2KGFiaS5lbmNvZGUoc2xvdCkpOwoKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIGxlbiA6PSBzbG9hZChzbG90KQogICAgICAgICAgICAvLyBzMCA9IGtlY2NhazI1NigwKQogICAgICAgICAgICAvLyBpbmRleCB8IHNsb3QgICAgICAgIHwgdmFsdWVzCiAgICAgICAgICAgIC8vICAgICAwIHwgc2xvdCBzMCArIDAgfCBhcnJbMF0ueAogICAgICAgICAgICAvLyAgICAgMCB8IHNsb3QgczAgKyAxIHwgYXJyWzBdLnogfCBhcnJbMF0ueQogICAgICAgICAgICAvLyAgICAgMSB8IHNsb3QgczAgKyAyIHwgYXJyWzFdLngKICAgICAgICAgICAgLy8gICAgIDEgfCBzbG90IHMwICsgMyB8IGFyclsxXS56IHwgYXJyWzFdLnkKICAgICAgICAgICAgLy8gICAgIDIgfCBzbG90IHMwICsgNCB8IGFyclsyXS54CiAgICAgICAgICAgIC8vICAgICAyIHwgc2xvdCBzMCArIDUgfCBhcnJbMl0ueiB8IGFyclsyXS55CiAgICAgICAgICAgIHggOj0gc2xvYWQoYWRkKHN0YXJ0LCBtdWwoaSwgMikpKQogICAgICAgICAgICBsZXQgenkgOj0gc2xvYWQoYWRkKHN0YXJ0LCBhZGQobXVsKGksIDIpLCAxKSkpCiAgICAgICAgICAgIC8vIHVpbnQxMjgg5Lya5LuOIDMyIOWtl+iKguS4reaIquaOieacgOW3puS+pyAxMjgg5L2NCiAgICAgICAgICAgIHkgOj0genkKICAgICAgICAgICAgeiA6PSBzaHIoMTI4LCB6eSkKICAgICAgICB9CiAgICB9Cn0K" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+      </div>
+    </article>
+    
+        <footer class="footer">
+          <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
+          <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">Web3-Club</a>
+            <div class="bar">|</div>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Twitter</a>
+          </div>
+          <div class="footer-row">v 0.8.26</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    document.querySelectorAll("[data-logo]").forEach(function (el) {
+      function paint() {
+        el.setAttribute("fill", document.body.classList.contains("dark") ? "rgb(0, 255, 0)" : "currentColor");
+      }
+      paint();
+      new MutationObserver(paint).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    });
+  </script>
+</body>
+</html>

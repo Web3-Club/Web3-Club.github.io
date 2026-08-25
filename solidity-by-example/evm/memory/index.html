@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EVM 内存布局 | Solidity by Example | 0.8.26</title>
+  <meta name="description" content="Solidity by Example 简体中文译本，对照 solidity-by-example.org v0.8.26。">
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body class="light">
+  <div class="layout">
+    <aside class="side-nav">
+      <h3 class="nav-category">Basic</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hello-world/">Hello World</a></li>
+<li class="nav-item"><a class="nav-link" href="../../first-app/">第一个应用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../primitives/">基本数据类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../variables/">变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constants/">常量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../immutable/">不可变</a></li>
+<li class="nav-item"><a class="nav-link" href="../../state-variables/">读写状态变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../ether-units/">以太币和 Wei</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas/">Gas 与 Gas Price</a></li>
+<li class="nav-item"><a class="nav-link" href="../../if-else/">条件判断</a></li>
+<li class="nav-item"><a class="nav-link" href="../../loop/">循环语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../mapping/">映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../array/">数组</a></li>
+<li class="nav-item"><a class="nav-link" href="../../enum/">枚举</a></li>
+<li class="nav-item"><a class="nav-link" href="../../user-defined-value-types/">用户自定义值类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../structs/">结构体</a></li>
+<li class="nav-item"><a class="nav-link" href="../../data-locations/">数据位置</a></li>
+<li class="nav-item"><a class="nav-link" href="../../transient-storage/">瞬时存储</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function/">函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../view-and-pure-functions/">View 和 Pure 函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../error/">错误或异常</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-modifier/">函数修饰符</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events-advanced/">高级事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constructor/">构造函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../inheritance/">继承</a></li>
+<li class="nav-item"><a class="nav-link" href="../../shadowing-inherited-state-variables/">继承状态变量的屏蔽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../super/">调用父合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../visibility/">可见性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../interface/">接口</a></li>
+<li class="nav-item"><a class="nav-link" href="../../payable/">Payable</a></li>
+<li class="nav-item"><a class="nav-link" href="../../sending-ether/">发送以太币</a></li>
+<li class="nav-item"><a class="nav-link" href="../../fallback/">回退函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../call/">Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../delegatecall/">Delegatecall</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-selector/">函数选择器</a></li>
+<li class="nav-item"><a class="nav-link" href="../../calling-contract/">调用其他合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../new-contract/">从合约创建合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../try-catch/">Try / Catch</a></li>
+<li class="nav-item"><a class="nav-link" href="../../import/">导入</a></li>
+<li class="nav-item"><a class="nav-link" href="../../library/">库</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-encode/">ABI 编码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-decode/">ABI 解码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hashing/">Keccak256 哈希</a></li>
+<li class="nav-item"><a class="nav-link" href="../../signature/">验证签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas-golf/">Gas 优化</a></li>
+<li class="nav-item"><a class="nav-link" href="../../bitwise/">位运算</a></li>
+<li class="nav-item"><a class="nav-link" href="../../unchecked-math/">Unchecked Math</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-variable/">汇编变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-if/">汇编条件语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-loop/">汇编循环</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-error/">汇编错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-math/">汇编数学运算</a></li>
+</ul>
+<h3 class="nav-title">Applications</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../app/ether-wallet/">以太钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-sig-wallet/">多签钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/merkle-tree/">默克尔树</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/iterable-mapping/">可迭代映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc20/">ERC20</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc721/">ERC721</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc1155/">ERC1155</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/gasless-token-transfer/">无 Gas 代币转账</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/simple-bytecode-contract/">简单字节码合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/create2/">使用 Create2 预计算合约地址</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/minimal-proxy/">最小代理合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/upgradeable-proxy/">可升级代理</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/deploy-any-contract/">部署任意合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/write-to-any-slot/">写入任意存储槽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/uni-directional-payment-channel/">单向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/bi-directional-payment-channel/">双向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/english-auction/">英式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/dutch-auction/">荷兰式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/crowd-fund/">众筹基金</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-call/">多调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-delegatecall/">多委托调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/time-lock/">定时锁</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/assembly-bin-exp/">汇编中的二进制求幂</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/airdrop/">默克尔空投</a></li>
+</ul>
+<h3 class="nav-title">Hacks</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hacks/re-entrancy/">重入攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/overflow/">算术溢出与下溢</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/self-destruct/">自毁函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/accessing-private-data/">访问私有数据</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/delegatecall/">Delegatecall 攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/randomness/">随机数预测</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/denial-of-service/">拒绝服务攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/phishing-with-tx-origin/">tx.origin 钓鱼</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/hiding-malicious-code-with-external-contract/">使用外部合约隐藏恶意代码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/honeypot/">蜜罐</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/front-running/">抢跑</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/block-timestamp-manipulation/">区块时间戳操纵</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/signature-replay/">签名重放</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/contract-size/">绕过合约大小检查</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/deploy-different-contracts-same-address/">在同一地址部署不同合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/vault-inflation/">金库通货膨胀攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/weth-permit/">WETH Permit</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/63-64-gas-rule/">63 / 64 Gas 规则</a></li>
+</ul>
+<h3 class="nav-title">EVM</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../evm/storage/">EVM 存储布局</a></li>
+<li class="nav-item-active"><a class="nav-link" href="../../evm/memory/">EVM 内存布局</a></li>
+</ul>
+<h3 class="nav-title">Tests</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../tests/echidna/">Echidna</a></li>
+</ul>
+<h3 class="nav-title">Foundry</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../foundry/basic/">Foundry 基础</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/auth/">授权</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/error/">错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/event/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/send/">发送</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/time/">时间</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/sign/">签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/label/">标签</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/mock-call/">Mock Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/vm-store/">Store</a></li>
+</ul>
+<h3 class="nav-title">DeFi</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2/">Uniswap V2 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-optimal-one-sided-supply/">Uniswap V2 最优单边供给</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-flash-swap/">Uniswap V2 Flash Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-swap/">Uniswap V3 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-liquidity/">Uniswap V3 流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash/">Uniswap V3 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash-swap/">Uniswap V3 Flash Swap 套利</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-swap/">Uniswap V4 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-flash/">Uniswap V4 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-limit-order/">Uniswap V4 限价单</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chronicle-price-oracle/">Chronicle 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/dai-proxy/">DAI Proxy</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/staking-rewards/">质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/discrete-staking-rewards/">离散质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/vault/">Vault</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/token-lock/">Token Lock</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-sum-amm/">恒定和 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-product-amm/">恒定乘积 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/stable-swap-amm/">Stable Swap AMM</a></li>
+</ul>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <button class="hamburger" data-toggle-nav aria-label="菜单"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" width="20" height="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+</svg></button>
+        <div class="header-center">
+          <div class="header-center-inner">
+            <a href="../../"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1300" width="30" height="30" class="logo" data-logo>
+  <path opacity="0.45" d="M773.772 253.308 643.068 485.61H381.842l130.614-232.302h261.316"/>
+  <path opacity="0.6" d="M643.068 485.61h261.318L773.772 253.308H512.456L643.068 485.61z"/>
+  <path opacity="0.8" d="M512.456 717.822 643.068 485.61 512.456 253.308 381.842 485.61l130.614 232.212z"/>
+  <path opacity="0.45" d="m513.721 1066.275 130.704-232.303h261.318l-130.705 232.303H513.721"/>
+  <path opacity="0.6" d="M644.424 833.973H383.107l130.613 232.303h261.317L644.424 833.973z"/>
+  <path opacity="0.8" d="M775.038 601.761 644.424 833.973l130.614 232.303 130.704-232.303-130.704-232.212z"/>
+</svg></a>
+            <h3><a href="../../">Solidity by Example</a></h3>
+          </div>
+          <div class="zh-badge">中文译本 · Web3-Club</div>
+        </div>
+        <button class="mode-btn" data-toggle-theme aria-label="切换主题"><svg data-icon="dark" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 438.277 438.277" width="20" height="20"><path d="M428.756 300.104c-.664-3.81-2.334-7.047-4.996-9.713-5.9-5.903-12.752-7.142-20.554-3.716-20.937 9.708-42.641 14.558-65.097 14.558-28.171 0-54.152-6.94-77.943-20.838-23.791-13.894-42.631-32.736-56.525-56.53-13.899-23.793-20.844-49.773-20.844-77.945 0-21.888 4.333-42.683 12.991-62.384 8.66-19.7 21.176-36.973 37.543-51.82 6.283-5.898 7.713-12.752 4.287-20.557-3.236-7.801-9.041-11.511-17.415-11.132-29.121 1.141-56.72 7.664-82.797 19.556C111.33 31.478 88.917 47.13 70.168 66.548c-18.747 19.414-33.595 42.399-44.54 68.95-10.942 26.553-16.416 54.39-16.416 83.511 0 29.694 5.806 58.054 17.416 85.082 11.613 27.028 27.218 50.344 46.824 69.949 19.604 19.599 42.92 35.207 69.951 46.822 27.028 11.607 55.384 17.415 85.075 17.415 42.64 0 81.987-11.563 118.054-34.69 36.069-23.124 63.05-54.006 80.944-92.645 1.524-3.423 1.951-7.036 1.28-10.838z"/></svg><svg data-icon="light" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.4 302.4" width="20" height="20"><circle cx="151.2" cy="151.2" r="48" fill="none" stroke="#252519" stroke-width="16"/><g stroke="#252519" stroke-width="12" stroke-linecap="round"><path d="M151.2 20 v32M151.2 250 v32M20 151.2 h32M250 151.2 h32M55 55 l22 22M225 225 l22 22M55 247 l22 -22M225 77 l22 -22"/></g></svg></button>
+      </header>
+      <div class="children">
+        
+    <article class="article">
+      <div class="article-content">
+        <h2>EVM 内存布局</h2>
+        <div class="en-link">英文原页：<a href="https://solidity-by-example.org/evm/memory" target="_blank" rel="noreferrer">https://solidity-by-example.org/evm/memory</a></div>
+        <p>示例如下</p>
+<ul><li>使用 <code>assembly</code> 读写内存</li><li>Solidity 中不同数据类型的内存布局</li><li>外部调用的内存管理</li></ul>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+// 内存布局
+// 长度为 2**256（32 字节）的数组，每个元素存储 1 字节（0x00 到 0xff）
+// index     0    1    2   ...   0xfff...fff = 2**256 - 1
+// memory | 00 | 00 | 00 | ... | 00 |
+
+// 保留槽
+// 0x00 - 0x3f（64 字节）：哈希方法的临时空间
+// 0x40 - 0x5f（32 字节）：空闲内存指针 —— 指向内存中下一个可用来存储数据的位置
+// 0x60 - 0x7f（32 字节）：零槽 —— 用作动态内存数组的初始值，永远不应写入
+
+// 空闲内存指针（0x40）
+// 0x80 = 空闲内存指针最初指向这里
+contract MemBasic {
+    // mstore(p, v) = 从内存位置 p 开始存储 32 字节
+    // mload(p) = 从内存位置 p 开始加载 32 字节
+    function test_1() public pure returns (bytes32 b32) {
+        assembly {
+            // 空闲内存指针
+            // p = 0x80
+            let p := mload(0x40)
+            mstore(p, 0xababab)
+            b32 := mload(p)
+        }
+    }
+
+    function test_2() public pure {
+        assembly {
+            mstore(0, 0x11)
+            // index: 从该索引起存储在内存中的 32 字节数据
+            //  0x00: 0x0000000000000000000000000000000000000000000000000000000000000011
+            mstore(1, 0x22)
+            //           0 1
+            //  0x00: 0x0000000000000000000000000000000000000000000000000000000000000000
+            //  0x20: 0x2200000000000000000000000000000000000000000000000000000000000000
+            mstore(2, 0x33)
+            //           0 1 2
+            //  0x00: 0x0000000000000000000000000000000000000000000000000000000000000000
+            //  0x20: 0x0033000000000000000000000000000000000000000000000000000000000000
+            mstore(3, 0x44)
+            //           0 1 2 3
+            //  0x00: 0x0000000000000000000000000000000000000000000000000000000000000000
+            //  0x20: 0x0000440000000000000000000000000000000000000000000000000000000000
+        }
+    }
+}
+
+contract MemStruct {
+    // 内存数据不打包 —— 所有数据以 32 字节块存储
+    struct Point {
+        uint256 x;
+        uint32 y;
+        uint32 z;
+    }
+
+    function test_read()
+        public
+        pure
+        returns (uint256 x, uint256 y, uint256 z)
+    {
+        // Point 从 0x80 开始加载到内存
+        // 0x80 = 初始空闲内存
+        Point memory p = Point(1, 2, 3);
+
+        assembly {
+            // 从 0x80 开始加载 32 字节
+            x := mload(0x80)
+            // 从 0xa0 开始加载 32 字节（0x80 + 32 = 0xa0）
+            y := mload(0xa0)
+            // 从 0xc0 开始加载 32 字节（0xa0 + 32 = 0xc0）
+            z := mload(0xc0)
+        }
+    }
+
+    function test_write()
+        public
+        pure
+        returns (bytes32 free_mem_ptr, uint256 x, uint256 y, uint256 z)
+    {
+        // 为 Point 分配内存 0x80 到 0xdf
+        // 空闲内存指针 = 0xdf + 1 = 0xe0
+        Point memory p;
+
+        // 写入
+        assembly {
+            // 存到 0x80
+            mstore(p, 11)
+            // 存到 0xa0
+            mstore(add(p, 0x20), 22)
+            // 存到 0xc0
+            mstore(add(p, 0x40), 33)
+            // 0xe0
+            free_mem_ptr := mload(0x40)
+        }
+
+        x = p.x;
+        y = p.y;
+        z = p.z;
+    }
+}
+
+contract MemFixedArray {
+    function test_read()
+        public
+        pure
+        returns (uint256 a0, uint256 a1, uint256 a2)
+    {
+        // arr 从 0x80 开始加载到内存
+        // 每个数组元素存储为 32 字节
+        uint32[3] memory arr = [uint32(1), uint32(2), uint32(3)];
+
+        assembly {
+            a0 := mload(0x80)
+            a1 := mload(0xa0)
+            a2 := mload(0xc0)
+        }
+    }
+
+    function test_write()
+        public
+        pure
+        returns (uint256 a0, uint256 a1, uint256 a2)
+    {
+        uint32[3] memory arr;
+
+        assembly {
+            // 0x80
+            mstore(arr, 11)
+            // 0xa0
+            mstore(add(arr, 0x20), 22)
+            // 0xc0
+            mstore(add(arr, 0x40), 33)
+        }
+
+        a0 = arr[0];
+        a1 = arr[1];
+        a2 = arr[2];
+    }
+}
+
+contract MemDynamicArray {
+    function test_read()
+        public
+        pure
+        returns (bytes32 p, uint256 len, uint256 a0, uint256 a1, uint256 a2)
+    {
+        uint256[] memory arr = new uint256[](5);
+        arr[0] = uint256(11);
+        arr[1] = uint256(22);
+        arr[2] = uint256(33);
+        arr[3] = uint256(44);
+        arr[4] = uint256(55);
+
+        assembly {
+            p := arr
+            // 0x80
+            len := mload(arr)
+            // 0xa0
+            a0 := mload(add(arr, 0x20))
+            // 0xc0
+            a1 := mload(add(arr, 0x40))
+            // 0xe0
+            a2 := mload(add(arr, 0x60))
+        }
+    }
+
+    function test_write() public pure returns (bytes32 p, uint256[] memory) {
+        uint256[] memory arr = new uint256[](0);
+
+        assembly {
+            p := arr
+            // 存储 arr 的长度
+            mstore(arr, 3)
+            // 存储 1、2、3
+            mstore(add(arr, 0x20), 11)
+            mstore(add(arr, 0x40), 22)
+            mstore(add(arr, 0x60), 33)
+            // 更新空闲内存指针
+            mstore(0x40, add(arr, 0x80))
+        }
+
+        // 当 arr 返回给调用者时，数据会按 ABI 编码
+        return (p, arr);
+    }
+}
+
+contract MemInternalFuncReturn {
+    function internal_func_return_val() private pure returns (uint256) {
+        return uint256(0xababab);
+    }
+
+    function test_val() public pure {
+        // 0xababab 会存储在栈顶
+        internal_func_return_val();
+    }
+
+    function internal_func_return_mem()
+        private
+        pure
+        returns (bytes32[] memory)
+    {
+        bytes32[] memory arr = new bytes32[](3);
+        arr[0] = bytes32(uint256(0xaaa));
+        arr[1] = bytes32(uint256(0xbbb));
+        arr[2] = bytes32(uint256(0xccc));
+        return arr;
+    }
+
+    function test_mem()
+        public
+        pure
+        returns (uint256 len, bytes32 a0, bytes32 a1, bytes32 a2)
+    {
+        // 将 0x80 存到栈顶
+        // 0x80 = 指向 arr 起始位置的内存指针
+        internal_func_return_mem();
+        // 用汇编从 arr 读取数据，arr 在 internal_func_return_mem 中初始化
+        assembly {
+            len := mload(0x80)
+            a0 := mload(0xa0)
+            a1 := mload(0xc0)
+            a2 := mload(0xe0)
+        }
+    }
+}
+
+contract ABIEncode {
+    // 将字符串按 64 长度切块的 js 代码
+    // str.match(/.{1,64}/g)
+
+    // 小于 32 字节的值类型 -&gt; 左侧补零
+    // 0x000000000000000000000000abababababababababababababababababababab
+    function encode_addr() public pure returns (bytes memory) {
+        address addr = 0xABaBaBaBABabABabAbAbABAbABabababaBaBABaB;
+        return abi.encode(addr);
+    }
+
+    // 定长 bytes -&gt; 右侧补零
+    // 0xaabbccdd00000000000000000000000000000000000000000000000000000000
+    function encode_bytes4() public pure returns (bytes memory) {
+        bytes4 b4 = 0xaabbccdd;
+        return abi.encode(b4);
+    }
+
+    // 动态大小类型
+    // offset | length | data
+    // offset = 数据起始位置的 32 字节索引
+    // length = 32 字节的数据长度
+
+    // 0x0000000000000000000000000000000000000000000000000000000000000020
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    //   ababab0000000000000000000000000000000000000000000000000000000000
+    function encode_bytes() public pure returns (bytes memory) {
+        bytes memory b = new bytes(3);
+        b[0] = 0xab;
+        b[1] = 0xab;
+        b[2] = 0xab;
+        return abi.encode(b);
+    }
+
+    // 0x0000000000000000000000000000000000000000000000000000000000000020
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    //   0000000000000000000000000000000000000000000000000000000000000001
+    //   0000000000000000000000000000000000000000000000000000000000000002
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    function encode_uint8_arr() public pure returns (bytes memory) {
+        uint8[] memory a = new uint8[](3);
+        a[0] = 1;
+        a[1] = 2;
+        a[2] = 3;
+        return abi.encode(a);
+    }
+
+    // 定长数组
+    // 0x0000000000000000000000000000000000000000000000000000000000000001
+    //   0000000000000000000000000000000000000000000000000000000000000002
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    function encode_uint256_fixed_size_arr()
+        public
+        pure
+        returns (bytes memory)
+    {
+        uint8[3] memory a;
+        a[0] = 1;
+        a[1] = 2;
+        a[2] = 3;
+        return abi.encode(a);
+    }
+
+    // 结构体
+    struct Point {
+        uint256 x;
+        uint128 y;
+        uint128 z;
+    }
+
+    // 0x0000000000000000000000000000000000000000000000000000000000000001
+    //   0000000000000000000000000000000000000000000000000000000000000002
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    function encode_struct() public pure returns (bytes memory) {
+        Point memory p = Point(1, 2, 3);
+        return abi.encode(p);
+    }
+
+    // 结构体的动态数组
+    // offset | length | struct data
+    // 0x0000000000000000000000000000000000000000000000000000000000000020
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    //   0000000000000000000000000000000000000000000000000000000000000001
+    //   0000000000000000000000000000000000000000000000000000000000000002
+    //   0000000000000000000000000000000000000000000000000000000000000003
+    //   0000000000000000000000000000000000000000000000000000000000000004
+    //   0000000000000000000000000000000000000000000000000000000000000005
+    //   0000000000000000000000000000000000000000000000000000000000000006
+    //   0000000000000000000000000000000000000000000000000000000000000007
+    //   0000000000000000000000000000000000000000000000000000000000000008
+    //   0000000000000000000000000000000000000000000000000000000000000009
+    function encode_struct_array() public pure returns (bytes memory) {
+        Point[] memory arr = new Point[](3);
+        arr[0] = Point(1, 2, 3);
+        arr[1] = Point(4, 5, 6);
+        arr[2] = Point(7, 8, 9);
+        return abi.encode(arr);
+    }
+}
+
+contract MemReturn {
+    function test_return_vals() public pure returns (uint256, uint256) {
+        // return(start, len) - 停止执行，并返回内存中从 start 到 start + len 存储的数据
+        assembly {
+            mstore(0x80, 11)
+            mstore(0xa0, 22)
+            return(0x80, 0x40)
+        }
+    }
+
+    function test_return_dyn_arr() public pure returns (uint256[] memory) {
+        // 对含 3 个元素 11、22 和 33 的 uint256[] 数组做 ABI 编码
+        assembly {
+            // offset
+            mstore(0x80, 0x20)
+            // length
+            mstore(add(0x80, 0x20), 3)
+            // 数组元素
+            mstore(add(0x80, 0x40), 11)
+            mstore(add(0x80, 0x60), 22)
+            mstore(add(0x80, 0x80), 33)
+            // 无需更新空闲内存指针 —— 函数执行到此结束
+            return(0x80, mul(5, 0x20))
+        }
+    }
+
+    function test_return() public pure returns (uint256, uint256) {
+        // 返回 (11, 22)
+        test_return_vals();
+        // 这段代码永远不会执行
+        return (333, 444);
+    }
+}
+
+contract MemRevert {
+    function test_revert() public pure {
+        // revert(start, len) - 回退执行，并返回内存中从 start 到 start + len 存储的数据
+        assembly {
+            mstore(0x80, &quot;ERROR HERE&quot;)
+            revert(0x80, 0x20)
+        }
+    }
+
+    function test_revert_with_error_msg() public pure {
+        assembly {
+            let p := mload(0x40)
+            // Error(string) 的函数选择器
+            // 0x08c379a000000000000000000000000000000000000000000000000000000000
+            // 0x08c379a0 是 32 位，左移 224 位使其成为 256 位
+            // 255 - 31 = 224
+            mstore(p, shl(224, 0x08c379a0))
+            // 字符串偏移
+            mstore(add(p, 0x04), 0x20)
+            // 字符串长度
+            mstore(add(p, 0x24), 5)
+            // 消息（必须小于 32 字节）
+            mstore(add(p, 0x44), &quot;ERROR&quot;)
+            // 函数选择器 + offset + 字符串长度 + 字符串消息
+            // = 0x04 + 0x20 + 0x20 + 0x20
+            // = 0x64
+            revert(p, 0x64)
+        }
+    }
+}
+
+contract MemKeccak {
+    function test_keccak() public pure returns (bytes32) {
+        // keccak256(start, len) - 对内存中从 start 到 start + len 的数据做 Keccak256
+        assembly {
+            mstore(0x80, 1)
+            mstore(0xa0, 2)
+
+            let h := keccak256(0x80, 0x40)
+            mstore(0xc0, h)
+
+            return(0xc0, 0x20)
+        }
+    }
+
+    function keccak() public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(uint256(1), uint256(2)));
+    }
+}
+
+contract Target {
+    function return_uint256(uint256 x) public pure returns (uint256) {
+        return x;
+    }
+
+    function return_bytes(uint256 n) public pure returns (bytes memory) {
+        bytes memory out = new bytes(n);
+        for (uint256 i; i &lt; n; i++) {
+            out[i] = 0xab;
+        }
+        return out;
+    }
+
+    function return_uint256_arr(uint256 n)
+        public
+        pure
+        returns (uint256[] memory)
+    {
+        uint256[] memory out = new uint256[](n);
+        for (uint256 i = 0; i &lt; n; i++) {
+            out[i] = i + 1;
+        }
+        return out;
+    }
+}
+
+// calldatacopy(p, start, size) - 将 calldata 从 start 到 start + size 复制到从指针 p 开始的内存
+// returndatasize - 获取 call、staticcall 或 delegatecall 返回数据的大小
+// returndatacopy(p, start, size) - 将返回数据从 start 到 start + size 复制到从指针 p 开始的内存
+// call(g, a, v, in, in_size, out, out_size)
+// - 调用地址 a 处的合约，最多使用 g gas，发送 v wei
+// - 输入取自内存 in 到 in + in_size
+// - 使用内存 out 到 out + out_size 存放输出
+// staticcall(g, a, in, in_size, out, out_size) - call 的只读版本
+contract YulStaticCall {
+    function test_staticcall(address a, bytes calldata data) public view {
+        assembly {
+            let p := mload(0x40)
+            // 将 calldata 复制到内存
+            calldatacopy(p, data.offset, data.length)
+
+            let ok := staticcall(gas(), a, p, data.length, 0, 0)
+
+            if iszero(ok) { revert(0, 0) }
+
+            // p := mload(0x40)
+            let return_data_size := returndatasize()
+            // 将返回数据复制到内存
+            // 覆盖曾用于输入的内存是否安全？
+            returndatacopy(p, 0, return_data_size)
+            return(p, return_data_size)
+        }
+    }
+
+    function test_abi_decode_uint256(address a, bytes calldata data)
+        public
+        view
+        returns (uint256)
+    {
+        test_staticcall(a, data);
+    }
+
+    function test_abi_decode_bytes(address a, bytes calldata data)
+        public
+        view
+        returns (bytes memory)
+    {
+        test_staticcall(a, data);
+    }
+
+    function test_abi_decode_uint256_arr(address a, bytes calldata data)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        test_staticcall(a, data);
+    }
+
+    function test_staticcall_return_abi_encoded_bytes(
+        address addr,
+        bytes calldata data
+    ) public view returns (bytes memory out, uint256 return_data_size) {
+        assembly {
+            let p := mload(0x40)
+            // 将 calldata 复制到内存
+            calldatacopy(p, data.offset, data.length)
+            // 更新空闲内存指针
+            mstore(0x40, add(p, data.length))
+
+            let ok := staticcall(gas(), addr, p, data.length, 0, 0)
+
+            if iszero(ok) { revert(0, 0) }
+
+            // return_data_size = 32  调用 Target.return_uint256 -&gt; uint256
+            //                  = 96  调用 Target.return_bytes -&gt; bytes[]（32 offset、32 length、3 字节填充到 32）
+            //                  = 160 调用 Target.return_uint256_arr -&gt; uint256[]（32 offset、32 length、32 x 3 个元素）
+            return_data_size := returndatasize()
+            // 将返回数据长度存入 out
+            // 指向 out 的指针 = 0x60（零槽）
+            mstore(out, return_data_size)
+            // 将返回数据复制到 out
+            returndatacopy(add(out, 0x20), 0, return_data_size)
+            // 更新空闲内存指针
+            mstore(0x40, add(out, add(0x20, return_data_size)))
+        }
+    }
+}
+
+contract Counter {
+    uint256 public count;
+
+    function inc() public returns (uint256) {
+        count += 1;
+        return count;
+    }
+}
+
+contract YulCall {
+    function test_call(address a, bytes memory data)
+        public
+        payable
+        returns (bytes memory out)
+    {
+        assembly {
+            // 0x80
+            let data_ptr := data
+            // 0x60
+            let out_ptr := out
+
+            let data_size := mload(data)
+            let data_start := add(data, 0x20)
+            let ok := call(gas(), a, callvalue(), data_start, data_size, 0, 0)
+
+            if iszero(ok) { revert(0, 0) }
+
+            let return_data_size := returndatasize()
+            // 将返回数据长度存入 out
+            mstore(out, return_data_size)
+            // 将返回数据复制到 out
+            returndatacopy(add(out, 0x20), 0, return_data_size)
+            // 更新空闲内存指针
+            mstore(0x40, add(out, add(0x20, return_data_size)))
+        }
+    }
+
+    function test_inc(address counter) public returns (uint256 count) {
+        bytes memory res = test_call(counter, abi.encodeCall(Counter.inc, ()));
+        count = abi.decode(res, (uint256));
+    }
+}
+
+// 内存扩展 gas 成本
+// gas 成本与内存分配呈二次关系。
+contract MemExp {
+    function alloc_mem(uint256 n) external view returns (uint256) {
+        uint256 gas_start = gasleft();
+        uint256[] memory arr = new uint256[](n);
+        uint256 gas_end = gasleft();
+        return gas_start - gas_end;
+    }
+}
+
+// arr size | gas
+//        0 |    120
+//        1 |    178
+//       10 |    232
+//       20 |    293
+//       30 |    354
+//       40 |    415
+//       50 |    477
+//       60 |    540
+//       70 |    602
+//       80 |    666
+//       90 |    729
+//      100 |    793
+//      110 |    857
+//      120 |    922
+//      130 |    987
+//      140 |   1053
+//      150 |   1118
+//      160 |   1185
+//      170 |   1251
+//      180 |   1318
+//      190 |   1386
+//      200 |   1454
+
+//     1000 |   8144
+//     2000 |  20023
+//     3000 |  35808
+//     4000 |  55500
+//     5000 |  79097
+//     6000 | 106601
+//     7000 | 138011
+//     8000 | 173328
+//     9000 | 212550
+//    10000 | 255679
+//    11000 | 302715
+//    12000 | 353656
+//    13000 | 408504
+//    14000 | 467257
+//    15000 | 529918
+//    16000 | 596484
+//    17000 | 666957
+//    18000 | 741336
+//    19000 | 819621
+//    20000 | 901812
+</code></pre>
+<h3>参考资料</h3>
+<p><a href="https://docs.soliditylang.org/en/latest/internals/layout_in_memory.html">Solidity 文档</a></p>
+<p><a href="https://www.evm.codes/">EVM Codes</a></p>
+        <div class="prev-next"><a href="../../evm/storage/">&lt; EVM 存储布局</a><a href="../../tests/echidna/">Echidna &gt;</a></div>
+        <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8vIOWGheWtmOW4g+WxgAovLyDplb/luqbkuLogMioqMjU277yIMzIg5a2X6IqC77yJ55qE5pWw57uE77yM5q+P5Liq5YWD57Sg5a2Y5YKoIDEg5a2X6IqC77yIMHgwMCDliLAgMHhmZu+8iQovLyBpbmRleCAgICAgMCAgICAxICAgIDIgICAuLi4gICAweGZmZi4uLmZmZiA9IDIqKjI1NiAtIDEKLy8gbWVtb3J5IHwgMDAgfCAwMCB8IDAwIHwgLi4uIHwgMDAgfAoKLy8g5L+d55WZ5qe9Ci8vIDB4MDAgLSAweDNm77yINjQg5a2X6IqC77yJ77ya5ZOI5biM5pa55rOV55qE5Li05pe256m66Ze0Ci8vIDB4NDAgLSAweDVm77yIMzIg5a2X6IqC77yJ77ya56m66Zey5YaF5a2Y5oyH6ZKIIOKAlOKAlCDmjIflkJHlhoXlrZjkuK3kuIvkuIDkuKrlj6/nlKjmnaXlrZjlgqjmlbDmja7nmoTkvY3nva4KLy8gMHg2MCAtIDB4N2bvvIgzMiDlrZfoioLvvInvvJrpm7bmp70g4oCU4oCUIOeUqOS9nOWKqOaAgeWGheWtmOaVsOe7hOeahOWIneWni+WAvO+8jOawuOi/nOS4jeW6lOWGmeWFpQoKLy8g56m66Zey5YaF5a2Y5oyH6ZKI77yIMHg0MO+8iQovLyAweDgwID0g56m66Zey5YaF5a2Y5oyH6ZKI5pyA5Yid5oyH5ZCR6L+Z6YeMCmNvbnRyYWN0IE1lbUJhc2ljIHsKICAgIC8vIG1zdG9yZShwLCB2KSA9IOS7juWGheWtmOS9jee9riBwIOW8gOWni+WtmOWCqCAzMiDlrZfoioIKICAgIC8vIG1sb2FkKHApID0g5LuO5YaF5a2Y5L2N572uIHAg5byA5aeL5Yqg6L29IDMyIOWtl+iKggogICAgZnVuY3Rpb24gdGVzdF8xKCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMzMiBiMzIpIHsKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIC8vIOepuumXsuWGheWtmOaMh+mSiAogICAgICAgICAgICAvLyBwID0gMHg4MAogICAgICAgICAgICBsZXQgcCA6PSBtbG9hZCgweDQwKQogICAgICAgICAgICBtc3RvcmUocCwgMHhhYmFiYWIpCiAgICAgICAgICAgIGIzMiA6PSBtbG9hZChwKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0XzIoKSBwdWJsaWMgcHVyZSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBtc3RvcmUoMCwgMHgxMSkKICAgICAgICAgICAgLy8gaW5kZXg6IOS7juivpee0ouW8lei1t+WtmOWCqOWcqOWGheWtmOS4reeahCAzMiDlrZfoioLmlbDmja4KICAgICAgICAgICAgLy8gIDB4MDA6IDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxMQogICAgICAgICAgICBtc3RvcmUoMSwgMHgyMikKICAgICAgICAgICAgLy8gICAgICAgICAgIDAgMQogICAgICAgICAgICAvLyAgMHgwMDogMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICAgICAgICAgIC8vICAweDIwOiAweDIyMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgICAgICAgICAgbXN0b3JlKDIsIDB4MzMpCiAgICAgICAgICAgIC8vICAgICAgICAgICAwIDEgMgogICAgICAgICAgICAvLyAgMHgwMDogMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICAgICAgICAgIC8vICAweDIwOiAweDAwMzMwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgICAgICAgICAgbXN0b3JlKDMsIDB4NDQpCiAgICAgICAgICAgIC8vICAgICAgICAgICAwIDEgMiAzCiAgICAgICAgICAgIC8vICAweDAwOiAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgICAgICAgICAgLy8gIDB4MjA6IDB4MDAwMDQ0MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgICAgIH0KICAgIH0KfQoKY29udHJhY3QgTWVtU3RydWN0IHsKICAgIC8vIOWGheWtmOaVsOaNruS4jeaJk+WMhSDigJTigJQg5omA5pyJ5pWw5o2u5LulIDMyIOWtl+iKguWdl+WtmOWCqAogICAgc3RydWN0IFBvaW50IHsKICAgICAgICB1aW50MjU2IHg7CiAgICAgICAgdWludDMyIHk7CiAgICAgICAgdWludDMyIHo7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9yZWFkKCkKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAodWludDI1NiB4LCB1aW50MjU2IHksIHVpbnQyNTYgeikKICAgIHsKICAgICAgICAvLyBQb2ludCDku44gMHg4MCDlvIDlp4vliqDovb3liLDlhoXlrZgKICAgICAgICAvLyAweDgwID0g5Yid5aeL56m66Zey5YaF5a2YCiAgICAgICAgUG9pbnQgbWVtb3J5IHAgPSBQb2ludCgxLCAyLCAzKTsKCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyDku44gMHg4MCDlvIDlp4vliqDovb0gMzIg5a2X6IqCCiAgICAgICAgICAgIHggOj0gbWxvYWQoMHg4MCkKICAgICAgICAgICAgLy8g5LuOIDB4YTAg5byA5aeL5Yqg6L29IDMyIOWtl+iKgu+8iDB4ODAgKyAzMiA9IDB4YTDvvIkKICAgICAgICAgICAgeSA6PSBtbG9hZCgweGEwKQogICAgICAgICAgICAvLyDku44gMHhjMCDlvIDlp4vliqDovb0gMzIg5a2X6IqC77yIMHhhMCArIDMyID0gMHhjMO+8iQogICAgICAgICAgICB6IDo9IG1sb2FkKDB4YzApCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3Rfd3JpdGUoKQogICAgICAgIHB1YmxpYwogICAgICAgIHB1cmUKICAgICAgICByZXR1cm5zIChieXRlczMyIGZyZWVfbWVtX3B0ciwgdWludDI1NiB4LCB1aW50MjU2IHksIHVpbnQyNTYgeikKICAgIHsKICAgICAgICAvLyDkuLogUG9pbnQg5YiG6YWN5YaF5a2YIDB4ODAg5YiwIDB4ZGYKICAgICAgICAvLyDnqbrpl7LlhoXlrZjmjIfpkoggPSAweGRmICsgMSA9IDB4ZTAKICAgICAgICBQb2ludCBtZW1vcnkgcDsKCiAgICAgICAgLy8g5YaZ5YWlCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyDlrZjliLAgMHg4MAogICAgICAgICAgICBtc3RvcmUocCwgMTEpCiAgICAgICAgICAgIC8vIOWtmOWIsCAweGEwCiAgICAgICAgICAgIG1zdG9yZShhZGQocCwgMHgyMCksIDIyKQogICAgICAgICAgICAvLyDlrZjliLAgMHhjMAogICAgICAgICAgICBtc3RvcmUoYWRkKHAsIDB4NDApLCAzMykKICAgICAgICAgICAgLy8gMHhlMAogICAgICAgICAgICBmcmVlX21lbV9wdHIgOj0gbWxvYWQoMHg0MCkKICAgICAgICB9CgogICAgICAgIHggPSBwLng7CiAgICAgICAgeSA9IHAueTsKICAgICAgICB6ID0gcC56OwogICAgfQp9Cgpjb250cmFjdCBNZW1GaXhlZEFycmF5IHsKICAgIGZ1bmN0aW9uIHRlc3RfcmVhZCgpCiAgICAgICAgcHVibGljCiAgICAgICAgcHVyZQogICAgICAgIHJldHVybnMgKHVpbnQyNTYgYTAsIHVpbnQyNTYgYTEsIHVpbnQyNTYgYTIpCiAgICB7CiAgICAgICAgLy8gYXJyIOS7jiAweDgwIOW8gOWni+WKoOi9veWIsOWGheWtmAogICAgICAgIC8vIOavj+S4quaVsOe7hOWFg+e0oOWtmOWCqOS4uiAzMiDlrZfoioIKICAgICAgICB1aW50MzJbM10gbWVtb3J5IGFyciA9IFt1aW50MzIoMSksIHVpbnQzMigyKSwgdWludDMyKDMpXTsKCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBhMCA6PSBtbG9hZCgweDgwKQogICAgICAgICAgICBhMSA6PSBtbG9hZCgweGEwKQogICAgICAgICAgICBhMiA6PSBtbG9hZCgweGMwKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3dyaXRlKCkKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAodWludDI1NiBhMCwgdWludDI1NiBhMSwgdWludDI1NiBhMikKICAgIHsKICAgICAgICB1aW50MzJbM10gbWVtb3J5IGFycjsKCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyAweDgwCiAgICAgICAgICAgIG1zdG9yZShhcnIsIDExKQogICAgICAgICAgICAvLyAweGEwCiAgICAgICAgICAgIG1zdG9yZShhZGQoYXJyLCAweDIwKSwgMjIpCiAgICAgICAgICAgIC8vIDB4YzAKICAgICAgICAgICAgbXN0b3JlKGFkZChhcnIsIDB4NDApLCAzMykKICAgICAgICB9CgogICAgICAgIGEwID0gYXJyWzBdOwogICAgICAgIGExID0gYXJyWzFdOwogICAgICAgIGEyID0gYXJyWzJdOwogICAgfQp9Cgpjb250cmFjdCBNZW1EeW5hbWljQXJyYXkgewogICAgZnVuY3Rpb24gdGVzdF9yZWFkKCkKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAoYnl0ZXMzMiBwLCB1aW50MjU2IGxlbiwgdWludDI1NiBhMCwgdWludDI1NiBhMSwgdWludDI1NiBhMikKICAgIHsKICAgICAgICB1aW50MjU2W10gbWVtb3J5IGFyciA9IG5ldyB1aW50MjU2W10oNSk7CiAgICAgICAgYXJyWzBdID0gdWludDI1NigxMSk7CiAgICAgICAgYXJyWzFdID0gdWludDI1NigyMik7CiAgICAgICAgYXJyWzJdID0gdWludDI1NigzMyk7CiAgICAgICAgYXJyWzNdID0gdWludDI1Nig0NCk7CiAgICAgICAgYXJyWzRdID0gdWludDI1Nig1NSk7CgogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgcCA6PSBhcnIKICAgICAgICAgICAgLy8gMHg4MAogICAgICAgICAgICBsZW4gOj0gbWxvYWQoYXJyKQogICAgICAgICAgICAvLyAweGEwCiAgICAgICAgICAgIGEwIDo9IG1sb2FkKGFkZChhcnIsIDB4MjApKQogICAgICAgICAgICAvLyAweGMwCiAgICAgICAgICAgIGExIDo9IG1sb2FkKGFkZChhcnIsIDB4NDApKQogICAgICAgICAgICAvLyAweGUwCiAgICAgICAgICAgIGEyIDo9IG1sb2FkKGFkZChhcnIsIDB4NjApKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3dyaXRlKCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMzMiBwLCB1aW50MjU2W10gbWVtb3J5KSB7CiAgICAgICAgdWludDI1NltdIG1lbW9yeSBhcnIgPSBuZXcgdWludDI1NltdKDApOwoKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIHAgOj0gYXJyCiAgICAgICAgICAgIC8vIOWtmOWCqCBhcnIg55qE6ZW/5bqmCiAgICAgICAgICAgIG1zdG9yZShhcnIsIDMpCiAgICAgICAgICAgIC8vIOWtmOWCqCAx44CBMuOAgTMKICAgICAgICAgICAgbXN0b3JlKGFkZChhcnIsIDB4MjApLCAxMSkKICAgICAgICAgICAgbXN0b3JlKGFkZChhcnIsIDB4NDApLCAyMikKICAgICAgICAgICAgbXN0b3JlKGFkZChhcnIsIDB4NjApLCAzMykKICAgICAgICAgICAgLy8g5pu05paw56m66Zey5YaF5a2Y5oyH6ZKICiAgICAgICAgICAgIG1zdG9yZSgweDQwLCBhZGQoYXJyLCAweDgwKSkKICAgICAgICB9CgogICAgICAgIC8vIOW9kyBhcnIg6L+U5Zue57uZ6LCD55So6ICF5pe277yM5pWw5o2u5Lya5oyJIEFCSSDnvJbnoIEKICAgICAgICByZXR1cm4gKHAsIGFycik7CiAgICB9Cn0KCmNvbnRyYWN0IE1lbUludGVybmFsRnVuY1JldHVybiB7CiAgICBmdW5jdGlvbiBpbnRlcm5hbF9mdW5jX3JldHVybl92YWwoKSBwcml2YXRlIHB1cmUgcmV0dXJucyAodWludDI1NikgewogICAgICAgIHJldHVybiB1aW50MjU2KDB4YWJhYmFiKTsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3ZhbCgpIHB1YmxpYyBwdXJlIHsKICAgICAgICAvLyAweGFiYWJhYiDkvJrlrZjlgqjlnKjmoIjpobYKICAgICAgICBpbnRlcm5hbF9mdW5jX3JldHVybl92YWwoKTsKICAgIH0KCiAgICBmdW5jdGlvbiBpbnRlcm5hbF9mdW5jX3JldHVybl9tZW0oKQogICAgICAgIHByaXZhdGUKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAoYnl0ZXMzMltdIG1lbW9yeSkKICAgIHsKICAgICAgICBieXRlczMyW10gbWVtb3J5IGFyciA9IG5ldyBieXRlczMyW10oMyk7CiAgICAgICAgYXJyWzBdID0gYnl0ZXMzMih1aW50MjU2KDB4YWFhKSk7CiAgICAgICAgYXJyWzFdID0gYnl0ZXMzMih1aW50MjU2KDB4YmJiKSk7CiAgICAgICAgYXJyWzJdID0gYnl0ZXMzMih1aW50MjU2KDB4Y2NjKSk7CiAgICAgICAgcmV0dXJuIGFycjsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X21lbSgpCiAgICAgICAgcHVibGljCiAgICAgICAgcHVyZQogICAgICAgIHJldHVybnMgKHVpbnQyNTYgbGVuLCBieXRlczMyIGEwLCBieXRlczMyIGExLCBieXRlczMyIGEyKQogICAgewogICAgICAgIC8vIOWwhiAweDgwIOWtmOWIsOagiOmhtgogICAgICAgIC8vIDB4ODAgPSDmjIflkJEgYXJyIOi1t+Wni+S9jee9rueahOWGheWtmOaMh+mSiAogICAgICAgIGludGVybmFsX2Z1bmNfcmV0dXJuX21lbSgpOwogICAgICAgIC8vIOeUqOaxh+e8luS7jiBhcnIg6K+75Y+W5pWw5o2u77yMYXJyIOWcqCBpbnRlcm5hbF9mdW5jX3JldHVybl9tZW0g5Lit5Yid5aeL5YyWCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBsZW4gOj0gbWxvYWQoMHg4MCkKICAgICAgICAgICAgYTAgOj0gbWxvYWQoMHhhMCkKICAgICAgICAgICAgYTEgOj0gbWxvYWQoMHhjMCkKICAgICAgICAgICAgYTIgOj0gbWxvYWQoMHhlMCkKICAgICAgICB9CiAgICB9Cn0KCmNvbnRyYWN0IEFCSUVuY29kZSB7CiAgICAvLyDlsIblrZfnrKbkuLLmjIkgNjQg6ZW/5bqm5YiH5Z2X55qEIGpzIOS7o+eggQogICAgLy8gc3RyLm1hdGNoKC8uezEsNjR9L2cpCgogICAgLy8g5bCP5LqOIDMyIOWtl+iKgueahOWAvOexu+WeiyAtPiDlt6bkvqfooaXpm7YKICAgIC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYgogICAgZnVuY3Rpb24gZW5jb2RlX2FkZHIoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChieXRlcyBtZW1vcnkpIHsKICAgICAgICBhZGRyZXNzIGFkZHIgPSAweEFCYUJhQmFCQUJhYkFCYWJBYkFiQUJBYkFCYWJhYmFiYUJhQkFCYUI7CiAgICAgICAgcmV0dXJuIGFiaS5lbmNvZGUoYWRkcik7CiAgICB9CgogICAgLy8g5a6a6ZW/IGJ5dGVzIC0+IOWPs+S+p+ihpembtgogICAgLy8gMHhhYWJiY2NkZDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICBmdW5jdGlvbiBlbmNvZGVfYnl0ZXM0KCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMgbWVtb3J5KSB7CiAgICAgICAgYnl0ZXM0IGI0ID0gMHhhYWJiY2NkZDsKICAgICAgICByZXR1cm4gYWJpLmVuY29kZShiNCk7CiAgICB9CgogICAgLy8g5Yqo5oCB5aSn5bCP57G75Z6LCiAgICAvLyBvZmZzZXQgfCBsZW5ndGggfCBkYXRhCiAgICAvLyBvZmZzZXQgPSDmlbDmja7otbflp4vkvY3nva7nmoQgMzIg5a2X6IqC57Si5byVCiAgICAvLyBsZW5ndGggPSAzMiDlrZfoioLnmoTmlbDmja7plb/luqYKCiAgICAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMjAKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMwogICAgLy8gICBhYmFiYWIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICBmdW5jdGlvbiBlbmNvZGVfYnl0ZXMoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChieXRlcyBtZW1vcnkpIHsKICAgICAgICBieXRlcyBtZW1vcnkgYiA9IG5ldyBieXRlcygzKTsKICAgICAgICBiWzBdID0gMHhhYjsKICAgICAgICBiWzFdID0gMHhhYjsKICAgICAgICBiWzJdID0gMHhhYjsKICAgICAgICByZXR1cm4gYWJpLmVuY29kZShiKTsKICAgIH0KCiAgICAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMjAKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMwogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxCiAgICAvLyAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDIKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMwogICAgZnVuY3Rpb24gZW5jb2RlX3VpbnQ4X2FycigpIHB1YmxpYyBwdXJlIHJldHVybnMgKGJ5dGVzIG1lbW9yeSkgewogICAgICAgIHVpbnQ4W10gbWVtb3J5IGEgPSBuZXcgdWludDhbXSgzKTsKICAgICAgICBhWzBdID0gMTsKICAgICAgICBhWzFdID0gMjsKICAgICAgICBhWzJdID0gMzsKICAgICAgICByZXR1cm4gYWJpLmVuY29kZShhKTsKICAgIH0KCiAgICAvLyDlrprplb/mlbDnu4QKICAgIC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMQogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAyCiAgICAvLyAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDMKICAgIGZ1bmN0aW9uIGVuY29kZV91aW50MjU2X2ZpeGVkX3NpemVfYXJyKCkKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAoYnl0ZXMgbWVtb3J5KQogICAgewogICAgICAgIHVpbnQ4WzNdIG1lbW9yeSBhOwogICAgICAgIGFbMF0gPSAxOwogICAgICAgIGFbMV0gPSAyOwogICAgICAgIGFbMl0gPSAzOwogICAgICAgIHJldHVybiBhYmkuZW5jb2RlKGEpOwogICAgfQoKICAgIC8vIOe7k+aehOS9kwogICAgc3RydWN0IFBvaW50IHsKICAgICAgICB1aW50MjU2IHg7CiAgICAgICAgdWludDEyOCB5OwogICAgICAgIHVpbnQxMjggejsKICAgIH0KCiAgICAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDEKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMgogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAzCiAgICBmdW5jdGlvbiBlbmNvZGVfc3RydWN0KCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMgbWVtb3J5KSB7CiAgICAgICAgUG9pbnQgbWVtb3J5IHAgPSBQb2ludCgxLCAyLCAzKTsKICAgICAgICByZXR1cm4gYWJpLmVuY29kZShwKTsKICAgIH0KCiAgICAvLyDnu5PmnoTkvZPnmoTliqjmgIHmlbDnu4QKICAgIC8vIG9mZnNldCB8IGxlbmd0aCB8IHN0cnVjdCBkYXRhCiAgICAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMjAKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMwogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxCiAgICAvLyAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDIKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMwogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA0CiAgICAvLyAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDUKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwNgogICAgLy8gICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA3CiAgICAvLyAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDgKICAgIC8vICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwOQogICAgZnVuY3Rpb24gZW5jb2RlX3N0cnVjdF9hcnJheSgpIHB1YmxpYyBwdXJlIHJldHVybnMgKGJ5dGVzIG1lbW9yeSkgewogICAgICAgIFBvaW50W10gbWVtb3J5IGFyciA9IG5ldyBQb2ludFtdKDMpOwogICAgICAgIGFyclswXSA9IFBvaW50KDEsIDIsIDMpOwogICAgICAgIGFyclsxXSA9IFBvaW50KDQsIDUsIDYpOwogICAgICAgIGFyclsyXSA9IFBvaW50KDcsIDgsIDkpOwogICAgICAgIHJldHVybiBhYmkuZW5jb2RlKGFycik7CiAgICB9Cn0KCmNvbnRyYWN0IE1lbVJldHVybiB7CiAgICBmdW5jdGlvbiB0ZXN0X3JldHVybl92YWxzKCkgcHVibGljIHB1cmUgcmV0dXJucyAodWludDI1NiwgdWludDI1NikgewogICAgICAgIC8vIHJldHVybihzdGFydCwgbGVuKSAtIOWBnOatouaJp+ihjO+8jOW5tui/lOWbnuWGheWtmOS4reS7jiBzdGFydCDliLAgc3RhcnQgKyBsZW4g5a2Y5YKo55qE5pWw5o2uCiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBtc3RvcmUoMHg4MCwgMTEpCiAgICAgICAgICAgIG1zdG9yZSgweGEwLCAyMikKICAgICAgICAgICAgcmV0dXJuKDB4ODAsIDB4NDApCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3RfcmV0dXJuX2R5bl9hcnIoKSBwdWJsaWMgcHVyZSByZXR1cm5zICh1aW50MjU2W10gbWVtb3J5KSB7CiAgICAgICAgLy8g5a+55ZCrIDMg5Liq5YWD57SgIDEx44CBMjIg5ZKMIDMzIOeahCB1aW50MjU2W10g5pWw57uE5YGaIEFCSSDnvJbnoIEKICAgICAgICBhc3NlbWJseSB7CiAgICAgICAgICAgIC8vIG9mZnNldAogICAgICAgICAgICBtc3RvcmUoMHg4MCwgMHgyMCkKICAgICAgICAgICAgLy8gbGVuZ3RoCiAgICAgICAgICAgIG1zdG9yZShhZGQoMHg4MCwgMHgyMCksIDMpCiAgICAgICAgICAgIC8vIOaVsOe7hOWFg+e0oAogICAgICAgICAgICBtc3RvcmUoYWRkKDB4ODAsIDB4NDApLCAxMSkKICAgICAgICAgICAgbXN0b3JlKGFkZCgweDgwLCAweDYwKSwgMjIpCiAgICAgICAgICAgIG1zdG9yZShhZGQoMHg4MCwgMHg4MCksIDMzKQogICAgICAgICAgICAvLyDml6DpnIDmm7TmlrDnqbrpl7LlhoXlrZjmjIfpkogg4oCU4oCUIOWHveaVsOaJp+ihjOWIsOatpOe7k+adnwogICAgICAgICAgICByZXR1cm4oMHg4MCwgbXVsKDUsIDB4MjApKQogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X3JldHVybigpIHB1YmxpYyBwdXJlIHJldHVybnMgKHVpbnQyNTYsIHVpbnQyNTYpIHsKICAgICAgICAvLyDov5Tlm54gKDExLCAyMikKICAgICAgICB0ZXN0X3JldHVybl92YWxzKCk7CiAgICAgICAgLy8g6L+Z5q615Luj56CB5rC46L+c5LiN5Lya5omn6KGMCiAgICAgICAgcmV0dXJuICgzMzMsIDQ0NCk7CiAgICB9Cn0KCmNvbnRyYWN0IE1lbVJldmVydCB7CiAgICBmdW5jdGlvbiB0ZXN0X3JldmVydCgpIHB1YmxpYyBwdXJlIHsKICAgICAgICAvLyByZXZlcnQoc3RhcnQsIGxlbikgLSDlm57pgIDmiafooYzvvIzlubbov5Tlm57lhoXlrZjkuK3ku44gc3RhcnQg5YiwIHN0YXJ0ICsgbGVuIOWtmOWCqOeahOaVsOaNrgogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgbXN0b3JlKDB4ODAsICJFUlJPUiBIRVJFIikKICAgICAgICAgICAgcmV2ZXJ0KDB4ODAsIDB4MjApCiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3RfcmV2ZXJ0X3dpdGhfZXJyb3JfbXNnKCkgcHVibGljIHB1cmUgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgbGV0IHAgOj0gbWxvYWQoMHg0MCkKICAgICAgICAgICAgLy8gRXJyb3Ioc3RyaW5nKSDnmoTlh73mlbDpgInmi6nlmagKICAgICAgICAgICAgLy8gMHgwOGMzNzlhMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICAgICAgICAgIC8vIDB4MDhjMzc5YTAg5pivIDMyIOS9je+8jOW3puenuyAyMjQg5L2N5L2/5YW25oiQ5Li6IDI1NiDkvY0KICAgICAgICAgICAgLy8gMjU1IC0gMzEgPSAyMjQKICAgICAgICAgICAgbXN0b3JlKHAsIHNobCgyMjQsIDB4MDhjMzc5YTApKQogICAgICAgICAgICAvLyDlrZfnrKbkuLLlgY/np7sKICAgICAgICAgICAgbXN0b3JlKGFkZChwLCAweDA0KSwgMHgyMCkKICAgICAgICAgICAgLy8g5a2X56ym5Liy6ZW/5bqmCiAgICAgICAgICAgIG1zdG9yZShhZGQocCwgMHgyNCksIDUpCiAgICAgICAgICAgIC8vIOa2iOaBr++8iOW/hemhu+Wwj+S6jiAzMiDlrZfoioLvvIkKICAgICAgICAgICAgbXN0b3JlKGFkZChwLCAweDQ0KSwgIkVSUk9SIikKICAgICAgICAgICAgLy8g5Ye95pWw6YCJ5oup5ZmoICsgb2Zmc2V0ICsg5a2X56ym5Liy6ZW/5bqmICsg5a2X56ym5Liy5raI5oGvCiAgICAgICAgICAgIC8vID0gMHgwNCArIDB4MjAgKyAweDIwICsgMHgyMAogICAgICAgICAgICAvLyA9IDB4NjQKICAgICAgICAgICAgcmV2ZXJ0KHAsIDB4NjQpCiAgICAgICAgfQogICAgfQp9Cgpjb250cmFjdCBNZW1LZWNjYWsgewogICAgZnVuY3Rpb24gdGVzdF9rZWNjYWsoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChieXRlczMyKSB7CiAgICAgICAgLy8ga2VjY2FrMjU2KHN0YXJ0LCBsZW4pIC0g5a+55YaF5a2Y5Lit5LuOIHN0YXJ0IOWIsCBzdGFydCArIGxlbiDnmoTmlbDmja7lgZogS2VjY2FrMjU2CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBtc3RvcmUoMHg4MCwgMSkKICAgICAgICAgICAgbXN0b3JlKDB4YTAsIDIpCgogICAgICAgICAgICBsZXQgaCA6PSBrZWNjYWsyNTYoMHg4MCwgMHg0MCkKICAgICAgICAgICAgbXN0b3JlKDB4YzAsIGgpCgogICAgICAgICAgICByZXR1cm4oMHhjMCwgMHgyMCkKICAgICAgICB9CiAgICB9CgogICAgZnVuY3Rpb24ga2VjY2FrKCkgcHVibGljIHB1cmUgcmV0dXJucyAoYnl0ZXMzMikgewogICAgICAgIHJldHVybiBrZWNjYWsyNTYoYWJpLmVuY29kZVBhY2tlZCh1aW50MjU2KDEpLCB1aW50MjU2KDIpKSk7CiAgICB9Cn0KCmNvbnRyYWN0IFRhcmdldCB7CiAgICBmdW5jdGlvbiByZXR1cm5fdWludDI1Nih1aW50MjU2IHgpIHB1YmxpYyBwdXJlIHJldHVybnMgKHVpbnQyNTYpIHsKICAgICAgICByZXR1cm4geDsKICAgIH0KCiAgICBmdW5jdGlvbiByZXR1cm5fYnl0ZXModWludDI1NiBuKSBwdWJsaWMgcHVyZSByZXR1cm5zIChieXRlcyBtZW1vcnkpIHsKICAgICAgICBieXRlcyBtZW1vcnkgb3V0ID0gbmV3IGJ5dGVzKG4pOwogICAgICAgIGZvciAodWludDI1NiBpOyBpIDwgbjsgaSsrKSB7CiAgICAgICAgICAgIG91dFtpXSA9IDB4YWI7CiAgICAgICAgfQogICAgICAgIHJldHVybiBvdXQ7CiAgICB9CgogICAgZnVuY3Rpb24gcmV0dXJuX3VpbnQyNTZfYXJyKHVpbnQyNTYgbikKICAgICAgICBwdWJsaWMKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAodWludDI1NltdIG1lbW9yeSkKICAgIHsKICAgICAgICB1aW50MjU2W10gbWVtb3J5IG91dCA9IG5ldyB1aW50MjU2W10obik7CiAgICAgICAgZm9yICh1aW50MjU2IGkgPSAwOyBpIDwgbjsgaSsrKSB7CiAgICAgICAgICAgIG91dFtpXSA9IGkgKyAxOwogICAgICAgIH0KICAgICAgICByZXR1cm4gb3V0OwogICAgfQp9CgovLyBjYWxsZGF0YWNvcHkocCwgc3RhcnQsIHNpemUpIC0g5bCGIGNhbGxkYXRhIOS7jiBzdGFydCDliLAgc3RhcnQgKyBzaXplIOWkjeWItuWIsOS7juaMh+mSiCBwIOW8gOWni+eahOWGheWtmAovLyByZXR1cm5kYXRhc2l6ZSAtIOiOt+WPliBjYWxs44CBc3RhdGljY2FsbCDmiJYgZGVsZWdhdGVjYWxsIOi/lOWbnuaVsOaNrueahOWkp+WwjwovLyByZXR1cm5kYXRhY29weShwLCBzdGFydCwgc2l6ZSkgLSDlsIbov5Tlm57mlbDmja7ku44gc3RhcnQg5YiwIHN0YXJ0ICsgc2l6ZSDlpI3liLbliLDku47mjIfpkoggcCDlvIDlp4vnmoTlhoXlrZgKLy8gY2FsbChnLCBhLCB2LCBpbiwgaW5fc2l6ZSwgb3V0LCBvdXRfc2l6ZSkKLy8gLSDosIPnlKjlnLDlnYAgYSDlpITnmoTlkIjnuqbvvIzmnIDlpJrkvb/nlKggZyBnYXPvvIzlj5HpgIEgdiB3ZWkKLy8gLSDovpPlhaXlj5boh6rlhoXlrZggaW4g5YiwIGluICsgaW5fc2l6ZQovLyAtIOS9v+eUqOWGheWtmCBvdXQg5YiwIG91dCArIG91dF9zaXplIOWtmOaUvui+k+WHugovLyBzdGF0aWNjYWxsKGcsIGEsIGluLCBpbl9zaXplLCBvdXQsIG91dF9zaXplKSAtIGNhbGwg55qE5Y+q6K+754mI5pysCmNvbnRyYWN0IFl1bFN0YXRpY0NhbGwgewogICAgZnVuY3Rpb24gdGVzdF9zdGF0aWNjYWxsKGFkZHJlc3MgYSwgYnl0ZXMgY2FsbGRhdGEgZGF0YSkgcHVibGljIHZpZXcgewogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgbGV0IHAgOj0gbWxvYWQoMHg0MCkKICAgICAgICAgICAgLy8g5bCGIGNhbGxkYXRhIOWkjeWItuWIsOWGheWtmAogICAgICAgICAgICBjYWxsZGF0YWNvcHkocCwgZGF0YS5vZmZzZXQsIGRhdGEubGVuZ3RoKQoKICAgICAgICAgICAgbGV0IG9rIDo9IHN0YXRpY2NhbGwoZ2FzKCksIGEsIHAsIGRhdGEubGVuZ3RoLCAwLCAwKQoKICAgICAgICAgICAgaWYgaXN6ZXJvKG9rKSB7IHJldmVydCgwLCAwKSB9CgogICAgICAgICAgICAvLyBwIDo9IG1sb2FkKDB4NDApCiAgICAgICAgICAgIGxldCByZXR1cm5fZGF0YV9zaXplIDo9IHJldHVybmRhdGFzaXplKCkKICAgICAgICAgICAgLy8g5bCG6L+U5Zue5pWw5o2u5aSN5Yi25Yiw5YaF5a2YCiAgICAgICAgICAgIC8vIOimhuebluabvueUqOS6jui+k+WFpeeahOWGheWtmOaYr+WQpuWuieWFqO+8nwogICAgICAgICAgICByZXR1cm5kYXRhY29weShwLCAwLCByZXR1cm5fZGF0YV9zaXplKQogICAgICAgICAgICByZXR1cm4ocCwgcmV0dXJuX2RhdGFfc2l6ZSkKICAgICAgICB9CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9hYmlfZGVjb2RlX3VpbnQyNTYoYWRkcmVzcyBhLCBieXRlcyBjYWxsZGF0YSBkYXRhKQogICAgICAgIHB1YmxpYwogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MjU2KQogICAgewogICAgICAgIHRlc3Rfc3RhdGljY2FsbChhLCBkYXRhKTsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X2FiaV9kZWNvZGVfYnl0ZXMoYWRkcmVzcyBhLCBieXRlcyBjYWxsZGF0YSBkYXRhKQogICAgICAgIHB1YmxpYwogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zIChieXRlcyBtZW1vcnkpCiAgICB7CiAgICAgICAgdGVzdF9zdGF0aWNjYWxsKGEsIGRhdGEpOwogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3RfYWJpX2RlY29kZV91aW50MjU2X2FycihhZGRyZXNzIGEsIGJ5dGVzIGNhbGxkYXRhIGRhdGEpCiAgICAgICAgcHVibGljCiAgICAgICAgdmlldwogICAgICAgIHJldHVybnMgKHVpbnQyNTZbXSBtZW1vcnkpCiAgICB7CiAgICAgICAgdGVzdF9zdGF0aWNjYWxsKGEsIGRhdGEpOwogICAgfQoKICAgIGZ1bmN0aW9uIHRlc3Rfc3RhdGljY2FsbF9yZXR1cm5fYWJpX2VuY29kZWRfYnl0ZXMoCiAgICAgICAgYWRkcmVzcyBhZGRyLAogICAgICAgIGJ5dGVzIGNhbGxkYXRhIGRhdGEKICAgICkgcHVibGljIHZpZXcgcmV0dXJucyAoYnl0ZXMgbWVtb3J5IG91dCwgdWludDI1NiByZXR1cm5fZGF0YV9zaXplKSB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICBsZXQgcCA6PSBtbG9hZCgweDQwKQogICAgICAgICAgICAvLyDlsIYgY2FsbGRhdGEg5aSN5Yi25Yiw5YaF5a2YCiAgICAgICAgICAgIGNhbGxkYXRhY29weShwLCBkYXRhLm9mZnNldCwgZGF0YS5sZW5ndGgpCiAgICAgICAgICAgIC8vIOabtOaWsOepuumXsuWGheWtmOaMh+mSiAogICAgICAgICAgICBtc3RvcmUoMHg0MCwgYWRkKHAsIGRhdGEubGVuZ3RoKSkKCiAgICAgICAgICAgIGxldCBvayA6PSBzdGF0aWNjYWxsKGdhcygpLCBhZGRyLCBwLCBkYXRhLmxlbmd0aCwgMCwgMCkKCiAgICAgICAgICAgIGlmIGlzemVybyhvaykgeyByZXZlcnQoMCwgMCkgfQoKICAgICAgICAgICAgLy8gcmV0dXJuX2RhdGFfc2l6ZSA9IDMyICDosIPnlKggVGFyZ2V0LnJldHVybl91aW50MjU2IC0+IHVpbnQyNTYKICAgICAgICAgICAgLy8gICAgICAgICAgICAgICAgICA9IDk2ICDosIPnlKggVGFyZ2V0LnJldHVybl9ieXRlcyAtPiBieXRlc1td77yIMzIgb2Zmc2V044CBMzIgbGVuZ3Ro44CBMyDlrZfoioLloavlhYXliLAgMzLvvIkKICAgICAgICAgICAgLy8gICAgICAgICAgICAgICAgICA9IDE2MCDosIPnlKggVGFyZ2V0LnJldHVybl91aW50MjU2X2FyciAtPiB1aW50MjU2W13vvIgzMiBvZmZzZXTjgIEzMiBsZW5ndGjjgIEzMiB4IDMg5Liq5YWD57Sg77yJCiAgICAgICAgICAgIHJldHVybl9kYXRhX3NpemUgOj0gcmV0dXJuZGF0YXNpemUoKQogICAgICAgICAgICAvLyDlsIbov5Tlm57mlbDmja7plb/luqblrZjlhaUgb3V0CiAgICAgICAgICAgIC8vIOaMh+WQkSBvdXQg55qE5oyH6ZKIID0gMHg2MO+8iOmbtuanve+8iQogICAgICAgICAgICBtc3RvcmUob3V0LCByZXR1cm5fZGF0YV9zaXplKQogICAgICAgICAgICAvLyDlsIbov5Tlm57mlbDmja7lpI3liLbliLAgb3V0CiAgICAgICAgICAgIHJldHVybmRhdGFjb3B5KGFkZChvdXQsIDB4MjApLCAwLCByZXR1cm5fZGF0YV9zaXplKQogICAgICAgICAgICAvLyDmm7TmlrDnqbrpl7LlhoXlrZjmjIfpkogKICAgICAgICAgICAgbXN0b3JlKDB4NDAsIGFkZChvdXQsIGFkZCgweDIwLCByZXR1cm5fZGF0YV9zaXplKSkpCiAgICAgICAgfQogICAgfQp9Cgpjb250cmFjdCBDb3VudGVyIHsKICAgIHVpbnQyNTYgcHVibGljIGNvdW50OwoKICAgIGZ1bmN0aW9uIGluYygpIHB1YmxpYyByZXR1cm5zICh1aW50MjU2KSB7CiAgICAgICAgY291bnQgKz0gMTsKICAgICAgICByZXR1cm4gY291bnQ7CiAgICB9Cn0KCmNvbnRyYWN0IFl1bENhbGwgewogICAgZnVuY3Rpb24gdGVzdF9jYWxsKGFkZHJlc3MgYSwgYnl0ZXMgbWVtb3J5IGRhdGEpCiAgICAgICAgcHVibGljCiAgICAgICAgcGF5YWJsZQogICAgICAgIHJldHVybnMgKGJ5dGVzIG1lbW9yeSBvdXQpCiAgICB7CiAgICAgICAgYXNzZW1ibHkgewogICAgICAgICAgICAvLyAweDgwCiAgICAgICAgICAgIGxldCBkYXRhX3B0ciA6PSBkYXRhCiAgICAgICAgICAgIC8vIDB4NjAKICAgICAgICAgICAgbGV0IG91dF9wdHIgOj0gb3V0CgogICAgICAgICAgICBsZXQgZGF0YV9zaXplIDo9IG1sb2FkKGRhdGEpCiAgICAgICAgICAgIGxldCBkYXRhX3N0YXJ0IDo9IGFkZChkYXRhLCAweDIwKQogICAgICAgICAgICBsZXQgb2sgOj0gY2FsbChnYXMoKSwgYSwgY2FsbHZhbHVlKCksIGRhdGFfc3RhcnQsIGRhdGFfc2l6ZSwgMCwgMCkKCiAgICAgICAgICAgIGlmIGlzemVybyhvaykgeyByZXZlcnQoMCwgMCkgfQoKICAgICAgICAgICAgbGV0IHJldHVybl9kYXRhX3NpemUgOj0gcmV0dXJuZGF0YXNpemUoKQogICAgICAgICAgICAvLyDlsIbov5Tlm57mlbDmja7plb/luqblrZjlhaUgb3V0CiAgICAgICAgICAgIG1zdG9yZShvdXQsIHJldHVybl9kYXRhX3NpemUpCiAgICAgICAgICAgIC8vIOWwhui/lOWbnuaVsOaNruWkjeWItuWIsCBvdXQKICAgICAgICAgICAgcmV0dXJuZGF0YWNvcHkoYWRkKG91dCwgMHgyMCksIDAsIHJldHVybl9kYXRhX3NpemUpCiAgICAgICAgICAgIC8vIOabtOaWsOepuumXsuWGheWtmOaMh+mSiAogICAgICAgICAgICBtc3RvcmUoMHg0MCwgYWRkKG91dCwgYWRkKDB4MjAsIHJldHVybl9kYXRhX3NpemUpKSkKICAgICAgICB9CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdF9pbmMoYWRkcmVzcyBjb3VudGVyKSBwdWJsaWMgcmV0dXJucyAodWludDI1NiBjb3VudCkgewogICAgICAgIGJ5dGVzIG1lbW9yeSByZXMgPSB0ZXN0X2NhbGwoY291bnRlciwgYWJpLmVuY29kZUNhbGwoQ291bnRlci5pbmMsICgpKSk7CiAgICAgICAgY291bnQgPSBhYmkuZGVjb2RlKHJlcywgKHVpbnQyNTYpKTsKICAgIH0KfQoKLy8g5YaF5a2Y5omp5bGVIGdhcyDmiJDmnKwKLy8gZ2FzIOaIkOacrOS4juWGheWtmOWIhumFjeWRiOS6jOasoeWFs+ezu+OAggpjb250cmFjdCBNZW1FeHAgewogICAgZnVuY3Rpb24gYWxsb2NfbWVtKHVpbnQyNTYgbikgZXh0ZXJuYWwgdmlldyByZXR1cm5zICh1aW50MjU2KSB7CiAgICAgICAgdWludDI1NiBnYXNfc3RhcnQgPSBnYXNsZWZ0KCk7CiAgICAgICAgdWludDI1NltdIG1lbW9yeSBhcnIgPSBuZXcgdWludDI1NltdKG4pOwogICAgICAgIHVpbnQyNTYgZ2FzX2VuZCA9IGdhc2xlZnQoKTsKICAgICAgICByZXR1cm4gZ2FzX3N0YXJ0IC0gZ2FzX2VuZDsKICAgIH0KfQoKLy8gYXJyIHNpemUgfCBnYXMKLy8gICAgICAgIDAgfCAgICAxMjAKLy8gICAgICAgIDEgfCAgICAxNzgKLy8gICAgICAgMTAgfCAgICAyMzIKLy8gICAgICAgMjAgfCAgICAyOTMKLy8gICAgICAgMzAgfCAgICAzNTQKLy8gICAgICAgNDAgfCAgICA0MTUKLy8gICAgICAgNTAgfCAgICA0NzcKLy8gICAgICAgNjAgfCAgICA1NDAKLy8gICAgICAgNzAgfCAgICA2MDIKLy8gICAgICAgODAgfCAgICA2NjYKLy8gICAgICAgOTAgfCAgICA3MjkKLy8gICAgICAxMDAgfCAgICA3OTMKLy8gICAgICAxMTAgfCAgICA4NTcKLy8gICAgICAxMjAgfCAgICA5MjIKLy8gICAgICAxMzAgfCAgICA5ODcKLy8gICAgICAxNDAgfCAgIDEwNTMKLy8gICAgICAxNTAgfCAgIDExMTgKLy8gICAgICAxNjAgfCAgIDExODUKLy8gICAgICAxNzAgfCAgIDEyNTEKLy8gICAgICAxODAgfCAgIDEzMTgKLy8gICAgICAxOTAgfCAgIDEzODYKLy8gICAgICAyMDAgfCAgIDE0NTQKCi8vICAgICAxMDAwIHwgICA4MTQ0Ci8vICAgICAyMDAwIHwgIDIwMDIzCi8vICAgICAzMDAwIHwgIDM1ODA4Ci8vICAgICA0MDAwIHwgIDU1NTAwCi8vICAgICA1MDAwIHwgIDc5MDk3Ci8vICAgICA2MDAwIHwgMTA2NjAxCi8vICAgICA3MDAwIHwgMTM4MDExCi8vICAgICA4MDAwIHwgMTczMzI4Ci8vICAgICA5MDAwIHwgMjEyNTUwCi8vICAgIDEwMDAwIHwgMjU1Njc5Ci8vICAgIDExMDAwIHwgMzAyNzE1Ci8vICAgIDEyMDAwIHwgMzUzNjU2Ci8vICAgIDEzMDAwIHwgNDA4NTA0Ci8vICAgIDE0MDAwIHwgNDY3MjU3Ci8vICAgIDE1MDAwIHwgNTI5OTE4Ci8vICAgIDE2MDAwIHwgNTk2NDg0Ci8vICAgIDE3MDAwIHwgNjY2OTU3Ci8vICAgIDE4MDAwIHwgNzQxMzM2Ci8vICAgIDE5MDAwIHwgODE5NjIxCi8vICAgIDIwMDAwIHwgOTAxODEyCg==" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+      </div>
+    </article>
+    
+        <footer class="footer">
+          <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
+          <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">Web3-Club</a>
+            <div class="bar">|</div>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Twitter</a>
+          </div>
+          <div class="footer-row">v 0.8.26</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    document.querySelectorAll("[data-logo]").forEach(function (el) {
+      function paint() {
+        el.setAttribute("fill", document.body.classList.contains("dark") ? "rgb(0, 255, 0)" : "currentColor");
+      }
+      paint();
+      new MutationObserver(paint).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    });
+  </script>
+</body>
+</html>
