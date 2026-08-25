@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stable Swap AMM | Solidity by Example | 0.8.26</title>
+  <meta name="description" content="Solidity by Example 简体中文译本，对照 solidity-by-example.org v0.8.26。">
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body class="light">
+  <div class="layout">
+    <aside class="side-nav">
+      <h3 class="nav-category">Basic</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hello-world/">Hello World</a></li>
+<li class="nav-item"><a class="nav-link" href="../../first-app/">第一个应用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../primitives/">基本数据类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../variables/">变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constants/">常量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../immutable/">不可变</a></li>
+<li class="nav-item"><a class="nav-link" href="../../state-variables/">读写状态变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../ether-units/">以太币和 Wei</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas/">Gas 与 Gas Price</a></li>
+<li class="nav-item"><a class="nav-link" href="../../if-else/">条件判断</a></li>
+<li class="nav-item"><a class="nav-link" href="../../loop/">循环语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../mapping/">映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../array/">数组</a></li>
+<li class="nav-item"><a class="nav-link" href="../../enum/">枚举</a></li>
+<li class="nav-item"><a class="nav-link" href="../../user-defined-value-types/">用户自定义值类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../structs/">结构体</a></li>
+<li class="nav-item"><a class="nav-link" href="../../data-locations/">数据位置</a></li>
+<li class="nav-item"><a class="nav-link" href="../../transient-storage/">瞬时存储</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function/">函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../view-and-pure-functions/">View 和 Pure 函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../error/">错误或异常</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-modifier/">函数修饰符</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events-advanced/">高级事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constructor/">构造函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../inheritance/">继承</a></li>
+<li class="nav-item"><a class="nav-link" href="../../shadowing-inherited-state-variables/">继承状态变量的屏蔽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../super/">调用父合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../visibility/">可见性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../interface/">接口</a></li>
+<li class="nav-item"><a class="nav-link" href="../../payable/">Payable</a></li>
+<li class="nav-item"><a class="nav-link" href="../../sending-ether/">发送以太币</a></li>
+<li class="nav-item"><a class="nav-link" href="../../fallback/">回退函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../call/">Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../delegatecall/">Delegatecall</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-selector/">函数选择器</a></li>
+<li class="nav-item"><a class="nav-link" href="../../calling-contract/">调用其他合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../new-contract/">从合约创建合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../try-catch/">Try / Catch</a></li>
+<li class="nav-item"><a class="nav-link" href="../../import/">导入</a></li>
+<li class="nav-item"><a class="nav-link" href="../../library/">库</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-encode/">ABI 编码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-decode/">ABI 解码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hashing/">Keccak256 哈希</a></li>
+<li class="nav-item"><a class="nav-link" href="../../signature/">验证签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas-golf/">Gas 优化</a></li>
+<li class="nav-item"><a class="nav-link" href="../../bitwise/">位运算</a></li>
+<li class="nav-item"><a class="nav-link" href="../../unchecked-math/">Unchecked Math</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-variable/">汇编变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-if/">汇编条件语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-loop/">汇编循环</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-error/">汇编错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-math/">汇编数学运算</a></li>
+</ul>
+<h3 class="nav-title">Applications</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../app/ether-wallet/">以太钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-sig-wallet/">多签钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/merkle-tree/">默克尔树</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/iterable-mapping/">可迭代映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc20/">ERC20</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc721/">ERC721</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc1155/">ERC1155</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/gasless-token-transfer/">无 Gas 代币转账</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/simple-bytecode-contract/">简单字节码合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/create2/">使用 Create2 预计算合约地址</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/minimal-proxy/">最小代理合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/upgradeable-proxy/">可升级代理</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/deploy-any-contract/">部署任意合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/write-to-any-slot/">写入任意存储槽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/uni-directional-payment-channel/">单向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/bi-directional-payment-channel/">双向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/english-auction/">英式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/dutch-auction/">荷兰式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/crowd-fund/">众筹基金</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-call/">多调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-delegatecall/">多委托调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/time-lock/">定时锁</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/assembly-bin-exp/">汇编中的二进制求幂</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/airdrop/">默克尔空投</a></li>
+</ul>
+<h3 class="nav-title">Hacks</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hacks/re-entrancy/">重入攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/overflow/">算术溢出与下溢</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/self-destruct/">自毁函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/accessing-private-data/">访问私有数据</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/delegatecall/">Delegatecall 攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/randomness/">随机数预测</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/denial-of-service/">拒绝服务攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/phishing-with-tx-origin/">tx.origin 钓鱼</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/hiding-malicious-code-with-external-contract/">使用外部合约隐藏恶意代码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/honeypot/">蜜罐</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/front-running/">抢跑</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/block-timestamp-manipulation/">区块时间戳操纵</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/signature-replay/">签名重放</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/contract-size/">绕过合约大小检查</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/deploy-different-contracts-same-address/">在同一地址部署不同合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/vault-inflation/">金库通货膨胀攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/weth-permit/">WETH Permit</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/63-64-gas-rule/">63 / 64 Gas 规则</a></li>
+</ul>
+<h3 class="nav-title">EVM</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../evm/storage/">EVM 存储布局</a></li>
+<li class="nav-item"><a class="nav-link" href="../../evm/memory/">EVM 内存布局</a></li>
+</ul>
+<h3 class="nav-title">Tests</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../tests/echidna/">Echidna</a></li>
+</ul>
+<h3 class="nav-title">Foundry</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../foundry/basic/">Foundry 基础</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/auth/">授权</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/error/">错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/event/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/send/">发送</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/time/">时间</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/sign/">签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/label/">标签</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/mock-call/">Mock Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/vm-store/">Store</a></li>
+</ul>
+<h3 class="nav-title">DeFi</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2/">Uniswap V2 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-optimal-one-sided-supply/">Uniswap V2 最优单边供给</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-flash-swap/">Uniswap V2 Flash Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-swap/">Uniswap V3 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-liquidity/">Uniswap V3 流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash/">Uniswap V3 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash-swap/">Uniswap V3 Flash Swap 套利</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-swap/">Uniswap V4 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-flash/">Uniswap V4 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-limit-order/">Uniswap V4 限价单</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chronicle-price-oracle/">Chronicle 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/dai-proxy/">DAI Proxy</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/staking-rewards/">质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/discrete-staking-rewards/">离散质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/vault/">Vault</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/token-lock/">Token Lock</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-sum-amm/">恒定和 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-product-amm/">恒定乘积 AMM</a></li>
+<li class="nav-item-active"><a class="nav-link" href="../../defi/stable-swap-amm/">Stable Swap AMM</a></li>
+</ul>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <button class="hamburger" data-toggle-nav aria-label="菜单"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" width="20" height="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+</svg></button>
+        <div class="header-center">
+          <div class="header-center-inner">
+            <a href="../../"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1300" width="30" height="30" class="logo" data-logo>
+  <path opacity="0.45" d="M773.772 253.308 643.068 485.61H381.842l130.614-232.302h261.316"/>
+  <path opacity="0.6" d="M643.068 485.61h261.318L773.772 253.308H512.456L643.068 485.61z"/>
+  <path opacity="0.8" d="M512.456 717.822 643.068 485.61 512.456 253.308 381.842 485.61l130.614 232.212z"/>
+  <path opacity="0.45" d="m513.721 1066.275 130.704-232.303h261.318l-130.705 232.303H513.721"/>
+  <path opacity="0.6" d="M644.424 833.973H383.107l130.613 232.303h261.317L644.424 833.973z"/>
+  <path opacity="0.8" d="M775.038 601.761 644.424 833.973l130.614 232.303 130.704-232.303-130.704-232.212z"/>
+</svg></a>
+            <h3><a href="../../">Solidity by Example</a></h3>
+          </div>
+          <div class="zh-badge">中文译本 · Web3-Club</div>
+        </div>
+        <button class="mode-btn" data-toggle-theme aria-label="切换主题"><svg data-icon="dark" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 438.277 438.277" width="20" height="20"><path d="M428.756 300.104c-.664-3.81-2.334-7.047-4.996-9.713-5.9-5.903-12.752-7.142-20.554-3.716-20.937 9.708-42.641 14.558-65.097 14.558-28.171 0-54.152-6.94-77.943-20.838-23.791-13.894-42.631-32.736-56.525-56.53-13.899-23.793-20.844-49.773-20.844-77.945 0-21.888 4.333-42.683 12.991-62.384 8.66-19.7 21.176-36.973 37.543-51.82 6.283-5.898 7.713-12.752 4.287-20.557-3.236-7.801-9.041-11.511-17.415-11.132-29.121 1.141-56.72 7.664-82.797 19.556C111.33 31.478 88.917 47.13 70.168 66.548c-18.747 19.414-33.595 42.399-44.54 68.95-10.942 26.553-16.416 54.39-16.416 83.511 0 29.694 5.806 58.054 17.416 85.082 11.613 27.028 27.218 50.344 46.824 69.949 19.604 19.599 42.92 35.207 69.951 46.822 27.028 11.607 55.384 17.415 85.075 17.415 42.64 0 81.987-11.563 118.054-34.69 36.069-23.124 63.05-54.006 80.944-92.645 1.524-3.423 1.951-7.036 1.28-10.838z"/></svg><svg data-icon="light" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.4 302.4" width="20" height="20"><circle cx="151.2" cy="151.2" r="48" fill="none" stroke="#252519" stroke-width="16"/><g stroke="#252519" stroke-width="12" stroke-linecap="round"><path d="M151.2 20 v32M151.2 250 v32M20 151.2 h32M250 151.2 h32M55 55 l22 22M225 225 l22 22M55 247 l22 -22M225 77 l22 -22"/></g></svg></button>
+      </header>
+      <div class="children">
+        
+    <article class="article">
+      <div class="article-content">
+        <h2>Stable Swap AMM</h2>
+        <div class="en-link">英文原页：<a href="https://solidity-by-example.org/defi/stable-swap-amm" target="_blank" rel="noreferrer">https://solidity-by-example.org/defi/stable-swap-amm</a></div>
+        <p>Curve 稳定兑换 AMM 的简化版本</p>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/*
+不变量 —— 交易价格和流动性数量由该方程决定
+
+An^n sum(x_i) + D = ADn^n + D^(n + 1) / (n^n prod(x_i))
+
+主题
+0. 牛顿法 x_(n + 1) = x_n - f(x_n) / f&#x27;(x_n)
+1. 不变量
+2. 兑换
+   - 计算 Y
+   - 计算 D
+3. 获取虚拟价格
+4. 添加流动性
+   - 失衡手续费
+5. 移除流动性
+6. 移除流动性（单一代币）
+   - 计算提取单一代币
+   - getYD
+TODO: 测试？
+*/
+
+library Math {
+    function abs(uint256 x, uint256 y) internal pure returns (uint256) {
+        return x &gt;= y ? x - y : y - x;
+    }
+}
+
+contract StableSwap {
+    // 代币数量
+    uint256 private constant N = 3;
+    // 放大系数乘以 N^(N - 1)
+    // 值越大，曲线越平坦
+    // 值越小，曲线越接近恒定乘积 AMM
+    uint256 private constant A = 1000 * (N ** (N - 1));
+    // 0.03%
+    uint256 private constant SWAP_FEE = 300;
+    // 流动性手续费由 2 个约束推导
+    // 1. 添加 / 移除流动性后资金池仍平衡时，手续费为 0
+    // 2. 在平衡池中兑换，等价于向平衡池先添加再移除流动性
+    // 兑换手续费 = 添加流动性手续费 + 移除流动性手续费
+    uint256 private constant LIQUIDITY_FEE = (SWAP_FEE * N) / (4 * (N - 1));
+    uint256 private constant FEE_DENOMINATOR = 1e6;
+
+    address[N] public tokens;
+    // 将每种代币归一化到 18 位小数
+    // 例如 —— DAI（18 位小数）、USDC（6 位小数）、USDT（6 位小数）
+    uint256[N] private multipliers = [1, 1e12, 1e12];
+    uint256[N] public balances;
+
+    // 1 份额 = 1e18，18 位小数
+    uint256 private constant DECIMALS = 18;
+    uint256 public totalSupply;
+    mapping(address =&gt; uint256) public balanceOf;
+
+    constructor(address[N] memory _tokens) {
+        tokens = _tokens;
+    }
+
+    function _mint(address _to, uint256 _amount) private {
+        balanceOf[_to] += _amount;
+        totalSupply += _amount;
+    }
+
+    function _burn(address _from, uint256 _amount) private {
+        balanceOf[_from] -= _amount;
+        totalSupply -= _amount;
+    }
+
+    // 返回按精度调整后的余额，调整到 18 位小数
+    function _xp() private view returns (uint256[N] memory xp) {
+        for (uint256 i; i &lt; N; ++i) {
+            xp[i] = balances[i] * multipliers[i];
+        }
+    }
+
+    /**
+     * @notice 计算 D，即完全平衡池中的余额之和
+     * 若余额为 x_0, x_1, ... x_(n-1)，则 sum(x_i) = D
+     * @param xp 按精度调整后的余额
+     * @return D
+     */
+    function _getD(uint256[N] memory xp) private pure returns (uint256) {
+        /*
+        用牛顿法计算 D
+        -----------------------------
+        f(D) = ADn^n + D^(n + 1) / (n^n prod(x_i)) - An^n sum(x_i) - D 
+        f&#x27;(D) = An^n + (n + 1) D^n / (n^n prod(x_i)) - 1
+
+                     (as + np)D_n
+        D_(n+1) = -----------------------
+                  (a - 1)D_n + (n + 1)p
+
+        a = An^n
+        s = sum(x_i)
+        p = (D_n)^(n + 1) / (n^n prod(x_i))
+        */
+        uint256 a = A * N; // An^n
+
+        uint256 s; // x_0 + x_1 + ... + x_(n-1)
+        for (uint256 i; i &lt; N; ++i) {
+            s += xp[i];
+        }
+
+        // 牛顿法
+        // 初始猜测，d &lt;= s
+        uint256 d = s;
+        uint256 d_prev;
+        for (uint256 i; i &lt; 255; ++i) {
+            // p = D^(n + 1) / (n^n * x_0 * ... * x_(n-1))
+            uint256 p = d;
+            for (uint256 j; j &lt; N; ++j) {
+                p = (p * d) / (N * xp[j]);
+            }
+            d_prev = d;
+            d = ((a * s + N * p) * d) / ((a - 1) * d + (N + 1) * p);
+
+            if (Math.abs(d, d_prev) &lt;= 1) {
+                return d;
+            }
+        }
+        revert(&quot;D didn&#x27;t converge&quot;);
+    }
+
+    /**
+     * @notice 给定代币 i 的新余额，计算代币 j 的新余额
+     * @param i 输入代币的索引
+     * @param j 输出代币的索引
+     * @param x 代币 i 的新余额
+     * @param xp 当前按精度调整后的余额
+     */
+    function _getY(uint256 i, uint256 j, uint256 x, uint256[N] memory xp)
+        private
+        pure
+        returns (uint256)
+    {
+        /*
+        用牛顿法计算 y
+        -----------------------------
+        y = x_j
+
+        f(y) = y^2 + y(b - D) - c
+
+                    y_n^2 + c
+        y_(n+1) = --------------
+                   2y_n + b - D
+
+        其中
+        s = sum(x_k), k != j
+        p = prod(x_k), k != j
+        b = s + D / (An^n)
+        c = D^(n + 1) / (n^n * p * An^n)
+        */
+        uint256 a = A * N;
+        uint256 d = _getD(xp);
+        uint256 s;
+        uint256 c = d;
+
+        uint256 _x;
+        for (uint256 k; k &lt; N; ++k) {
+            if (k == i) {
+                _x = x;
+            } else if (k == j) {
+                continue;
+            } else {
+                _x = xp[k];
+            }
+
+            s += _x;
+            c = (c * d) / (N * _x);
+        }
+        c = (c * d) / (N * a);
+        uint256 b = s + d / a;
+
+        // 牛顿法
+        uint256 y_prev;
+        // 初始猜测，y &lt;= d
+        uint256 y = d;
+        for (uint256 _i; _i &lt; 255; ++_i) {
+            y_prev = y;
+            y = (y * y + c) / (2 * y + b - d);
+            if (Math.abs(y, y_prev) &lt;= 1) {
+                return y;
+            }
+        }
+        revert(&quot;y didn&#x27;t converge&quot;);
+    }
+
+    /**
+     * @notice 给定按精度调整后的余额 xp 和流动性 d，计算代币 i 的新余额
+     * @dev 计算 y 的方程与 _getY 相同
+     * @param i 要计算新余额的代币索引
+     * @param xp 按精度调整后的余额
+     * @param d 流动性 d
+     * @return 代币 i 的新余额
+     */
+    function _getYD(uint256 i, uint256[N] memory xp, uint256 d)
+        private
+        pure
+        returns (uint256)
+    {
+        uint256 a = A * N;
+        uint256 s;
+        uint256 c = d;
+
+        uint256 _x;
+        for (uint256 k; k &lt; N; ++k) {
+            if (k != i) {
+                _x = xp[k];
+            } else {
+                continue;
+            }
+
+            s += _x;
+            c = (c * d) / (N * _x);
+        }
+        c = (c * d) / (N * a);
+        uint256 b = s + d / a;
+
+        // 牛顿法
+        uint256 y_prev;
+        // 初始猜测，y &lt;= d
+        uint256 y = d;
+        for (uint256 _i; _i &lt; 255; ++_i) {
+            y_prev = y;
+            y = (y * y + c) / (2 * y + b - d);
+            if (Math.abs(y, y_prev) &lt;= 1) {
+                return y;
+            }
+        }
+        revert(&quot;y didn&#x27;t converge&quot;);
+    }
+
+    // 估算 1 份额的价值
+    // 1 份额值多少代币？
+    function getVirtualPrice() external view returns (uint256) {
+        uint256 d = _getD(_xp());
+        uint256 _totalSupply = totalSupply;
+        if (_totalSupply &gt; 0) {
+            return (d * 10 ** DECIMALS) / _totalSupply;
+        }
+        return 0;
+    }
+
+    /**
+     * @notice 用 dx 数量的代币 i 兑换代币 j
+     * @param i 输入代币的索引
+     * @param j 输出代币的索引
+     * @param dx 输入代币数量
+     * @param minDy 最少输出代币数量
+     */
+    function swap(uint256 i, uint256 j, uint256 dx, uint256 minDy)
+        external
+        returns (uint256 dy)
+    {
+        require(i != j, &quot;i = j&quot;);
+
+        IERC20(tokens[i]).transferFrom(msg.sender, address(this), dx);
+
+        // 计算 dy
+        uint256[N] memory xp = _xp();
+        uint256 x = xp[i] + dx * multipliers[i];
+
+        uint256 y0 = xp[j];
+        uint256 y1 = _getY(i, j, x, xp);
+        // 由于 x 增加，y0 必须 &gt;= y1
+        // -1 用于向下取整
+        dy = (y0 - y1 - 1) / multipliers[j];
+
+        // 从 dy 中扣除手续费
+        uint256 fee = (dy * SWAP_FEE) / FEE_DENOMINATOR;
+        dy -= fee;
+        require(dy &gt;= minDy, &quot;dy &lt; min&quot;);
+
+        balances[i] += dx;
+        balances[j] -= dy;
+
+        IERC20(tokens[j]).transfer(msg.sender, dy);
+    }
+
+    function addLiquidity(uint256[N] calldata amounts, uint256 minShares)
+        external
+        returns (uint256 shares)
+    {
+        // 计算当前流动性 d0
+        uint256 _totalSupply = totalSupply;
+        uint256 d0;
+        uint256[N] memory old_xs = _xp();
+        if (_totalSupply &gt; 0) {
+            d0 = _getD(old_xs);
+        }
+
+        // 转入代币
+        uint256[N] memory new_xs;
+        for (uint256 i; i &lt; N; ++i) {
+            uint256 amount = amounts[i];
+            if (amount &gt; 0) {
+                IERC20(tokens[i]).transferFrom(
+                    msg.sender, address(this), amount
+                );
+                new_xs[i] = old_xs[i] + amount * multipliers[i];
+            } else {
+                new_xs[i] = old_xs[i];
+            }
+        }
+
+        // 计算新流动性 d1
+        uint256 d1 = _getD(new_xs);
+        require(d1 &gt; d0, &quot;liquidity didn&#x27;t increase&quot;);
+
+        // 计入失衡手续费后重新计算 D
+        uint256 d2;
+        if (_totalSupply &gt; 0) {
+            for (uint256 i; i &lt; N; ++i) {
+                // TODO: 为什么是 old_xs[i] * d1 / d0？为什么不是 d1 / N？
+                uint256 idealBalance = (old_xs[i] * d1) / d0;
+                uint256 diff = Math.abs(new_xs[i], idealBalance);
+                new_xs[i] -= (LIQUIDITY_FEE * diff) / FEE_DENOMINATOR;
+            }
+
+            d2 = _getD(new_xs);
+        } else {
+            d2 = d1;
+        }
+
+        // 更新余额
+        for (uint256 i; i &lt; N; ++i) {
+            balances[i] += amounts[i];
+        }
+
+        // 要铸造的份额 = (d2 - d0) / d0 * total supply
+        // d1 &gt;= d2 &gt;= d0
+        if (_totalSupply &gt; 0) {
+            shares = ((d2 - d0) * _totalSupply) / d0;
+        } else {
+            shares = d2;
+        }
+        require(shares &gt;= minShares, &quot;shares &lt; min&quot;);
+        _mint(msg.sender, shares);
+    }
+
+    function removeLiquidity(uint256 shares, uint256[N] calldata minAmountsOut)
+        external
+        returns (uint256[N] memory amountsOut)
+    {
+        uint256 _totalSupply = totalSupply;
+
+        for (uint256 i; i &lt; N; ++i) {
+            uint256 amountOut = (balances[i] * shares) / _totalSupply;
+            require(amountOut &gt;= minAmountsOut[i], &quot;out &lt; min&quot;);
+
+            balances[i] -= amountOut;
+            amountsOut[i] = amountOut;
+
+            IERC20(tokens[i]).transfer(msg.sender, amountOut);
+        }
+
+        _burn(msg.sender, shares);
+    }
+
+    /**
+     * @notice 计算销毁份额后可收到的代币 i 数量
+     * @param shares 要销毁的份额
+     * @param i 要提取的代币索引
+     * @return dy 可收到的代币 i 数量
+     *         fee 提取手续费。手续费已包含在 dy 中
+     */
+    function _calcWithdrawOneToken(uint256 shares, uint256 i)
+        private
+        view
+        returns (uint256 dy, uint256 fee)
+    {
+        uint256 _totalSupply = totalSupply;
+        uint256[N] memory xp = _xp();
+
+        // 计算 d0 和 d1
+        uint256 d0 = _getD(xp);
+        uint256 d1 = d0 - (d0 * shares) / _totalSupply;
+
+        // 计算 D = d1 时 y 的减少量
+        uint256 y0 = _getYD(i, xp, d1);
+        // d1 &lt;= d0，因此 y 必须 &lt;= xp[i]
+        uint256 dy0 = (xp[i] - y0) / multipliers[i];
+
+        // 计算失衡手续费，用手续费更新 xp
+        uint256 dx;
+        for (uint256 j; j &lt; N; ++j) {
+            if (j == i) {
+                dx = (xp[j] * d1) / d0 - y0;
+            } else {
+                // d1 / d0 &lt;= 1
+                dx = xp[j] - (xp[j] * d1) / d0;
+            }
+            xp[j] -= (LIQUIDITY_FEE * dx) / FEE_DENOMINATOR;
+        }
+
+        // 用包含失衡手续费的 xp 重新计算 y
+        uint256 y1 = _getYD(i, xp, d1);
+        // - 1 用于向下取整
+        dy = (xp[i] - y1 - 1) / multipliers[i];
+        fee = dy0 - dy;
+    }
+
+    function calcWithdrawOneToken(uint256 shares, uint256 i)
+        external
+        view
+        returns (uint256 dy, uint256 fee)
+    {
+        return _calcWithdrawOneToken(shares, i);
+    }
+
+    /**
+     * @notice 以代币 i 提取流动性
+     * @param shares 要销毁的份额
+     * @param i 要提取的代币
+     * @param minAmountOut 必须提取的代币 i 的最小数量
+     */
+    function removeLiquidityOneToken(
+        uint256 shares,
+        uint256 i,
+        uint256 minAmountOut
+    ) external returns (uint256 amountOut) {
+        (amountOut,) = _calcWithdrawOneToken(shares, i);
+        require(amountOut &gt;= minAmountOut, &quot;out &lt; min&quot;);
+
+        balances[i] -= amountOut;
+        _burn(msg.sender, shares);
+
+        IERC20(tokens[i]).transfer(msg.sender, amountOut);
+    }
+}
+
+interface IERC20 {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount)
+        external
+        returns (bool);
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount)
+        external
+        returns (bool);
+}
+</code></pre>
+        <div class="prev-next"><a href="../../defi/constant-product-amm/">&lt; 恒定乘积 AMM</a><span></span></div>
+        <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8qCuS4jeWPmOmHjyDigJTigJQg5Lqk5piT5Lu35qC85ZKM5rWB5Yqo5oCn5pWw6YeP55Sx6K+l5pa556iL5Yaz5a6aCgpBbl5uIHN1bSh4X2kpICsgRCA9IEFEbl5uICsgRF4obiArIDEpIC8gKG5ebiBwcm9kKHhfaSkpCgrkuLvpopgKMC4g54mb6aG/5rOVIHhfKG4gKyAxKSA9IHhfbiAtIGYoeF9uKSAvIGYnKHhfbikKMS4g5LiN5Y+Y6YePCjIuIOWFkeaNogogICAtIOiuoeeulyBZCiAgIC0g6K6h566XIEQKMy4g6I635Y+W6Jma5ouf5Lu35qC8CjQuIOa3u+WKoOa1geWKqOaApwogICAtIOWkseihoeaJi+e7rei0uQo1LiDnp7vpmaTmtYHliqjmgKcKNi4g56e76Zmk5rWB5Yqo5oCn77yI5Y2V5LiA5Luj5biB77yJCiAgIC0g6K6h566X5o+Q5Y+W5Y2V5LiA5Luj5biBCiAgIC0gZ2V0WUQKVE9ETzog5rWL6K+V77yfCiovCgpsaWJyYXJ5IE1hdGggewogICAgZnVuY3Rpb24gYWJzKHVpbnQyNTYgeCwgdWludDI1NiB5KSBpbnRlcm5hbCBwdXJlIHJldHVybnMgKHVpbnQyNTYpIHsKICAgICAgICByZXR1cm4geCA+PSB5ID8geCAtIHkgOiB5IC0geDsKICAgIH0KfQoKY29udHJhY3QgU3RhYmxlU3dhcCB7CiAgICAvLyDku6PluIHmlbDph48KICAgIHVpbnQyNTYgcHJpdmF0ZSBjb25zdGFudCBOID0gMzsKICAgIC8vIOaUvuWkp+ezu+aVsOS5mOS7pSBOXihOIC0gMSkKICAgIC8vIOWAvOi2iuWkp++8jOabsue6v+i2iuW5s+WdpgogICAgLy8g5YC86LaK5bCP77yM5puy57q/6LaK5o6l6L+R5oGS5a6a5LmY56evIEFNTQogICAgdWludDI1NiBwcml2YXRlIGNvbnN0YW50IEEgPSAxMDAwICogKE4gKiogKE4gLSAxKSk7CiAgICAvLyAwLjAzJQogICAgdWludDI1NiBwcml2YXRlIGNvbnN0YW50IFNXQVBfRkVFID0gMzAwOwogICAgLy8g5rWB5Yqo5oCn5omL57ut6LS555SxIDIg5Liq57qm5p2f5o6o5a+8CiAgICAvLyAxLiDmt7vliqAgLyDnp7vpmaTmtYHliqjmgKflkI7otYTph5HmsaDku43lubPooaHml7bvvIzmiYvnu63otLnkuLogMAogICAgLy8gMi4g5Zyo5bmz6KGh5rGg5Lit5YWR5o2i77yM562J5Lu35LqO5ZCR5bmz6KGh5rGg5YWI5re75Yqg5YaN56e76Zmk5rWB5Yqo5oCnCiAgICAvLyDlhZHmjaLmiYvnu63otLkgPSDmt7vliqDmtYHliqjmgKfmiYvnu63otLkgKyDnp7vpmaTmtYHliqjmgKfmiYvnu63otLkKICAgIHVpbnQyNTYgcHJpdmF0ZSBjb25zdGFudCBMSVFVSURJVFlfRkVFID0gKFNXQVBfRkVFICogTikgLyAoNCAqIChOIC0gMSkpOwogICAgdWludDI1NiBwcml2YXRlIGNvbnN0YW50IEZFRV9ERU5PTUlOQVRPUiA9IDFlNjsKCiAgICBhZGRyZXNzW05dIHB1YmxpYyB0b2tlbnM7CiAgICAvLyDlsIbmr4/np43ku6PluIHlvZLkuIDljJbliLAgMTgg5L2N5bCP5pWwCiAgICAvLyDkvovlpoIg4oCU4oCUIERBSe+8iDE4IOS9jeWwj+aVsO+8ieOAgVVTREPvvIg2IOS9jeWwj+aVsO+8ieOAgVVTRFTvvIg2IOS9jeWwj+aVsO+8iQogICAgdWludDI1NltOXSBwcml2YXRlIG11bHRpcGxpZXJzID0gWzEsIDFlMTIsIDFlMTJdOwogICAgdWludDI1NltOXSBwdWJsaWMgYmFsYW5jZXM7CgogICAgLy8gMSDku73pop0gPSAxZTE477yMMTgg5L2N5bCP5pWwCiAgICB1aW50MjU2IHByaXZhdGUgY29uc3RhbnQgREVDSU1BTFMgPSAxODsKICAgIHVpbnQyNTYgcHVibGljIHRvdGFsU3VwcGx5OwogICAgbWFwcGluZyhhZGRyZXNzID0+IHVpbnQyNTYpIHB1YmxpYyBiYWxhbmNlT2Y7CgogICAgY29uc3RydWN0b3IoYWRkcmVzc1tOXSBtZW1vcnkgX3Rva2VucykgewogICAgICAgIHRva2VucyA9IF90b2tlbnM7CiAgICB9CgogICAgZnVuY3Rpb24gX21pbnQoYWRkcmVzcyBfdG8sIHVpbnQyNTYgX2Ftb3VudCkgcHJpdmF0ZSB7CiAgICAgICAgYmFsYW5jZU9mW190b10gKz0gX2Ftb3VudDsKICAgICAgICB0b3RhbFN1cHBseSArPSBfYW1vdW50OwogICAgfQoKICAgIGZ1bmN0aW9uIF9idXJuKGFkZHJlc3MgX2Zyb20sIHVpbnQyNTYgX2Ftb3VudCkgcHJpdmF0ZSB7CiAgICAgICAgYmFsYW5jZU9mW19mcm9tXSAtPSBfYW1vdW50OwogICAgICAgIHRvdGFsU3VwcGx5IC09IF9hbW91bnQ7CiAgICB9CgogICAgLy8g6L+U5Zue5oyJ57K+5bqm6LCD5pW05ZCO55qE5L2Z6aKd77yM6LCD5pW05YiwIDE4IOS9jeWwj+aVsAogICAgZnVuY3Rpb24gX3hwKCkgcHJpdmF0ZSB2aWV3IHJldHVybnMgKHVpbnQyNTZbTl0gbWVtb3J5IHhwKSB7CiAgICAgICAgZm9yICh1aW50MjU2IGk7IGkgPCBOOyArK2kpIHsKICAgICAgICAgICAgeHBbaV0gPSBiYWxhbmNlc1tpXSAqIG11bHRpcGxpZXJzW2ldOwogICAgICAgIH0KICAgIH0KCiAgICAvKioKICAgICAqIEBub3RpY2Ug6K6h566XIETvvIzljbPlrozlhajlubPooaHmsaDkuK3nmoTkvZnpop3kuYvlkowKICAgICAqIOiLpeS9memineS4uiB4XzAsIHhfMSwgLi4uIHhfKG4tMSnvvIzliJkgc3VtKHhfaSkgPSBECiAgICAgKiBAcGFyYW0geHAg5oyJ57K+5bqm6LCD5pW05ZCO55qE5L2Z6aKdCiAgICAgKiBAcmV0dXJuIEQKICAgICAqLwogICAgZnVuY3Rpb24gX2dldEQodWludDI1NltOXSBtZW1vcnkgeHApIHByaXZhdGUgcHVyZSByZXR1cm5zICh1aW50MjU2KSB7CiAgICAgICAgLyoKICAgICAgICDnlKjniZvpob/ms5XorqHnrpcgRAogICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgZihEKSA9IEFEbl5uICsgRF4obiArIDEpIC8gKG5ebiBwcm9kKHhfaSkpIC0gQW5ebiBzdW0oeF9pKSAtIEQgCiAgICAgICAgZicoRCkgPSBBbl5uICsgKG4gKyAxKSBEXm4gLyAobl5uIHByb2QoeF9pKSkgLSAxCgogICAgICAgICAgICAgICAgICAgICAoYXMgKyBucClEX24KICAgICAgICBEXyhuKzEpID0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgKGEgLSAxKURfbiArIChuICsgMSlwCgogICAgICAgIGEgPSBBbl5uCiAgICAgICAgcyA9IHN1bSh4X2kpCiAgICAgICAgcCA9IChEX24pXihuICsgMSkgLyAobl5uIHByb2QoeF9pKSkKICAgICAgICAqLwogICAgICAgIHVpbnQyNTYgYSA9IEEgKiBOOyAvLyBBbl5uCgogICAgICAgIHVpbnQyNTYgczsgLy8geF8wICsgeF8xICsgLi4uICsgeF8obi0xKQogICAgICAgIGZvciAodWludDI1NiBpOyBpIDwgTjsgKytpKSB7CiAgICAgICAgICAgIHMgKz0geHBbaV07CiAgICAgICAgfQoKICAgICAgICAvLyDniZvpob/ms5UKICAgICAgICAvLyDliJ3lp4vnjJzmtYvvvIxkIDw9IHMKICAgICAgICB1aW50MjU2IGQgPSBzOwogICAgICAgIHVpbnQyNTYgZF9wcmV2OwogICAgICAgIGZvciAodWludDI1NiBpOyBpIDwgMjU1OyArK2kpIHsKICAgICAgICAgICAgLy8gcCA9IEReKG4gKyAxKSAvIChuXm4gKiB4XzAgKiAuLi4gKiB4XyhuLTEpKQogICAgICAgICAgICB1aW50MjU2IHAgPSBkOwogICAgICAgICAgICBmb3IgKHVpbnQyNTYgajsgaiA8IE47ICsraikgewogICAgICAgICAgICAgICAgcCA9IChwICogZCkgLyAoTiAqIHhwW2pdKTsKICAgICAgICAgICAgfQogICAgICAgICAgICBkX3ByZXYgPSBkOwogICAgICAgICAgICBkID0gKChhICogcyArIE4gKiBwKSAqIGQpIC8gKChhIC0gMSkgKiBkICsgKE4gKyAxKSAqIHApOwoKICAgICAgICAgICAgaWYgKE1hdGguYWJzKGQsIGRfcHJldikgPD0gMSkgewogICAgICAgICAgICAgICAgcmV0dXJuIGQ7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgcmV2ZXJ0KCJEIGRpZG4ndCBjb252ZXJnZSIpOwogICAgfQoKICAgIC8qKgogICAgICogQG5vdGljZSDnu5nlrprku6PluIEgaSDnmoTmlrDkvZnpop3vvIzorqHnrpfku6PluIEgaiDnmoTmlrDkvZnpop0KICAgICAqIEBwYXJhbSBpIOi+k+WFpeS7o+W4geeahOe0ouW8lQogICAgICogQHBhcmFtIGog6L6T5Ye65Luj5biB55qE57Si5byVCiAgICAgKiBAcGFyYW0geCDku6PluIEgaSDnmoTmlrDkvZnpop0KICAgICAqIEBwYXJhbSB4cCDlvZPliY3mjInnsr7luqbosIPmlbTlkI7nmoTkvZnpop0KICAgICAqLwogICAgZnVuY3Rpb24gX2dldFkodWludDI1NiBpLCB1aW50MjU2IGosIHVpbnQyNTYgeCwgdWludDI1NltOXSBtZW1vcnkgeHApCiAgICAgICAgcHJpdmF0ZQogICAgICAgIHB1cmUKICAgICAgICByZXR1cm5zICh1aW50MjU2KQogICAgewogICAgICAgIC8qCiAgICAgICAg55So54mb6aG/5rOV6K6h566XIHkKICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIHkgPSB4X2oKCiAgICAgICAgZih5KSA9IHleMiArIHkoYiAtIEQpIC0gYwoKICAgICAgICAgICAgICAgICAgICB5X25eMiArIGMKICAgICAgICB5XyhuKzEpID0gLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgIDJ5X24gKyBiIC0gRAoKICAgICAgICDlhbbkuK0KICAgICAgICBzID0gc3VtKHhfayksIGsgIT0gagogICAgICAgIHAgPSBwcm9kKHhfayksIGsgIT0gagogICAgICAgIGIgPSBzICsgRCAvIChBbl5uKQogICAgICAgIGMgPSBEXihuICsgMSkgLyAobl5uICogcCAqIEFuXm4pCiAgICAgICAgKi8KICAgICAgICB1aW50MjU2IGEgPSBBICogTjsKICAgICAgICB1aW50MjU2IGQgPSBfZ2V0RCh4cCk7CiAgICAgICAgdWludDI1NiBzOwogICAgICAgIHVpbnQyNTYgYyA9IGQ7CgogICAgICAgIHVpbnQyNTYgX3g7CiAgICAgICAgZm9yICh1aW50MjU2IGs7IGsgPCBOOyArK2spIHsKICAgICAgICAgICAgaWYgKGsgPT0gaSkgewogICAgICAgICAgICAgICAgX3ggPSB4OwogICAgICAgICAgICB9IGVsc2UgaWYgKGsgPT0gaikgewogICAgICAgICAgICAgICAgY29udGludWU7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBfeCA9IHhwW2tdOwogICAgICAgICAgICB9CgogICAgICAgICAgICBzICs9IF94OwogICAgICAgICAgICBjID0gKGMgKiBkKSAvIChOICogX3gpOwogICAgICAgIH0KICAgICAgICBjID0gKGMgKiBkKSAvIChOICogYSk7CiAgICAgICAgdWludDI1NiBiID0gcyArIGQgLyBhOwoKICAgICAgICAvLyDniZvpob/ms5UKICAgICAgICB1aW50MjU2IHlfcHJldjsKICAgICAgICAvLyDliJ3lp4vnjJzmtYvvvIx5IDw9IGQKICAgICAgICB1aW50MjU2IHkgPSBkOwogICAgICAgIGZvciAodWludDI1NiBfaTsgX2kgPCAyNTU7ICsrX2kpIHsKICAgICAgICAgICAgeV9wcmV2ID0geTsKICAgICAgICAgICAgeSA9ICh5ICogeSArIGMpIC8gKDIgKiB5ICsgYiAtIGQpOwogICAgICAgICAgICBpZiAoTWF0aC5hYnMoeSwgeV9wcmV2KSA8PSAxKSB7CiAgICAgICAgICAgICAgICByZXR1cm4geTsKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXZlcnQoInkgZGlkbid0IGNvbnZlcmdlIik7CiAgICB9CgogICAgLyoqCiAgICAgKiBAbm90aWNlIOe7meWumuaMieeyvuW6puiwg+aVtOWQjueahOS9meminSB4cCDlkozmtYHliqjmgKcgZO+8jOiuoeeul+S7o+W4gSBpIOeahOaWsOS9meminQogICAgICogQGRldiDorqHnrpcgeSDnmoTmlrnnqIvkuI4gX2dldFkg55u45ZCMCiAgICAgKiBAcGFyYW0gaSDopoHorqHnrpfmlrDkvZnpop3nmoTku6PluIHntKLlvJUKICAgICAqIEBwYXJhbSB4cCDmjInnsr7luqbosIPmlbTlkI7nmoTkvZnpop0KICAgICAqIEBwYXJhbSBkIOa1geWKqOaApyBkCiAgICAgKiBAcmV0dXJuIOS7o+W4gSBpIOeahOaWsOS9meminQogICAgICovCiAgICBmdW5jdGlvbiBfZ2V0WUQodWludDI1NiBpLCB1aW50MjU2W05dIG1lbW9yeSB4cCwgdWludDI1NiBkKQogICAgICAgIHByaXZhdGUKICAgICAgICBwdXJlCiAgICAgICAgcmV0dXJucyAodWludDI1NikKICAgIHsKICAgICAgICB1aW50MjU2IGEgPSBBICogTjsKICAgICAgICB1aW50MjU2IHM7CiAgICAgICAgdWludDI1NiBjID0gZDsKCiAgICAgICAgdWludDI1NiBfeDsKICAgICAgICBmb3IgKHVpbnQyNTYgazsgayA8IE47ICsraykgewogICAgICAgICAgICBpZiAoayAhPSBpKSB7CiAgICAgICAgICAgICAgICBfeCA9IHhwW2tdOwogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgY29udGludWU7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHMgKz0gX3g7CiAgICAgICAgICAgIGMgPSAoYyAqIGQpIC8gKE4gKiBfeCk7CiAgICAgICAgfQogICAgICAgIGMgPSAoYyAqIGQpIC8gKE4gKiBhKTsKICAgICAgICB1aW50MjU2IGIgPSBzICsgZCAvIGE7CgogICAgICAgIC8vIOeJm+mhv+azlQogICAgICAgIHVpbnQyNTYgeV9wcmV2OwogICAgICAgIC8vIOWIneWni+eMnOa1i++8jHkgPD0gZAogICAgICAgIHVpbnQyNTYgeSA9IGQ7CiAgICAgICAgZm9yICh1aW50MjU2IF9pOyBfaSA8IDI1NTsgKytfaSkgewogICAgICAgICAgICB5X3ByZXYgPSB5OwogICAgICAgICAgICB5ID0gKHkgKiB5ICsgYykgLyAoMiAqIHkgKyBiIC0gZCk7CiAgICAgICAgICAgIGlmIChNYXRoLmFicyh5LCB5X3ByZXYpIDw9IDEpIHsKICAgICAgICAgICAgICAgIHJldHVybiB5OwogICAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHJldmVydCgieSBkaWRuJ3QgY29udmVyZ2UiKTsKICAgIH0KCiAgICAvLyDkvLDnrpcgMSDku73pop3nmoTku7flgLwKICAgIC8vIDEg5Lu96aKd5YC85aSa5bCR5Luj5biB77yfCiAgICBmdW5jdGlvbiBnZXRWaXJ0dWFsUHJpY2UoKSBleHRlcm5hbCB2aWV3IHJldHVybnMgKHVpbnQyNTYpIHsKICAgICAgICB1aW50MjU2IGQgPSBfZ2V0RChfeHAoKSk7CiAgICAgICAgdWludDI1NiBfdG90YWxTdXBwbHkgPSB0b3RhbFN1cHBseTsKICAgICAgICBpZiAoX3RvdGFsU3VwcGx5ID4gMCkgewogICAgICAgICAgICByZXR1cm4gKGQgKiAxMCAqKiBERUNJTUFMUykgLyBfdG90YWxTdXBwbHk7CiAgICAgICAgfQogICAgICAgIHJldHVybiAwOwogICAgfQoKICAgIC8qKgogICAgICogQG5vdGljZSDnlKggZHgg5pWw6YeP55qE5Luj5biBIGkg5YWR5o2i5Luj5biBIGoKICAgICAqIEBwYXJhbSBpIOi+k+WFpeS7o+W4geeahOe0ouW8lQogICAgICogQHBhcmFtIGog6L6T5Ye65Luj5biB55qE57Si5byVCiAgICAgKiBAcGFyYW0gZHgg6L6T5YWl5Luj5biB5pWw6YePCiAgICAgKiBAcGFyYW0gbWluRHkg5pyA5bCR6L6T5Ye65Luj5biB5pWw6YePCiAgICAgKi8KICAgIGZ1bmN0aW9uIHN3YXAodWludDI1NiBpLCB1aW50MjU2IGosIHVpbnQyNTYgZHgsIHVpbnQyNTYgbWluRHkpCiAgICAgICAgZXh0ZXJuYWwKICAgICAgICByZXR1cm5zICh1aW50MjU2IGR5KQogICAgewogICAgICAgIHJlcXVpcmUoaSAhPSBqLCAiaSA9IGoiKTsKCiAgICAgICAgSUVSQzIwKHRva2Vuc1tpXSkudHJhbnNmZXJGcm9tKG1zZy5zZW5kZXIsIGFkZHJlc3ModGhpcyksIGR4KTsKCiAgICAgICAgLy8g6K6h566XIGR5CiAgICAgICAgdWludDI1NltOXSBtZW1vcnkgeHAgPSBfeHAoKTsKICAgICAgICB1aW50MjU2IHggPSB4cFtpXSArIGR4ICogbXVsdGlwbGllcnNbaV07CgogICAgICAgIHVpbnQyNTYgeTAgPSB4cFtqXTsKICAgICAgICB1aW50MjU2IHkxID0gX2dldFkoaSwgaiwgeCwgeHApOwogICAgICAgIC8vIOeUseS6jiB4IOWinuWKoO+8jHkwIOW/hemhuyA+PSB5MQogICAgICAgIC8vIC0xIOeUqOS6juWQkeS4i+WPluaVtAogICAgICAgIGR5ID0gKHkwIC0geTEgLSAxKSAvIG11bHRpcGxpZXJzW2pdOwoKICAgICAgICAvLyDku44gZHkg5Lit5omj6Zmk5omL57ut6LS5CiAgICAgICAgdWludDI1NiBmZWUgPSAoZHkgKiBTV0FQX0ZFRSkgLyBGRUVfREVOT01JTkFUT1I7CiAgICAgICAgZHkgLT0gZmVlOwogICAgICAgIHJlcXVpcmUoZHkgPj0gbWluRHksICJkeSA8IG1pbiIpOwoKICAgICAgICBiYWxhbmNlc1tpXSArPSBkeDsKICAgICAgICBiYWxhbmNlc1tqXSAtPSBkeTsKCiAgICAgICAgSUVSQzIwKHRva2Vuc1tqXSkudHJhbnNmZXIobXNnLnNlbmRlciwgZHkpOwogICAgfQoKICAgIGZ1bmN0aW9uIGFkZExpcXVpZGl0eSh1aW50MjU2W05dIGNhbGxkYXRhIGFtb3VudHMsIHVpbnQyNTYgbWluU2hhcmVzKQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAodWludDI1NiBzaGFyZXMpCiAgICB7CiAgICAgICAgLy8g6K6h566X5b2T5YmN5rWB5Yqo5oCnIGQwCiAgICAgICAgdWludDI1NiBfdG90YWxTdXBwbHkgPSB0b3RhbFN1cHBseTsKICAgICAgICB1aW50MjU2IGQwOwogICAgICAgIHVpbnQyNTZbTl0gbWVtb3J5IG9sZF94cyA9IF94cCgpOwogICAgICAgIGlmIChfdG90YWxTdXBwbHkgPiAwKSB7CiAgICAgICAgICAgIGQwID0gX2dldEQob2xkX3hzKTsKICAgICAgICB9CgogICAgICAgIC8vIOi9rOWFpeS7o+W4gQogICAgICAgIHVpbnQyNTZbTl0gbWVtb3J5IG5ld194czsKICAgICAgICBmb3IgKHVpbnQyNTYgaTsgaSA8IE47ICsraSkgewogICAgICAgICAgICB1aW50MjU2IGFtb3VudCA9IGFtb3VudHNbaV07CiAgICAgICAgICAgIGlmIChhbW91bnQgPiAwKSB7CiAgICAgICAgICAgICAgICBJRVJDMjAodG9rZW5zW2ldKS50cmFuc2ZlckZyb20oCiAgICAgICAgICAgICAgICAgICAgbXNnLnNlbmRlciwgYWRkcmVzcyh0aGlzKSwgYW1vdW50CiAgICAgICAgICAgICAgICApOwogICAgICAgICAgICAgICAgbmV3X3hzW2ldID0gb2xkX3hzW2ldICsgYW1vdW50ICogbXVsdGlwbGllcnNbaV07CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBuZXdfeHNbaV0gPSBvbGRfeHNbaV07CiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIC8vIOiuoeeul+aWsOa1geWKqOaApyBkMQogICAgICAgIHVpbnQyNTYgZDEgPSBfZ2V0RChuZXdfeHMpOwogICAgICAgIHJlcXVpcmUoZDEgPiBkMCwgImxpcXVpZGl0eSBkaWRuJ3QgaW5jcmVhc2UiKTsKCiAgICAgICAgLy8g6K6h5YWl5aSx6KGh5omL57ut6LS55ZCO6YeN5paw6K6h566XIEQKICAgICAgICB1aW50MjU2IGQyOwogICAgICAgIGlmIChfdG90YWxTdXBwbHkgPiAwKSB7CiAgICAgICAgICAgIGZvciAodWludDI1NiBpOyBpIDwgTjsgKytpKSB7CiAgICAgICAgICAgICAgICAvLyBUT0RPOiDkuLrku4DkuYjmmK8gb2xkX3hzW2ldICogZDEgLyBkMO+8n+S4uuS7gOS5iOS4jeaYryBkMSAvIE7vvJ8KICAgICAgICAgICAgICAgIHVpbnQyNTYgaWRlYWxCYWxhbmNlID0gKG9sZF94c1tpXSAqIGQxKSAvIGQwOwogICAgICAgICAgICAgICAgdWludDI1NiBkaWZmID0gTWF0aC5hYnMobmV3X3hzW2ldLCBpZGVhbEJhbGFuY2UpOwogICAgICAgICAgICAgICAgbmV3X3hzW2ldIC09IChMSVFVSURJVFlfRkVFICogZGlmZikgLyBGRUVfREVOT01JTkFUT1I7CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGQyID0gX2dldEQobmV3X3hzKTsKICAgICAgICB9IGVsc2UgewogICAgICAgICAgICBkMiA9IGQxOwogICAgICAgIH0KCiAgICAgICAgLy8g5pu05paw5L2Z6aKdCiAgICAgICAgZm9yICh1aW50MjU2IGk7IGkgPCBOOyArK2kpIHsKICAgICAgICAgICAgYmFsYW5jZXNbaV0gKz0gYW1vdW50c1tpXTsKICAgICAgICB9CgogICAgICAgIC8vIOimgemTuOmAoOeahOS7veminSA9IChkMiAtIGQwKSAvIGQwICogdG90YWwgc3VwcGx5CiAgICAgICAgLy8gZDEgPj0gZDIgPj0gZDAKICAgICAgICBpZiAoX3RvdGFsU3VwcGx5ID4gMCkgewogICAgICAgICAgICBzaGFyZXMgPSAoKGQyIC0gZDApICogX3RvdGFsU3VwcGx5KSAvIGQwOwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIHNoYXJlcyA9IGQyOwogICAgICAgIH0KICAgICAgICByZXF1aXJlKHNoYXJlcyA+PSBtaW5TaGFyZXMsICJzaGFyZXMgPCBtaW4iKTsKICAgICAgICBfbWludChtc2cuc2VuZGVyLCBzaGFyZXMpOwogICAgfQoKICAgIGZ1bmN0aW9uIHJlbW92ZUxpcXVpZGl0eSh1aW50MjU2IHNoYXJlcywgdWludDI1NltOXSBjYWxsZGF0YSBtaW5BbW91bnRzT3V0KQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAodWludDI1NltOXSBtZW1vcnkgYW1vdW50c091dCkKICAgIHsKICAgICAgICB1aW50MjU2IF90b3RhbFN1cHBseSA9IHRvdGFsU3VwcGx5OwoKICAgICAgICBmb3IgKHVpbnQyNTYgaTsgaSA8IE47ICsraSkgewogICAgICAgICAgICB1aW50MjU2IGFtb3VudE91dCA9IChiYWxhbmNlc1tpXSAqIHNoYXJlcykgLyBfdG90YWxTdXBwbHk7CiAgICAgICAgICAgIHJlcXVpcmUoYW1vdW50T3V0ID49IG1pbkFtb3VudHNPdXRbaV0sICJvdXQgPCBtaW4iKTsKCiAgICAgICAgICAgIGJhbGFuY2VzW2ldIC09IGFtb3VudE91dDsKICAgICAgICAgICAgYW1vdW50c091dFtpXSA9IGFtb3VudE91dDsKCiAgICAgICAgICAgIElFUkMyMCh0b2tlbnNbaV0pLnRyYW5zZmVyKG1zZy5zZW5kZXIsIGFtb3VudE91dCk7CiAgICAgICAgfQoKICAgICAgICBfYnVybihtc2cuc2VuZGVyLCBzaGFyZXMpOwogICAgfQoKICAgIC8qKgogICAgICogQG5vdGljZSDorqHnrpfplIDmr4Hku73pop3lkI7lj6/mlLbliLDnmoTku6PluIEgaSDmlbDph48KICAgICAqIEBwYXJhbSBzaGFyZXMg6KaB6ZSA5q+B55qE5Lu96aKdCiAgICAgKiBAcGFyYW0gaSDopoHmj5Dlj5bnmoTku6PluIHntKLlvJUKICAgICAqIEByZXR1cm4gZHkg5Y+v5pS25Yiw55qE5Luj5biBIGkg5pWw6YePCiAgICAgKiAgICAgICAgIGZlZSDmj5Dlj5bmiYvnu63otLnjgILmiYvnu63otLnlt7LljIXlkKvlnKggZHkg5LitCiAgICAgKi8KICAgIGZ1bmN0aW9uIF9jYWxjV2l0aGRyYXdPbmVUb2tlbih1aW50MjU2IHNoYXJlcywgdWludDI1NiBpKQogICAgICAgIHByaXZhdGUKICAgICAgICB2aWV3CiAgICAgICAgcmV0dXJucyAodWludDI1NiBkeSwgdWludDI1NiBmZWUpCiAgICB7CiAgICAgICAgdWludDI1NiBfdG90YWxTdXBwbHkgPSB0b3RhbFN1cHBseTsKICAgICAgICB1aW50MjU2W05dIG1lbW9yeSB4cCA9IF94cCgpOwoKICAgICAgICAvLyDorqHnrpcgZDAg5ZKMIGQxCiAgICAgICAgdWludDI1NiBkMCA9IF9nZXREKHhwKTsKICAgICAgICB1aW50MjU2IGQxID0gZDAgLSAoZDAgKiBzaGFyZXMpIC8gX3RvdGFsU3VwcGx5OwoKICAgICAgICAvLyDorqHnrpcgRCA9IGQxIOaXtiB5IOeahOWHj+WwkemHjwogICAgICAgIHVpbnQyNTYgeTAgPSBfZ2V0WUQoaSwgeHAsIGQxKTsKICAgICAgICAvLyBkMSA8PSBkMO+8jOWboOatpCB5IOW/hemhuyA8PSB4cFtpXQogICAgICAgIHVpbnQyNTYgZHkwID0gKHhwW2ldIC0geTApIC8gbXVsdGlwbGllcnNbaV07CgogICAgICAgIC8vIOiuoeeul+WkseihoeaJi+e7rei0ue+8jOeUqOaJi+e7rei0ueabtOaWsCB4cAogICAgICAgIHVpbnQyNTYgZHg7CiAgICAgICAgZm9yICh1aW50MjU2IGo7IGogPCBOOyArK2opIHsKICAgICAgICAgICAgaWYgKGogPT0gaSkgewogICAgICAgICAgICAgICAgZHggPSAoeHBbal0gKiBkMSkgLyBkMCAtIHkwOwogICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgLy8gZDEgLyBkMCA8PSAxCiAgICAgICAgICAgICAgICBkeCA9IHhwW2pdIC0gKHhwW2pdICogZDEpIC8gZDA7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgeHBbal0gLT0gKExJUVVJRElUWV9GRUUgKiBkeCkgLyBGRUVfREVOT01JTkFUT1I7CiAgICAgICAgfQoKICAgICAgICAvLyDnlKjljIXlkKvlpLHooaHmiYvnu63otLnnmoQgeHAg6YeN5paw6K6h566XIHkKICAgICAgICB1aW50MjU2IHkxID0gX2dldFlEKGksIHhwLCBkMSk7CiAgICAgICAgLy8gLSAxIOeUqOS6juWQkeS4i+WPluaVtAogICAgICAgIGR5ID0gKHhwW2ldIC0geTEgLSAxKSAvIG11bHRpcGxpZXJzW2ldOwogICAgICAgIGZlZSA9IGR5MCAtIGR5OwogICAgfQoKICAgIGZ1bmN0aW9uIGNhbGNXaXRoZHJhd09uZVRva2VuKHVpbnQyNTYgc2hhcmVzLCB1aW50MjU2IGkpCiAgICAgICAgZXh0ZXJuYWwKICAgICAgICB2aWV3CiAgICAgICAgcmV0dXJucyAodWludDI1NiBkeSwgdWludDI1NiBmZWUpCiAgICB7CiAgICAgICAgcmV0dXJuIF9jYWxjV2l0aGRyYXdPbmVUb2tlbihzaGFyZXMsIGkpOwogICAgfQoKICAgIC8qKgogICAgICogQG5vdGljZSDku6Xku6PluIEgaSDmj5Dlj5bmtYHliqjmgKcKICAgICAqIEBwYXJhbSBzaGFyZXMg6KaB6ZSA5q+B55qE5Lu96aKdCiAgICAgKiBAcGFyYW0gaSDopoHmj5Dlj5bnmoTku6PluIEKICAgICAqIEBwYXJhbSBtaW5BbW91bnRPdXQg5b+F6aG75o+Q5Y+W55qE5Luj5biBIGkg55qE5pyA5bCP5pWw6YePCiAgICAgKi8KICAgIGZ1bmN0aW9uIHJlbW92ZUxpcXVpZGl0eU9uZVRva2VuKAogICAgICAgIHVpbnQyNTYgc2hhcmVzLAogICAgICAgIHVpbnQyNTYgaSwKICAgICAgICB1aW50MjU2IG1pbkFtb3VudE91dAogICAgKSBleHRlcm5hbCByZXR1cm5zICh1aW50MjU2IGFtb3VudE91dCkgewogICAgICAgIChhbW91bnRPdXQsKSA9IF9jYWxjV2l0aGRyYXdPbmVUb2tlbihzaGFyZXMsIGkpOwogICAgICAgIHJlcXVpcmUoYW1vdW50T3V0ID49IG1pbkFtb3VudE91dCwgIm91dCA8IG1pbiIpOwoKICAgICAgICBiYWxhbmNlc1tpXSAtPSBhbW91bnRPdXQ7CiAgICAgICAgX2J1cm4obXNnLnNlbmRlciwgc2hhcmVzKTsKCiAgICAgICAgSUVSQzIwKHRva2Vuc1tpXSkudHJhbnNmZXIobXNnLnNlbmRlciwgYW1vdW50T3V0KTsKICAgIH0KfQoKaW50ZXJmYWNlIElFUkMyMCB7CiAgICBmdW5jdGlvbiB0b3RhbFN1cHBseSgpIGV4dGVybmFsIHZpZXcgcmV0dXJucyAodWludDI1Nik7CiAgICBmdW5jdGlvbiBiYWxhbmNlT2YoYWRkcmVzcyBhY2NvdW50KSBleHRlcm5hbCB2aWV3IHJldHVybnMgKHVpbnQyNTYpOwogICAgZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcyByZWNpcGllbnQsIHVpbnQyNTYgYW1vdW50KQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAoYm9vbCk7CiAgICBmdW5jdGlvbiBhbGxvd2FuY2UoYWRkcmVzcyBvd25lciwgYWRkcmVzcyBzcGVuZGVyKQogICAgICAgIGV4dGVybmFsCiAgICAgICAgdmlldwogICAgICAgIHJldHVybnMgKHVpbnQyNTYpOwogICAgZnVuY3Rpb24gYXBwcm92ZShhZGRyZXNzIHNwZW5kZXIsIHVpbnQyNTYgYW1vdW50KSBleHRlcm5hbCByZXR1cm5zIChib29sKTsKICAgIGZ1bmN0aW9uIHRyYW5zZmVyRnJvbShhZGRyZXNzIHNlbmRlciwgYWRkcmVzcyByZWNpcGllbnQsIHVpbnQyNTYgYW1vdW50KQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAoYm9vbCk7Cn0K" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+      </div>
+    </article>
+    
+        <footer class="footer">
+          <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
+          <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
+          <div class="footer-row">
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <div class="bar">|</div>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <div class="bar">|</div>
+            <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+          <div class="footer-row">v 0.8.26</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    document.querySelectorAll("[data-logo]").forEach(function (el) {
+      function paint() {
+        el.setAttribute("fill", document.body.classList.contains("dark") ? "rgb(0, 255, 0)" : "currentColor");
+      }
+      paint();
+      new MutationObserver(paint).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    });
+  </script>
+</body>
+</html>

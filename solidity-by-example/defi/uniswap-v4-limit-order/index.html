@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Uniswap V4 限价单 | Solidity by Example | 0.8.26</title>
+  <meta name="description" content="Solidity by Example 简体中文译本，对照 solidity-by-example.org v0.8.26。">
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body class="light">
+  <div class="layout">
+    <aside class="side-nav">
+      <h3 class="nav-category">Basic</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hello-world/">Hello World</a></li>
+<li class="nav-item"><a class="nav-link" href="../../first-app/">第一个应用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../primitives/">基本数据类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../variables/">变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constants/">常量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../immutable/">不可变</a></li>
+<li class="nav-item"><a class="nav-link" href="../../state-variables/">读写状态变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../ether-units/">以太币和 Wei</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas/">Gas 与 Gas Price</a></li>
+<li class="nav-item"><a class="nav-link" href="../../if-else/">条件判断</a></li>
+<li class="nav-item"><a class="nav-link" href="../../loop/">循环语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../mapping/">映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../array/">数组</a></li>
+<li class="nav-item"><a class="nav-link" href="../../enum/">枚举</a></li>
+<li class="nav-item"><a class="nav-link" href="../../user-defined-value-types/">用户自定义值类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../structs/">结构体</a></li>
+<li class="nav-item"><a class="nav-link" href="../../data-locations/">数据位置</a></li>
+<li class="nav-item"><a class="nav-link" href="../../transient-storage/">瞬时存储</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function/">函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../view-and-pure-functions/">View 和 Pure 函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../error/">错误或异常</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-modifier/">函数修饰符</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events-advanced/">高级事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constructor/">构造函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../inheritance/">继承</a></li>
+<li class="nav-item"><a class="nav-link" href="../../shadowing-inherited-state-variables/">继承状态变量的屏蔽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../super/">调用父合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../visibility/">可见性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../interface/">接口</a></li>
+<li class="nav-item"><a class="nav-link" href="../../payable/">Payable</a></li>
+<li class="nav-item"><a class="nav-link" href="../../sending-ether/">发送以太币</a></li>
+<li class="nav-item"><a class="nav-link" href="../../fallback/">回退函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../call/">Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../delegatecall/">Delegatecall</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-selector/">函数选择器</a></li>
+<li class="nav-item"><a class="nav-link" href="../../calling-contract/">调用其他合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../new-contract/">从合约创建合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../try-catch/">Try / Catch</a></li>
+<li class="nav-item"><a class="nav-link" href="../../import/">导入</a></li>
+<li class="nav-item"><a class="nav-link" href="../../library/">库</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-encode/">ABI 编码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-decode/">ABI 解码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hashing/">Keccak256 哈希</a></li>
+<li class="nav-item"><a class="nav-link" href="../../signature/">验证签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas-golf/">Gas 优化</a></li>
+<li class="nav-item"><a class="nav-link" href="../../bitwise/">位运算</a></li>
+<li class="nav-item"><a class="nav-link" href="../../unchecked-math/">Unchecked Math</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-variable/">汇编变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-if/">汇编条件语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-loop/">汇编循环</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-error/">汇编错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-math/">汇编数学运算</a></li>
+</ul>
+<h3 class="nav-title">Applications</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../app/ether-wallet/">以太钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-sig-wallet/">多签钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/merkle-tree/">默克尔树</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/iterable-mapping/">可迭代映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc20/">ERC20</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc721/">ERC721</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc1155/">ERC1155</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/gasless-token-transfer/">无 Gas 代币转账</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/simple-bytecode-contract/">简单字节码合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/create2/">使用 Create2 预计算合约地址</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/minimal-proxy/">最小代理合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/upgradeable-proxy/">可升级代理</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/deploy-any-contract/">部署任意合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/write-to-any-slot/">写入任意存储槽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/uni-directional-payment-channel/">单向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/bi-directional-payment-channel/">双向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/english-auction/">英式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/dutch-auction/">荷兰式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/crowd-fund/">众筹基金</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-call/">多调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-delegatecall/">多委托调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/time-lock/">定时锁</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/assembly-bin-exp/">汇编中的二进制求幂</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/airdrop/">默克尔空投</a></li>
+</ul>
+<h3 class="nav-title">Hacks</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hacks/re-entrancy/">重入攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/overflow/">算术溢出与下溢</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/self-destruct/">自毁函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/accessing-private-data/">访问私有数据</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/delegatecall/">Delegatecall 攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/randomness/">随机数预测</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/denial-of-service/">拒绝服务攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/phishing-with-tx-origin/">tx.origin 钓鱼</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/hiding-malicious-code-with-external-contract/">使用外部合约隐藏恶意代码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/honeypot/">蜜罐</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/front-running/">抢跑</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/block-timestamp-manipulation/">区块时间戳操纵</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/signature-replay/">签名重放</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/contract-size/">绕过合约大小检查</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/deploy-different-contracts-same-address/">在同一地址部署不同合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/vault-inflation/">金库通货膨胀攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/weth-permit/">WETH Permit</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/63-64-gas-rule/">63 / 64 Gas 规则</a></li>
+</ul>
+<h3 class="nav-title">EVM</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../evm/storage/">EVM 存储布局</a></li>
+<li class="nav-item"><a class="nav-link" href="../../evm/memory/">EVM 内存布局</a></li>
+</ul>
+<h3 class="nav-title">Tests</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../tests/echidna/">Echidna</a></li>
+</ul>
+<h3 class="nav-title">Foundry</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../foundry/basic/">Foundry 基础</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/auth/">授权</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/error/">错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/event/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/send/">发送</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/time/">时间</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/sign/">签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/label/">标签</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/mock-call/">Mock Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/vm-store/">Store</a></li>
+</ul>
+<h3 class="nav-title">DeFi</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2/">Uniswap V2 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-optimal-one-sided-supply/">Uniswap V2 最优单边供给</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-flash-swap/">Uniswap V2 Flash Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-swap/">Uniswap V3 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-liquidity/">Uniswap V3 流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash/">Uniswap V3 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash-swap/">Uniswap V3 Flash Swap 套利</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-swap/">Uniswap V4 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-flash/">Uniswap V4 闪电贷</a></li>
+<li class="nav-item-active"><a class="nav-link" href="../../defi/uniswap-v4-limit-order/">Uniswap V4 限价单</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chronicle-price-oracle/">Chronicle 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/dai-proxy/">DAI Proxy</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/staking-rewards/">质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/discrete-staking-rewards/">离散质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/vault/">Vault</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/token-lock/">Token Lock</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-sum-amm/">恒定和 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-product-amm/">恒定乘积 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/stable-swap-amm/">Stable Swap AMM</a></li>
+</ul>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <button class="hamburger" data-toggle-nav aria-label="菜单"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" width="20" height="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+</svg></button>
+        <div class="header-center">
+          <div class="header-center-inner">
+            <a href="../../"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1300" width="30" height="30" class="logo" data-logo>
+  <path opacity="0.45" d="M773.772 253.308 643.068 485.61H381.842l130.614-232.302h261.316"/>
+  <path opacity="0.6" d="M643.068 485.61h261.318L773.772 253.308H512.456L643.068 485.61z"/>
+  <path opacity="0.8" d="M512.456 717.822 643.068 485.61 512.456 253.308 381.842 485.61l130.614 232.212z"/>
+  <path opacity="0.45" d="m513.721 1066.275 130.704-232.303h261.318l-130.705 232.303H513.721"/>
+  <path opacity="0.6" d="M644.424 833.973H383.107l130.613 232.303h261.317L644.424 833.973z"/>
+  <path opacity="0.8" d="M775.038 601.761 644.424 833.973l130.614 232.303 130.704-232.303-130.704-232.212z"/>
+</svg></a>
+            <h3><a href="../../">Solidity by Example</a></h3>
+          </div>
+          <div class="zh-badge">中文译本 · Web3-Club</div>
+        </div>
+        <button class="mode-btn" data-toggle-theme aria-label="切换主题"><svg data-icon="dark" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 438.277 438.277" width="20" height="20"><path d="M428.756 300.104c-.664-3.81-2.334-7.047-4.996-9.713-5.9-5.903-12.752-7.142-20.554-3.716-20.937 9.708-42.641 14.558-65.097 14.558-28.171 0-54.152-6.94-77.943-20.838-23.791-13.894-42.631-32.736-56.525-56.53-13.899-23.793-20.844-49.773-20.844-77.945 0-21.888 4.333-42.683 12.991-62.384 8.66-19.7 21.176-36.973 37.543-51.82 6.283-5.898 7.713-12.752 4.287-20.557-3.236-7.801-9.041-11.511-17.415-11.132-29.121 1.141-56.72 7.664-82.797 19.556C111.33 31.478 88.917 47.13 70.168 66.548c-18.747 19.414-33.595 42.399-44.54 68.95-10.942 26.553-16.416 54.39-16.416 83.511 0 29.694 5.806 58.054 17.416 85.082 11.613 27.028 27.218 50.344 46.824 69.949 19.604 19.599 42.92 35.207 69.951 46.822 27.028 11.607 55.384 17.415 85.075 17.415 42.64 0 81.987-11.563 118.054-34.69 36.069-23.124 63.05-54.006 80.944-92.645 1.524-3.423 1.951-7.036 1.28-10.838z"/></svg><svg data-icon="light" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.4 302.4" width="20" height="20"><circle cx="151.2" cy="151.2" r="48" fill="none" stroke="#252519" stroke-width="16"/><g stroke="#252519" stroke-width="12" stroke-linecap="round"><path d="M151.2 20 v32M151.2 250 v32M20 151.2 h32M250 151.2 h32M55 55 l22 22M225 225 l22 22M55 247 l22 -22M225 77 l22 -22"/></g></svg></button>
+      </header>
+      <div class="children">
+        
+    <article class="article">
+      <div class="article-content">
+        <h2>Uniswap V4 限价单</h2>
+        <div class="en-link">英文原页：<a href="https://solidity-by-example.org/defi/uniswap-v4-limit-order" target="_blank" rel="noreferrer">https://solidity-by-example.org/defi/uniswap-v4-limit-order</a></div>
+        <p>Uniswap V4 的 hook 允许在兑换生命周期中执行自定义逻辑。本示例演示使用 <code>afterSwap</code> 实现的限价单 hook。</p>
+<p>使用 hook 实现限价单的工作方式：</p>
+<ol><li>用户调用 <code>placeLimitOrder()</code>，指定 tick（价格）和方向</li><li>代币由 hook 合约持有</li><li>当兑换使价格越过目标 tick 时，会触发 <code>afterSwap</code></li><li>hook 检测已成交的订单并执行它们</li><li>用户收到兑换后的代币</li></ol>
+<p>关键 hook 概念：</p>
+<ul><li><strong>权限（Permissions）</strong> - <code>getHookPermissions()</code> 声明你实现了哪些 hook</li><li><strong>Hook 地址</strong> - 必须根据权限设置特定的位（使用 CREATE2）</li><li><strong>回调（Callbacks）</strong> - PoolManager 在每个生命周期节点调用你的 hook</li></ul>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+/// @notice 简化的 Uniswap V4 限价单 Hook
+/// @dev Hook 允许在兑换生命周期中执行自定义逻辑
+/// 本示例演示使用 afterSwap 实现的基础限价单机制
+contract LimitOrderHook is IHooks {
+    IPoolManager public immutable poolManager;
+
+    // 映射：poolId =&gt; tick =&gt; zeroForOne =&gt; 总流动性
+    mapping(bytes32 =&gt; mapping(int24 =&gt; mapping(bool =&gt; uint256))) public tickLiquidity;
+
+    // 映射：poolId =&gt; tick =&gt; zeroForOne =&gt; 用户 =&gt; 流动性
+    mapping(bytes32 =&gt; mapping(int24 =&gt; mapping(bool =&gt; mapping(address =&gt; uint256))))
+        public userPositions;
+
+    error NotPoolManager();
+    error InvalidTick();
+
+    constructor(IPoolManager _poolManager) {
+        poolManager = _poolManager;
+    }
+
+    /// @notice 在指定 tick 下限价单
+    /// @param key 要下限价单的资金池
+    /// @param tick 限价单的 tick（价格点）
+    /// @param zeroForOne true = 卖出 token0 换 token1，false = 卖出 token1 换 token0
+    /// @param amount 要卖出的代币数量
+    function placeLimitOrder(
+        PoolKey calldata key,
+        int24 tick,
+        bool zeroForOne,
+        uint256 amount
+    ) external {
+        // 校验 tick 位于当前价格的正确一侧
+        (, int24 currentTick,,) = poolManager.getSlot0(toId(key));
+
+        // 卖出 token0：tick 必须高于当前价格（价格上涨）
+        // 卖出 token1：tick 必须低于当前价格（价格下跌）
+        if (zeroForOne &amp;&amp; tick &lt;= currentTick) revert InvalidTick();
+        if (!zeroForOne &amp;&amp; tick &gt;= currentTick) revert InvalidTick();
+
+        bytes32 poolId = toId(key);
+
+        // 从用户转入代币
+        Currency currency = zeroForOne ? key.currency0 : key.currency1;
+        IERC20(Currency.unwrap(currency)).transferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+
+        // 记录仓位
+        tickLiquidity[poolId][tick][zeroForOne] += amount;
+        userPositions[poolId][tick][zeroForOne][msg.sender] += amount;
+    }
+
+    /// @notice 每次兑换后由 PoolManager 调用
+    /// @dev 检查价格是否越过任何限价单 tick，并执行它们
+    function afterSwap(
+        address,
+        PoolKey calldata key,
+        IPoolManager.SwapParams calldata params,
+        BalanceDelta,
+        bytes calldata
+    ) external override returns (bytes4, int128) {
+        if (msg.sender != address(poolManager)) revert NotPoolManager();
+
+        (, int24 currentTick,,) = poolManager.getSlot0(toId(key));
+        bytes32 poolId = toId(key);
+
+        // 检查该 tick 上是否有应成交的限价单
+        // zeroForOne 兑换使价格下降，因此检查卖出 token1 的订单
+        // !zeroForOne 兑换使价格上升，因此检查卖出 token0 的订单
+        bool checkZeroForOne = !params.zeroForOne;
+
+        uint256 liquidity = tickLiquidity[poolId][currentTick][checkZeroForOne];
+
+        if (liquidity &gt; 0) {
+            // 执行该 tick 上的限价单
+            _executeLimitOrders(key, currentTick, checkZeroForOne, liquidity);
+        }
+
+        return (IHooks.afterSwap.selector, 0);
+    }
+
+    /// @notice 执行指定 tick 上的限价单
+    function _executeLimitOrders(
+        PoolKey calldata key,
+        int24 tick,
+        bool zeroForOne,
+        uint256 amount
+    ) internal {
+        // 在完整实现中，这里会：
+        // 1. 使用 poolManager.swap() 兑换代币
+        // 2. 将输出代币分配给下限价单的用户
+        // 3. 清除已成交的仓位
+
+        bytes32 poolId = toId(key);
+
+        // 清除该 tick 的流动性（订单已成交）
+        tickLiquidity[poolId][tick][zeroForOne] = 0;
+
+        // 发出事件，供链下跟踪
+        emit LimitOrderFilled(poolId, tick, zeroForOne, amount);
+    }
+
+    /// @notice 用户可以取消未成交的限价单
+    function cancelLimitOrder(
+        PoolKey calldata key,
+        int24 tick,
+        bool zeroForOne
+    ) external {
+        bytes32 poolId = toId(key);
+        uint256 amount = userPositions[poolId][tick][zeroForOne][msg.sender];
+
+        require(amount &gt; 0, &quot;No position&quot;);
+
+        // 清除仓位
+        userPositions[poolId][tick][zeroForOne][msg.sender] = 0;
+        tickLiquidity[poolId][tick][zeroForOne] -= amount;
+
+        // 退还代币
+        Currency currency = zeroForOne ? key.currency0 : key.currency1;
+        IERC20(Currency.unwrap(currency)).transfer(msg.sender, amount);
+    }
+
+    /// @notice 返回 hook 权限 - 我们只需要 afterSwap
+    function getHookPermissions() public pure returns (Hooks.Permissions memory) {
+        return Hooks.Permissions({
+            beforeInitialize: false,
+            afterInitialize: false,
+            beforeAddLiquidity: false,
+            afterAddLiquidity: false,
+            beforeRemoveLiquidity: false,
+            afterRemoveLiquidity: false,
+            beforeSwap: false,
+            afterSwap: true, // 我们需要这个！
+            beforeDonate: false,
+            afterDonate: false,
+            beforeSwapReturnDelta: false,
+            afterSwapReturnDelta: false,
+            afterAddLiquidityReturnDelta: false,
+            afterRemoveLiquidityReturnDelta: false
+        });
+    }
+
+    // 计算 pool ID 的辅助函数
+    function toId(PoolKey memory key) internal pure returns (bytes32) {
+        return keccak256(abi.encode(key));
+    }
+
+    // 必需的 hook 接口函数（未使用的 hook 为空实现）
+    function beforeInitialize(address, PoolKey calldata, uint160)
+        external pure override returns (bytes4) {
+        return IHooks.beforeInitialize.selector;
+    }
+    function afterInitialize(address, PoolKey calldata, uint160, int24)
+        external pure override returns (bytes4) {
+        return IHooks.afterInitialize.selector;
+    }
+    function beforeAddLiquidity(address, PoolKey calldata, IPoolManager.ModifyLiquidityParams calldata, bytes calldata)
+        external pure override returns (bytes4) {
+        return IHooks.beforeAddLiquidity.selector;
+    }
+    function afterAddLiquidity(address, PoolKey calldata, IPoolManager.ModifyLiquidityParams calldata, BalanceDelta, BalanceDelta, bytes calldata)
+        external pure override returns (bytes4, BalanceDelta) {
+        return (IHooks.afterAddLiquidity.selector, BalanceDelta.wrap(0));
+    }
+    function beforeRemoveLiquidity(address, PoolKey calldata, IPoolManager.ModifyLiquidityParams calldata, bytes calldata)
+        external pure override returns (bytes4) {
+        return IHooks.beforeRemoveLiquidity.selector;
+    }
+    function afterRemoveLiquidity(address, PoolKey calldata, IPoolManager.ModifyLiquidityParams calldata, BalanceDelta, BalanceDelta, bytes calldata)
+        external pure override returns (bytes4, BalanceDelta) {
+        return (IHooks.afterRemoveLiquidity.selector, BalanceDelta.wrap(0));
+    }
+    function beforeSwap(address, PoolKey calldata, IPoolManager.SwapParams calldata, bytes calldata)
+        external pure override returns (bytes4, BeforeSwapDelta, uint24) {
+        return (IHooks.beforeSwap.selector, BeforeSwapDelta.wrap(0), 0);
+    }
+    function beforeDonate(address, PoolKey calldata, uint256, uint256, bytes calldata)
+        external pure override returns (bytes4) {
+        return IHooks.beforeDonate.selector;
+    }
+    function afterDonate(address, PoolKey calldata, uint256, uint256, bytes calldata)
+        external pure override returns (bytes4) {
+        return IHooks.afterDonate.selector;
+    }
+
+    event LimitOrderFilled(
+        bytes32 indexed poolId,
+        int24 tick,
+        bool zeroForOne,
+        uint256 amount
+    );
+}
+
+// ============ 类型与接口 ============
+
+type Currency is address;
+
+library CurrencyLibrary {
+    function unwrap(Currency currency) internal pure returns (address) {
+        return Currency.unwrap(currency);
+    }
+}
+
+using CurrencyLibrary for Currency;
+
+struct PoolKey {
+    Currency currency0;
+    Currency currency1;
+    uint24 fee;
+    int24 tickSpacing;
+    address hooks;
+}
+
+type BalanceDelta is int256;
+type BeforeSwapDelta is int256;
+
+library Hooks {
+    struct Permissions {
+        bool beforeInitialize;
+        bool afterInitialize;
+        bool beforeAddLiquidity;
+        bool afterAddLiquidity;
+        bool beforeRemoveLiquidity;
+        bool afterRemoveLiquidity;
+        bool beforeSwap;
+        bool afterSwap;
+        bool beforeDonate;
+        bool afterDonate;
+        bool beforeSwapReturnDelta;
+        bool afterSwapReturnDelta;
+        bool afterAddLiquidityReturnDelta;
+        bool afterRemoveLiquidityReturnDelta;
+    }
+}
+
+interface IPoolManager {
+    struct SwapParams {
+        bool zeroForOne;
+        int256 amountSpecified;
+        uint160 sqrtPriceLimitX96;
+    }
+
+    struct ModifyLiquidityParams {
+        int24 tickLower;
+        int24 tickUpper;
+        int256 liquidityDelta;
+        bytes32 salt;
+    }
+
+    function getSlot0(bytes32 poolId)
+        external
+        view
+        returns (uint160 sqrtPriceX96, int24 tick, uint24 protocolFee, uint24 lpFee);
+
+    function swap(PoolKey memory key, SwapParams memory params, bytes calldata hookData)
+        external
+        returns (BalanceDelta);
+}
+
+interface IHooks {
+    function beforeInitialize(address sender, PoolKey calldata key, uint160 sqrtPriceX96)
+        external returns (bytes4);
+    function afterInitialize(address sender, PoolKey calldata key, uint160 sqrtPriceX96, int24 tick)
+        external returns (bytes4);
+    function beforeAddLiquidity(address sender, PoolKey calldata key, IPoolManager.ModifyLiquidityParams calldata params, bytes calldata hookData)
+        external returns (bytes4);
+    function afterAddLiquidity(address sender, PoolKey calldata key, IPoolManager.ModifyLiquidityParams calldata params, BalanceDelta delta, BalanceDelta feesAccrued, bytes calldata hookData)
+        external returns (bytes4, BalanceDelta);
+    function beforeRemoveLiquidity(address sender, PoolKey calldata key, IPoolManager.ModifyLiquidityParams calldata params, bytes calldata hookData)
+        external returns (bytes4);
+    function afterRemoveLiquidity(address sender, PoolKey calldata key, IPoolManager.ModifyLiquidityParams calldata params, BalanceDelta delta, BalanceDelta feesAccrued, bytes calldata hookData)
+        external returns (bytes4, BalanceDelta);
+    function beforeSwap(address sender, PoolKey calldata key, IPoolManager.SwapParams calldata params, bytes calldata hookData)
+        external returns (bytes4, BeforeSwapDelta, uint24);
+    function afterSwap(address sender, PoolKey calldata key, IPoolManager.SwapParams calldata params, BalanceDelta delta, bytes calldata hookData)
+        external returns (bytes4, int128);
+    function beforeDonate(address sender, PoolKey calldata key, uint256 amount0, uint256 amount1, bytes calldata hookData)
+        external returns (bytes4);
+    function afterDonate(address sender, PoolKey calldata key, uint256 amount0, uint256 amount1, bytes calldata hookData)
+        external returns (bytes4);
+}
+
+interface IERC20 {
+    function transferFrom(address sender, address recipient, uint256 amount)
+        external returns (bool);
+    function transfer(address recipient, uint256 amount)
+        external returns (bool);
+}
+</code></pre>
+        <div class="prev-next"><a href="../../defi/uniswap-v4-flash/">&lt; Uniswap V4 闪电贷</a><a href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机 &gt;</a></div>
+        <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8vLyBAbm90aWNlIOeugOWMlueahCBVbmlzd2FwIFY0IOmZkOS7t+WNlSBIb29rCi8vLyBAZGV2IEhvb2sg5YWB6K645Zyo5YWR5o2i55Sf5ZG95ZGo5pyf5Lit5omn6KGM6Ieq5a6a5LmJ6YC76L6RCi8vLyDmnKznpLrkvovmvJTnpLrkvb/nlKggYWZ0ZXJTd2FwIOWunueOsOeahOWfuuehgOmZkOS7t+WNleacuuWItgpjb250cmFjdCBMaW1pdE9yZGVySG9vayBpcyBJSG9va3MgewogICAgSVBvb2xNYW5hZ2VyIHB1YmxpYyBpbW11dGFibGUgcG9vbE1hbmFnZXI7CgogICAgLy8g5pig5bCE77yacG9vbElkID0+IHRpY2sgPT4gemVyb0Zvck9uZSA9PiDmgLvmtYHliqjmgKcKICAgIG1hcHBpbmcoYnl0ZXMzMiA9PiBtYXBwaW5nKGludDI0ID0+IG1hcHBpbmcoYm9vbCA9PiB1aW50MjU2KSkpIHB1YmxpYyB0aWNrTGlxdWlkaXR5OwoKICAgIC8vIOaYoOWwhO+8mnBvb2xJZCA9PiB0aWNrID0+IHplcm9Gb3JPbmUgPT4g55So5oi3ID0+IOa1geWKqOaApwogICAgbWFwcGluZyhieXRlczMyID0+IG1hcHBpbmcoaW50MjQgPT4gbWFwcGluZyhib29sID0+IG1hcHBpbmcoYWRkcmVzcyA9PiB1aW50MjU2KSkpKQogICAgICAgIHB1YmxpYyB1c2VyUG9zaXRpb25zOwoKICAgIGVycm9yIE5vdFBvb2xNYW5hZ2VyKCk7CiAgICBlcnJvciBJbnZhbGlkVGljaygpOwoKICAgIGNvbnN0cnVjdG9yKElQb29sTWFuYWdlciBfcG9vbE1hbmFnZXIpIHsKICAgICAgICBwb29sTWFuYWdlciA9IF9wb29sTWFuYWdlcjsKICAgIH0KCiAgICAvLy8gQG5vdGljZSDlnKjmjIflrpogdGljayDkuIvpmZDku7fljZUKICAgIC8vLyBAcGFyYW0ga2V5IOimgeS4i+mZkOS7t+WNleeahOi1hOmHkeaxoAogICAgLy8vIEBwYXJhbSB0aWNrIOmZkOS7t+WNleeahCB0aWNr77yI5Lu35qC854K577yJCiAgICAvLy8gQHBhcmFtIHplcm9Gb3JPbmUgdHJ1ZSA9IOWNluWHuiB0b2tlbjAg5o2iIHRva2VuMe+8jGZhbHNlID0g5Y2W5Ye6IHRva2VuMSDmjaIgdG9rZW4wCiAgICAvLy8gQHBhcmFtIGFtb3VudCDopoHljZblh7rnmoTku6PluIHmlbDph48KICAgIGZ1bmN0aW9uIHBsYWNlTGltaXRPcmRlcigKICAgICAgICBQb29sS2V5IGNhbGxkYXRhIGtleSwKICAgICAgICBpbnQyNCB0aWNrLAogICAgICAgIGJvb2wgemVyb0Zvck9uZSwKICAgICAgICB1aW50MjU2IGFtb3VudAogICAgKSBleHRlcm5hbCB7CiAgICAgICAgLy8g5qCh6aqMIHRpY2sg5L2N5LqO5b2T5YmN5Lu35qC855qE5q2j56Gu5LiA5L6nCiAgICAgICAgKCwgaW50MjQgY3VycmVudFRpY2ssLCkgPSBwb29sTWFuYWdlci5nZXRTbG90MCh0b0lkKGtleSkpOwoKICAgICAgICAvLyDljZblh7ogdG9rZW4w77yadGljayDlv4Xpobvpq5jkuo7lvZPliY3ku7fmoLzvvIjku7fmoLzkuIrmtqjvvIkKICAgICAgICAvLyDljZblh7ogdG9rZW4x77yadGljayDlv4XpobvkvY7kuo7lvZPliY3ku7fmoLzvvIjku7fmoLzkuIvot4zvvIkKICAgICAgICBpZiAoemVyb0Zvck9uZSAmJiB0aWNrIDw9IGN1cnJlbnRUaWNrKSByZXZlcnQgSW52YWxpZFRpY2soKTsKICAgICAgICBpZiAoIXplcm9Gb3JPbmUgJiYgdGljayA+PSBjdXJyZW50VGljaykgcmV2ZXJ0IEludmFsaWRUaWNrKCk7CgogICAgICAgIGJ5dGVzMzIgcG9vbElkID0gdG9JZChrZXkpOwoKICAgICAgICAvLyDku47nlKjmiLfovazlhaXku6PluIEKICAgICAgICBDdXJyZW5jeSBjdXJyZW5jeSA9IHplcm9Gb3JPbmUgPyBrZXkuY3VycmVuY3kwIDoga2V5LmN1cnJlbmN5MTsKICAgICAgICBJRVJDMjAoQ3VycmVuY3kudW53cmFwKGN1cnJlbmN5KSkudHJhbnNmZXJGcm9tKAogICAgICAgICAgICBtc2cuc2VuZGVyLAogICAgICAgICAgICBhZGRyZXNzKHRoaXMpLAogICAgICAgICAgICBhbW91bnQKICAgICAgICApOwoKICAgICAgICAvLyDorrDlvZXku5PkvY0KICAgICAgICB0aWNrTGlxdWlkaXR5W3Bvb2xJZF1bdGlja11bemVyb0Zvck9uZV0gKz0gYW1vdW50OwogICAgICAgIHVzZXJQb3NpdGlvbnNbcG9vbElkXVt0aWNrXVt6ZXJvRm9yT25lXVttc2cuc2VuZGVyXSArPSBhbW91bnQ7CiAgICB9CgogICAgLy8vIEBub3RpY2Ug5q+P5qyh5YWR5o2i5ZCO55SxIFBvb2xNYW5hZ2VyIOiwg+eUqAogICAgLy8vIEBkZXYg5qOA5p+l5Lu35qC85piv5ZCm6LaK6L+H5Lu75L2V6ZmQ5Lu35Y2VIHRpY2vvvIzlubbmiafooYzlroPku6wKICAgIGZ1bmN0aW9uIGFmdGVyU3dhcCgKICAgICAgICBhZGRyZXNzLAogICAgICAgIFBvb2xLZXkgY2FsbGRhdGEga2V5LAogICAgICAgIElQb29sTWFuYWdlci5Td2FwUGFyYW1zIGNhbGxkYXRhIHBhcmFtcywKICAgICAgICBCYWxhbmNlRGVsdGEsCiAgICAgICAgYnl0ZXMgY2FsbGRhdGEKICAgICkgZXh0ZXJuYWwgb3ZlcnJpZGUgcmV0dXJucyAoYnl0ZXM0LCBpbnQxMjgpIHsKICAgICAgICBpZiAobXNnLnNlbmRlciAhPSBhZGRyZXNzKHBvb2xNYW5hZ2VyKSkgcmV2ZXJ0IE5vdFBvb2xNYW5hZ2VyKCk7CgogICAgICAgICgsIGludDI0IGN1cnJlbnRUaWNrLCwpID0gcG9vbE1hbmFnZXIuZ2V0U2xvdDAodG9JZChrZXkpKTsKICAgICAgICBieXRlczMyIHBvb2xJZCA9IHRvSWQoa2V5KTsKCiAgICAgICAgLy8g5qOA5p+l6K+lIHRpY2sg5LiK5piv5ZCm5pyJ5bqU5oiQ5Lqk55qE6ZmQ5Lu35Y2VCiAgICAgICAgLy8gemVyb0Zvck9uZSDlhZHmjaLkvb/ku7fmoLzkuIvpmY3vvIzlm6DmraTmo4Dmn6XljZblh7ogdG9rZW4xIOeahOiuouWNlQogICAgICAgIC8vICF6ZXJvRm9yT25lIOWFkeaNouS9v+S7t+agvOS4iuWNh++8jOWboOatpOajgOafpeWNluWHuiB0b2tlbjAg55qE6K6i5Y2VCiAgICAgICAgYm9vbCBjaGVja1plcm9Gb3JPbmUgPSAhcGFyYW1zLnplcm9Gb3JPbmU7CgogICAgICAgIHVpbnQyNTYgbGlxdWlkaXR5ID0gdGlja0xpcXVpZGl0eVtwb29sSWRdW2N1cnJlbnRUaWNrXVtjaGVja1plcm9Gb3JPbmVdOwoKICAgICAgICBpZiAobGlxdWlkaXR5ID4gMCkgewogICAgICAgICAgICAvLyDmiafooYzor6UgdGljayDkuIrnmoTpmZDku7fljZUKICAgICAgICAgICAgX2V4ZWN1dGVMaW1pdE9yZGVycyhrZXksIGN1cnJlbnRUaWNrLCBjaGVja1plcm9Gb3JPbmUsIGxpcXVpZGl0eSk7CiAgICAgICAgfQoKICAgICAgICByZXR1cm4gKElIb29rcy5hZnRlclN3YXAuc2VsZWN0b3IsIDApOwogICAgfQoKICAgIC8vLyBAbm90aWNlIOaJp+ihjOaMh+WumiB0aWNrIOS4iueahOmZkOS7t+WNlQogICAgZnVuY3Rpb24gX2V4ZWN1dGVMaW1pdE9yZGVycygKICAgICAgICBQb29sS2V5IGNhbGxkYXRhIGtleSwKICAgICAgICBpbnQyNCB0aWNrLAogICAgICAgIGJvb2wgemVyb0Zvck9uZSwKICAgICAgICB1aW50MjU2IGFtb3VudAogICAgKSBpbnRlcm5hbCB7CiAgICAgICAgLy8g5Zyo5a6M5pW05a6e546w5Lit77yM6L+Z6YeM5Lya77yaCiAgICAgICAgLy8gMS4g5L2/55SoIHBvb2xNYW5hZ2VyLnN3YXAoKSDlhZHmjaLku6PluIEKICAgICAgICAvLyAyLiDlsIbovpPlh7rku6PluIHliIbphY3nu5nkuIvpmZDku7fljZXnmoTnlKjmiLcKICAgICAgICAvLyAzLiDmuIXpmaTlt7LmiJDkuqTnmoTku5PkvY0KCiAgICAgICAgYnl0ZXMzMiBwb29sSWQgPSB0b0lkKGtleSk7CgogICAgICAgIC8vIOa4hemZpOivpSB0aWNrIOeahOa1geWKqOaAp++8iOiuouWNleW3suaIkOS6pO+8iQogICAgICAgIHRpY2tMaXF1aWRpdHlbcG9vbElkXVt0aWNrXVt6ZXJvRm9yT25lXSA9IDA7CgogICAgICAgIC8vIOWPkeWHuuS6i+S7tu+8jOS+m+mTvuS4i+i3n+i4qgogICAgICAgIGVtaXQgTGltaXRPcmRlckZpbGxlZChwb29sSWQsIHRpY2ssIHplcm9Gb3JPbmUsIGFtb3VudCk7CiAgICB9CgogICAgLy8vIEBub3RpY2Ug55So5oi35Y+v5Lul5Y+W5raI5pyq5oiQ5Lqk55qE6ZmQ5Lu35Y2VCiAgICBmdW5jdGlvbiBjYW5jZWxMaW1pdE9yZGVyKAogICAgICAgIFBvb2xLZXkgY2FsbGRhdGEga2V5LAogICAgICAgIGludDI0IHRpY2ssCiAgICAgICAgYm9vbCB6ZXJvRm9yT25lCiAgICApIGV4dGVybmFsIHsKICAgICAgICBieXRlczMyIHBvb2xJZCA9IHRvSWQoa2V5KTsKICAgICAgICB1aW50MjU2IGFtb3VudCA9IHVzZXJQb3NpdGlvbnNbcG9vbElkXVt0aWNrXVt6ZXJvRm9yT25lXVttc2cuc2VuZGVyXTsKCiAgICAgICAgcmVxdWlyZShhbW91bnQgPiAwLCAiTm8gcG9zaXRpb24iKTsKCiAgICAgICAgLy8g5riF6Zmk5LuT5L2NCiAgICAgICAgdXNlclBvc2l0aW9uc1twb29sSWRdW3RpY2tdW3plcm9Gb3JPbmVdW21zZy5zZW5kZXJdID0gMDsKICAgICAgICB0aWNrTGlxdWlkaXR5W3Bvb2xJZF1bdGlja11bemVyb0Zvck9uZV0gLT0gYW1vdW50OwoKICAgICAgICAvLyDpgIDov5jku6PluIEKICAgICAgICBDdXJyZW5jeSBjdXJyZW5jeSA9IHplcm9Gb3JPbmUgPyBrZXkuY3VycmVuY3kwIDoga2V5LmN1cnJlbmN5MTsKICAgICAgICBJRVJDMjAoQ3VycmVuY3kudW53cmFwKGN1cnJlbmN5KSkudHJhbnNmZXIobXNnLnNlbmRlciwgYW1vdW50KTsKICAgIH0KCiAgICAvLy8gQG5vdGljZSDov5Tlm54gaG9vayDmnYPpmZAgLSDmiJHku6zlj6rpnIDopoEgYWZ0ZXJTd2FwCiAgICBmdW5jdGlvbiBnZXRIb29rUGVybWlzc2lvbnMoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChIb29rcy5QZXJtaXNzaW9ucyBtZW1vcnkpIHsKICAgICAgICByZXR1cm4gSG9va3MuUGVybWlzc2lvbnMoewogICAgICAgICAgICBiZWZvcmVJbml0aWFsaXplOiBmYWxzZSwKICAgICAgICAgICAgYWZ0ZXJJbml0aWFsaXplOiBmYWxzZSwKICAgICAgICAgICAgYmVmb3JlQWRkTGlxdWlkaXR5OiBmYWxzZSwKICAgICAgICAgICAgYWZ0ZXJBZGRMaXF1aWRpdHk6IGZhbHNlLAogICAgICAgICAgICBiZWZvcmVSZW1vdmVMaXF1aWRpdHk6IGZhbHNlLAogICAgICAgICAgICBhZnRlclJlbW92ZUxpcXVpZGl0eTogZmFsc2UsCiAgICAgICAgICAgIGJlZm9yZVN3YXA6IGZhbHNlLAogICAgICAgICAgICBhZnRlclN3YXA6IHRydWUsIC8vIOaIkeS7rOmcgOimgei/meS4qu+8gQogICAgICAgICAgICBiZWZvcmVEb25hdGU6IGZhbHNlLAogICAgICAgICAgICBhZnRlckRvbmF0ZTogZmFsc2UsCiAgICAgICAgICAgIGJlZm9yZVN3YXBSZXR1cm5EZWx0YTogZmFsc2UsCiAgICAgICAgICAgIGFmdGVyU3dhcFJldHVybkRlbHRhOiBmYWxzZSwKICAgICAgICAgICAgYWZ0ZXJBZGRMaXF1aWRpdHlSZXR1cm5EZWx0YTogZmFsc2UsCiAgICAgICAgICAgIGFmdGVyUmVtb3ZlTGlxdWlkaXR5UmV0dXJuRGVsdGE6IGZhbHNlCiAgICAgICAgfSk7CiAgICB9CgogICAgLy8g6K6h566XIHBvb2wgSUQg55qE6L6F5Yqp5Ye95pWwCiAgICBmdW5jdGlvbiB0b0lkKFBvb2xLZXkgbWVtb3J5IGtleSkgaW50ZXJuYWwgcHVyZSByZXR1cm5zIChieXRlczMyKSB7CiAgICAgICAgcmV0dXJuIGtlY2NhazI1NihhYmkuZW5jb2RlKGtleSkpOwogICAgfQoKICAgIC8vIOW/hemcgOeahCBob29rIOaOpeWPo+WHveaVsO+8iOacquS9v+eUqOeahCBob29rIOS4uuepuuWunueOsO+8iQogICAgZnVuY3Rpb24gYmVmb3JlSW5pdGlhbGl6ZShhZGRyZXNzLCBQb29sS2V5IGNhbGxkYXRhLCB1aW50MTYwKQogICAgICAgIGV4dGVybmFsIHB1cmUgb3ZlcnJpZGUgcmV0dXJucyAoYnl0ZXM0KSB7CiAgICAgICAgcmV0dXJuIElIb29rcy5iZWZvcmVJbml0aWFsaXplLnNlbGVjdG9yOwogICAgfQogICAgZnVuY3Rpb24gYWZ0ZXJJbml0aWFsaXplKGFkZHJlc3MsIFBvb2xLZXkgY2FsbGRhdGEsIHVpbnQxNjAsIGludDI0KQogICAgICAgIGV4dGVybmFsIHB1cmUgb3ZlcnJpZGUgcmV0dXJucyAoYnl0ZXM0KSB7CiAgICAgICAgcmV0dXJuIElIb29rcy5hZnRlckluaXRpYWxpemUuc2VsZWN0b3I7CiAgICB9CiAgICBmdW5jdGlvbiBiZWZvcmVBZGRMaXF1aWRpdHkoYWRkcmVzcywgUG9vbEtleSBjYWxsZGF0YSwgSVBvb2xNYW5hZ2VyLk1vZGlmeUxpcXVpZGl0eVBhcmFtcyBjYWxsZGF0YSwgYnl0ZXMgY2FsbGRhdGEpCiAgICAgICAgZXh0ZXJuYWwgcHVyZSBvdmVycmlkZSByZXR1cm5zIChieXRlczQpIHsKICAgICAgICByZXR1cm4gSUhvb2tzLmJlZm9yZUFkZExpcXVpZGl0eS5zZWxlY3RvcjsKICAgIH0KICAgIGZ1bmN0aW9uIGFmdGVyQWRkTGlxdWlkaXR5KGFkZHJlc3MsIFBvb2xLZXkgY2FsbGRhdGEsIElQb29sTWFuYWdlci5Nb2RpZnlMaXF1aWRpdHlQYXJhbXMgY2FsbGRhdGEsIEJhbGFuY2VEZWx0YSwgQmFsYW5jZURlbHRhLCBieXRlcyBjYWxsZGF0YSkKICAgICAgICBleHRlcm5hbCBwdXJlIG92ZXJyaWRlIHJldHVybnMgKGJ5dGVzNCwgQmFsYW5jZURlbHRhKSB7CiAgICAgICAgcmV0dXJuIChJSG9va3MuYWZ0ZXJBZGRMaXF1aWRpdHkuc2VsZWN0b3IsIEJhbGFuY2VEZWx0YS53cmFwKDApKTsKICAgIH0KICAgIGZ1bmN0aW9uIGJlZm9yZVJlbW92ZUxpcXVpZGl0eShhZGRyZXNzLCBQb29sS2V5IGNhbGxkYXRhLCBJUG9vbE1hbmFnZXIuTW9kaWZ5TGlxdWlkaXR5UGFyYW1zIGNhbGxkYXRhLCBieXRlcyBjYWxsZGF0YSkKICAgICAgICBleHRlcm5hbCBwdXJlIG92ZXJyaWRlIHJldHVybnMgKGJ5dGVzNCkgewogICAgICAgIHJldHVybiBJSG9va3MuYmVmb3JlUmVtb3ZlTGlxdWlkaXR5LnNlbGVjdG9yOwogICAgfQogICAgZnVuY3Rpb24gYWZ0ZXJSZW1vdmVMaXF1aWRpdHkoYWRkcmVzcywgUG9vbEtleSBjYWxsZGF0YSwgSVBvb2xNYW5hZ2VyLk1vZGlmeUxpcXVpZGl0eVBhcmFtcyBjYWxsZGF0YSwgQmFsYW5jZURlbHRhLCBCYWxhbmNlRGVsdGEsIGJ5dGVzIGNhbGxkYXRhKQogICAgICAgIGV4dGVybmFsIHB1cmUgb3ZlcnJpZGUgcmV0dXJucyAoYnl0ZXM0LCBCYWxhbmNlRGVsdGEpIHsKICAgICAgICByZXR1cm4gKElIb29rcy5hZnRlclJlbW92ZUxpcXVpZGl0eS5zZWxlY3RvciwgQmFsYW5jZURlbHRhLndyYXAoMCkpOwogICAgfQogICAgZnVuY3Rpb24gYmVmb3JlU3dhcChhZGRyZXNzLCBQb29sS2V5IGNhbGxkYXRhLCBJUG9vbE1hbmFnZXIuU3dhcFBhcmFtcyBjYWxsZGF0YSwgYnl0ZXMgY2FsbGRhdGEpCiAgICAgICAgZXh0ZXJuYWwgcHVyZSBvdmVycmlkZSByZXR1cm5zIChieXRlczQsIEJlZm9yZVN3YXBEZWx0YSwgdWludDI0KSB7CiAgICAgICAgcmV0dXJuIChJSG9va3MuYmVmb3JlU3dhcC5zZWxlY3RvciwgQmVmb3JlU3dhcERlbHRhLndyYXAoMCksIDApOwogICAgfQogICAgZnVuY3Rpb24gYmVmb3JlRG9uYXRlKGFkZHJlc3MsIFBvb2xLZXkgY2FsbGRhdGEsIHVpbnQyNTYsIHVpbnQyNTYsIGJ5dGVzIGNhbGxkYXRhKQogICAgICAgIGV4dGVybmFsIHB1cmUgb3ZlcnJpZGUgcmV0dXJucyAoYnl0ZXM0KSB7CiAgICAgICAgcmV0dXJuIElIb29rcy5iZWZvcmVEb25hdGUuc2VsZWN0b3I7CiAgICB9CiAgICBmdW5jdGlvbiBhZnRlckRvbmF0ZShhZGRyZXNzLCBQb29sS2V5IGNhbGxkYXRhLCB1aW50MjU2LCB1aW50MjU2LCBieXRlcyBjYWxsZGF0YSkKICAgICAgICBleHRlcm5hbCBwdXJlIG92ZXJyaWRlIHJldHVybnMgKGJ5dGVzNCkgewogICAgICAgIHJldHVybiBJSG9va3MuYWZ0ZXJEb25hdGUuc2VsZWN0b3I7CiAgICB9CgogICAgZXZlbnQgTGltaXRPcmRlckZpbGxlZCgKICAgICAgICBieXRlczMyIGluZGV4ZWQgcG9vbElkLAogICAgICAgIGludDI0IHRpY2ssCiAgICAgICAgYm9vbCB6ZXJvRm9yT25lLAogICAgICAgIHVpbnQyNTYgYW1vdW50CiAgICApOwp9CgovLyA9PT09PT09PT09PT0g57G75Z6L5LiO5o6l5Y+jID09PT09PT09PT09PQoKdHlwZSBDdXJyZW5jeSBpcyBhZGRyZXNzOwoKbGlicmFyeSBDdXJyZW5jeUxpYnJhcnkgewogICAgZnVuY3Rpb24gdW53cmFwKEN1cnJlbmN5IGN1cnJlbmN5KSBpbnRlcm5hbCBwdXJlIHJldHVybnMgKGFkZHJlc3MpIHsKICAgICAgICByZXR1cm4gQ3VycmVuY3kudW53cmFwKGN1cnJlbmN5KTsKICAgIH0KfQoKdXNpbmcgQ3VycmVuY3lMaWJyYXJ5IGZvciBDdXJyZW5jeTsKCnN0cnVjdCBQb29sS2V5IHsKICAgIEN1cnJlbmN5IGN1cnJlbmN5MDsKICAgIEN1cnJlbmN5IGN1cnJlbmN5MTsKICAgIHVpbnQyNCBmZWU7CiAgICBpbnQyNCB0aWNrU3BhY2luZzsKICAgIGFkZHJlc3MgaG9va3M7Cn0KCnR5cGUgQmFsYW5jZURlbHRhIGlzIGludDI1NjsKdHlwZSBCZWZvcmVTd2FwRGVsdGEgaXMgaW50MjU2OwoKbGlicmFyeSBIb29rcyB7CiAgICBzdHJ1Y3QgUGVybWlzc2lvbnMgewogICAgICAgIGJvb2wgYmVmb3JlSW5pdGlhbGl6ZTsKICAgICAgICBib29sIGFmdGVySW5pdGlhbGl6ZTsKICAgICAgICBib29sIGJlZm9yZUFkZExpcXVpZGl0eTsKICAgICAgICBib29sIGFmdGVyQWRkTGlxdWlkaXR5OwogICAgICAgIGJvb2wgYmVmb3JlUmVtb3ZlTGlxdWlkaXR5OwogICAgICAgIGJvb2wgYWZ0ZXJSZW1vdmVMaXF1aWRpdHk7CiAgICAgICAgYm9vbCBiZWZvcmVTd2FwOwogICAgICAgIGJvb2wgYWZ0ZXJTd2FwOwogICAgICAgIGJvb2wgYmVmb3JlRG9uYXRlOwogICAgICAgIGJvb2wgYWZ0ZXJEb25hdGU7CiAgICAgICAgYm9vbCBiZWZvcmVTd2FwUmV0dXJuRGVsdGE7CiAgICAgICAgYm9vbCBhZnRlclN3YXBSZXR1cm5EZWx0YTsKICAgICAgICBib29sIGFmdGVyQWRkTGlxdWlkaXR5UmV0dXJuRGVsdGE7CiAgICAgICAgYm9vbCBhZnRlclJlbW92ZUxpcXVpZGl0eVJldHVybkRlbHRhOwogICAgfQp9CgppbnRlcmZhY2UgSVBvb2xNYW5hZ2VyIHsKICAgIHN0cnVjdCBTd2FwUGFyYW1zIHsKICAgICAgICBib29sIHplcm9Gb3JPbmU7CiAgICAgICAgaW50MjU2IGFtb3VudFNwZWNpZmllZDsKICAgICAgICB1aW50MTYwIHNxcnRQcmljZUxpbWl0WDk2OwogICAgfQoKICAgIHN0cnVjdCBNb2RpZnlMaXF1aWRpdHlQYXJhbXMgewogICAgICAgIGludDI0IHRpY2tMb3dlcjsKICAgICAgICBpbnQyNCB0aWNrVXBwZXI7CiAgICAgICAgaW50MjU2IGxpcXVpZGl0eURlbHRhOwogICAgICAgIGJ5dGVzMzIgc2FsdDsKICAgIH0KCiAgICBmdW5jdGlvbiBnZXRTbG90MChieXRlczMyIHBvb2xJZCkKICAgICAgICBleHRlcm5hbAogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MTYwIHNxcnRQcmljZVg5NiwgaW50MjQgdGljaywgdWludDI0IHByb3RvY29sRmVlLCB1aW50MjQgbHBGZWUpOwoKICAgIGZ1bmN0aW9uIHN3YXAoUG9vbEtleSBtZW1vcnkga2V5LCBTd2FwUGFyYW1zIG1lbW9yeSBwYXJhbXMsIGJ5dGVzIGNhbGxkYXRhIGhvb2tEYXRhKQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAoQmFsYW5jZURlbHRhKTsKfQoKaW50ZXJmYWNlIElIb29rcyB7CiAgICBmdW5jdGlvbiBiZWZvcmVJbml0aWFsaXplKGFkZHJlc3Mgc2VuZGVyLCBQb29sS2V5IGNhbGxkYXRhIGtleSwgdWludDE2MCBzcXJ0UHJpY2VYOTYpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYnl0ZXM0KTsKICAgIGZ1bmN0aW9uIGFmdGVySW5pdGlhbGl6ZShhZGRyZXNzIHNlbmRlciwgUG9vbEtleSBjYWxsZGF0YSBrZXksIHVpbnQxNjAgc3FydFByaWNlWDk2LCBpbnQyNCB0aWNrKQogICAgICAgIGV4dGVybmFsIHJldHVybnMgKGJ5dGVzNCk7CiAgICBmdW5jdGlvbiBiZWZvcmVBZGRMaXF1aWRpdHkoYWRkcmVzcyBzZW5kZXIsIFBvb2xLZXkgY2FsbGRhdGEga2V5LCBJUG9vbE1hbmFnZXIuTW9kaWZ5TGlxdWlkaXR5UGFyYW1zIGNhbGxkYXRhIHBhcmFtcywgYnl0ZXMgY2FsbGRhdGEgaG9va0RhdGEpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYnl0ZXM0KTsKICAgIGZ1bmN0aW9uIGFmdGVyQWRkTGlxdWlkaXR5KGFkZHJlc3Mgc2VuZGVyLCBQb29sS2V5IGNhbGxkYXRhIGtleSwgSVBvb2xNYW5hZ2VyLk1vZGlmeUxpcXVpZGl0eVBhcmFtcyBjYWxsZGF0YSBwYXJhbXMsIEJhbGFuY2VEZWx0YSBkZWx0YSwgQmFsYW5jZURlbHRhIGZlZXNBY2NydWVkLCBieXRlcyBjYWxsZGF0YSBob29rRGF0YSkKICAgICAgICBleHRlcm5hbCByZXR1cm5zIChieXRlczQsIEJhbGFuY2VEZWx0YSk7CiAgICBmdW5jdGlvbiBiZWZvcmVSZW1vdmVMaXF1aWRpdHkoYWRkcmVzcyBzZW5kZXIsIFBvb2xLZXkgY2FsbGRhdGEga2V5LCBJUG9vbE1hbmFnZXIuTW9kaWZ5TGlxdWlkaXR5UGFyYW1zIGNhbGxkYXRhIHBhcmFtcywgYnl0ZXMgY2FsbGRhdGEgaG9va0RhdGEpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYnl0ZXM0KTsKICAgIGZ1bmN0aW9uIGFmdGVyUmVtb3ZlTGlxdWlkaXR5KGFkZHJlc3Mgc2VuZGVyLCBQb29sS2V5IGNhbGxkYXRhIGtleSwgSVBvb2xNYW5hZ2VyLk1vZGlmeUxpcXVpZGl0eVBhcmFtcyBjYWxsZGF0YSBwYXJhbXMsIEJhbGFuY2VEZWx0YSBkZWx0YSwgQmFsYW5jZURlbHRhIGZlZXNBY2NydWVkLCBieXRlcyBjYWxsZGF0YSBob29rRGF0YSkKICAgICAgICBleHRlcm5hbCByZXR1cm5zIChieXRlczQsIEJhbGFuY2VEZWx0YSk7CiAgICBmdW5jdGlvbiBiZWZvcmVTd2FwKGFkZHJlc3Mgc2VuZGVyLCBQb29sS2V5IGNhbGxkYXRhIGtleSwgSVBvb2xNYW5hZ2VyLlN3YXBQYXJhbXMgY2FsbGRhdGEgcGFyYW1zLCBieXRlcyBjYWxsZGF0YSBob29rRGF0YSkKICAgICAgICBleHRlcm5hbCByZXR1cm5zIChieXRlczQsIEJlZm9yZVN3YXBEZWx0YSwgdWludDI0KTsKICAgIGZ1bmN0aW9uIGFmdGVyU3dhcChhZGRyZXNzIHNlbmRlciwgUG9vbEtleSBjYWxsZGF0YSBrZXksIElQb29sTWFuYWdlci5Td2FwUGFyYW1zIGNhbGxkYXRhIHBhcmFtcywgQmFsYW5jZURlbHRhIGRlbHRhLCBieXRlcyBjYWxsZGF0YSBob29rRGF0YSkKICAgICAgICBleHRlcm5hbCByZXR1cm5zIChieXRlczQsIGludDEyOCk7CiAgICBmdW5jdGlvbiBiZWZvcmVEb25hdGUoYWRkcmVzcyBzZW5kZXIsIFBvb2xLZXkgY2FsbGRhdGEga2V5LCB1aW50MjU2IGFtb3VudDAsIHVpbnQyNTYgYW1vdW50MSwgYnl0ZXMgY2FsbGRhdGEgaG9va0RhdGEpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYnl0ZXM0KTsKICAgIGZ1bmN0aW9uIGFmdGVyRG9uYXRlKGFkZHJlc3Mgc2VuZGVyLCBQb29sS2V5IGNhbGxkYXRhIGtleSwgdWludDI1NiBhbW91bnQwLCB1aW50MjU2IGFtb3VudDEsIGJ5dGVzIGNhbGxkYXRhIGhvb2tEYXRhKQogICAgICAgIGV4dGVybmFsIHJldHVybnMgKGJ5dGVzNCk7Cn0KCmludGVyZmFjZSBJRVJDMjAgewogICAgZnVuY3Rpb24gdHJhbnNmZXJGcm9tKGFkZHJlc3Mgc2VuZGVyLCBhZGRyZXNzIHJlY2lwaWVudCwgdWludDI1NiBhbW91bnQpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYm9vbCk7CiAgICBmdW5jdGlvbiB0cmFuc2ZlcihhZGRyZXNzIHJlY2lwaWVudCwgdWludDI1NiBhbW91bnQpCiAgICAgICAgZXh0ZXJuYWwgcmV0dXJucyAoYm9vbCk7Cn0K" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+      </div>
+    </article>
+    
+        <footer class="footer">
+          <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
+          <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
+          <div class="footer-row">
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <div class="bar">|</div>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <div class="bar">|</div>
+            <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+          <div class="footer-row">v 0.8.26</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    document.querySelectorAll("[data-logo]").forEach(function (el) {
+      function paint() {
+        el.setAttribute("fill", document.body.classList.contains("dark") ? "rgb(0, 255, 0)" : "currentColor");
+      }
+      paint();
+      new MutationObserver(paint).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    });
+  </script>
+</body>
+</html>

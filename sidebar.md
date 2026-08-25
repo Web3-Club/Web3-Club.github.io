@@ -2,6 +2,10 @@
 
 ---
 
+* [Solidity by Example 中文](/solidity-by-example/)
+
+---
+
 * 区块链
   * [区块链介绍](post/区块链/介绍.md)
 

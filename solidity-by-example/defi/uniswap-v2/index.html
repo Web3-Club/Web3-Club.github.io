@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Uniswap V2 Swap | Solidity by Example | 0.8.26</title>
+  <meta name="description" content="Solidity by Example 简体中文译本，对照 solidity-by-example.org v0.8.26。">
+  <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body class="light">
+  <div class="layout">
+    <aside class="side-nav">
+      <h3 class="nav-category">Basic</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hello-world/">Hello World</a></li>
+<li class="nav-item"><a class="nav-link" href="../../first-app/">第一个应用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../primitives/">基本数据类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../variables/">变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constants/">常量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../immutable/">不可变</a></li>
+<li class="nav-item"><a class="nav-link" href="../../state-variables/">读写状态变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../ether-units/">以太币和 Wei</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas/">Gas 与 Gas Price</a></li>
+<li class="nav-item"><a class="nav-link" href="../../if-else/">条件判断</a></li>
+<li class="nav-item"><a class="nav-link" href="../../loop/">循环语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../mapping/">映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../array/">数组</a></li>
+<li class="nav-item"><a class="nav-link" href="../../enum/">枚举</a></li>
+<li class="nav-item"><a class="nav-link" href="../../user-defined-value-types/">用户自定义值类型</a></li>
+<li class="nav-item"><a class="nav-link" href="../../structs/">结构体</a></li>
+<li class="nav-item"><a class="nav-link" href="../../data-locations/">数据位置</a></li>
+<li class="nav-item"><a class="nav-link" href="../../transient-storage/">瞬时存储</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function/">函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../view-and-pure-functions/">View 和 Pure 函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../error/">错误或异常</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-modifier/">函数修饰符</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../events-advanced/">高级事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../constructor/">构造函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../inheritance/">继承</a></li>
+<li class="nav-item"><a class="nav-link" href="../../shadowing-inherited-state-variables/">继承状态变量的屏蔽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../super/">调用父合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../visibility/">可见性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../interface/">接口</a></li>
+<li class="nav-item"><a class="nav-link" href="../../payable/">Payable</a></li>
+<li class="nav-item"><a class="nav-link" href="../../sending-ether/">发送以太币</a></li>
+<li class="nav-item"><a class="nav-link" href="../../fallback/">回退函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../call/">Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../delegatecall/">Delegatecall</a></li>
+<li class="nav-item"><a class="nav-link" href="../../function-selector/">函数选择器</a></li>
+<li class="nav-item"><a class="nav-link" href="../../calling-contract/">调用其他合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../new-contract/">从合约创建合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../try-catch/">Try / Catch</a></li>
+<li class="nav-item"><a class="nav-link" href="../../import/">导入</a></li>
+<li class="nav-item"><a class="nav-link" href="../../library/">库</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-encode/">ABI 编码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../abi-decode/">ABI 解码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hashing/">Keccak256 哈希</a></li>
+<li class="nav-item"><a class="nav-link" href="../../signature/">验证签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../gas-golf/">Gas 优化</a></li>
+<li class="nav-item"><a class="nav-link" href="../../bitwise/">位运算</a></li>
+<li class="nav-item"><a class="nav-link" href="../../unchecked-math/">Unchecked Math</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-variable/">汇编变量</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-if/">汇编条件语句</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-loop/">汇编循环</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-error/">汇编错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../assembly-math/">汇编数学运算</a></li>
+</ul>
+<h3 class="nav-title">Applications</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../app/ether-wallet/">以太钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-sig-wallet/">多签钱包</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/merkle-tree/">默克尔树</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/iterable-mapping/">可迭代映射</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc20/">ERC20</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc721/">ERC721</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/erc1155/">ERC1155</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/gasless-token-transfer/">无 Gas 代币转账</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/simple-bytecode-contract/">简单字节码合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/create2/">使用 Create2 预计算合约地址</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/minimal-proxy/">最小代理合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/upgradeable-proxy/">可升级代理</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/deploy-any-contract/">部署任意合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/write-to-any-slot/">写入任意存储槽</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/uni-directional-payment-channel/">单向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/bi-directional-payment-channel/">双向支付渠道</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/english-auction/">英式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/dutch-auction/">荷兰式拍卖</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/crowd-fund/">众筹基金</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-call/">多调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/multi-delegatecall/">多委托调用</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/time-lock/">定时锁</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/assembly-bin-exp/">汇编中的二进制求幂</a></li>
+<li class="nav-item"><a class="nav-link" href="../../app/airdrop/">默克尔空投</a></li>
+</ul>
+<h3 class="nav-title">Hacks</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../hacks/re-entrancy/">重入攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/overflow/">算术溢出与下溢</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/self-destruct/">自毁函数</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/accessing-private-data/">访问私有数据</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/delegatecall/">Delegatecall 攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/randomness/">随机数预测</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/denial-of-service/">拒绝服务攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/phishing-with-tx-origin/">tx.origin 钓鱼</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/hiding-malicious-code-with-external-contract/">使用外部合约隐藏恶意代码</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/honeypot/">蜜罐</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/front-running/">抢跑</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/block-timestamp-manipulation/">区块时间戳操纵</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/signature-replay/">签名重放</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/contract-size/">绕过合约大小检查</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/deploy-different-contracts-same-address/">在同一地址部署不同合约</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/vault-inflation/">金库通货膨胀攻击</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/weth-permit/">WETH Permit</a></li>
+<li class="nav-item"><a class="nav-link" href="../../hacks/63-64-gas-rule/">63 / 64 Gas 规则</a></li>
+</ul>
+<h3 class="nav-title">EVM</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../evm/storage/">EVM 存储布局</a></li>
+<li class="nav-item"><a class="nav-link" href="../../evm/memory/">EVM 内存布局</a></li>
+</ul>
+<h3 class="nav-title">Tests</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../tests/echidna/">Echidna</a></li>
+</ul>
+<h3 class="nav-title">Foundry</h3>
+<ul class="nav-list">
+<li class="nav-item"><a class="nav-link" href="../../foundry/basic/">Foundry 基础</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/auth/">授权</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/error/">错误</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/event/">事件</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/send/">发送</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/time/">时间</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/sign/">签名</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/label/">标签</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/mock-call/">Mock Call</a></li>
+<li class="nav-item"><a class="nav-link" href="../../foundry/vm-store/">Store</a></li>
+</ul>
+<h3 class="nav-title">DeFi</h3>
+<ul class="nav-list">
+<li class="nav-item-active"><a class="nav-link" href="../../defi/uniswap-v2/">Uniswap V2 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-optimal-one-sided-supply/">Uniswap V2 最优单边供给</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v2-flash-swap/">Uniswap V2 Flash Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-swap/">Uniswap V3 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-liquidity/">Uniswap V3 流动性</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash/">Uniswap V3 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v3-flash-swap/">Uniswap V3 Flash Swap 套利</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-swap/">Uniswap V4 Swap</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-flash/">Uniswap V4 闪电贷</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/uniswap-v4-limit-order/">Uniswap V4 限价单</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chainlink-price-oracle/">Chainlink 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/chronicle-price-oracle/">Chronicle 价格预言机</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/dai-proxy/">DAI Proxy</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/staking-rewards/">质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/discrete-staking-rewards/">离散质押奖励</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/vault/">Vault</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/token-lock/">Token Lock</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-sum-amm/">恒定和 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/constant-product-amm/">恒定乘积 AMM</a></li>
+<li class="nav-item"><a class="nav-link" href="../../defi/stable-swap-amm/">Stable Swap AMM</a></li>
+</ul>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <button class="hamburger" data-toggle-nav aria-label="菜单"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="2" stroke="currentColor" width="20" height="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+</svg></button>
+        <div class="header-center">
+          <div class="header-center-inner">
+            <a href="../../"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1300" width="30" height="30" class="logo" data-logo>
+  <path opacity="0.45" d="M773.772 253.308 643.068 485.61H381.842l130.614-232.302h261.316"/>
+  <path opacity="0.6" d="M643.068 485.61h261.318L773.772 253.308H512.456L643.068 485.61z"/>
+  <path opacity="0.8" d="M512.456 717.822 643.068 485.61 512.456 253.308 381.842 485.61l130.614 232.212z"/>
+  <path opacity="0.45" d="m513.721 1066.275 130.704-232.303h261.318l-130.705 232.303H513.721"/>
+  <path opacity="0.6" d="M644.424 833.973H383.107l130.613 232.303h261.317L644.424 833.973z"/>
+  <path opacity="0.8" d="M775.038 601.761 644.424 833.973l130.614 232.303 130.704-232.303-130.704-232.212z"/>
+</svg></a>
+            <h3><a href="../../">Solidity by Example</a></h3>
+          </div>
+          <div class="zh-badge">中文译本 · Web3-Club</div>
+        </div>
+        <button class="mode-btn" data-toggle-theme aria-label="切换主题"><svg data-icon="dark" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 438.277 438.277" width="20" height="20"><path d="M428.756 300.104c-.664-3.81-2.334-7.047-4.996-9.713-5.9-5.903-12.752-7.142-20.554-3.716-20.937 9.708-42.641 14.558-65.097 14.558-28.171 0-54.152-6.94-77.943-20.838-23.791-13.894-42.631-32.736-56.525-56.53-13.899-23.793-20.844-49.773-20.844-77.945 0-21.888 4.333-42.683 12.991-62.384 8.66-19.7 21.176-36.973 37.543-51.82 6.283-5.898 7.713-12.752 4.287-20.557-3.236-7.801-9.041-11.511-17.415-11.132-29.121 1.141-56.72 7.664-82.797 19.556C111.33 31.478 88.917 47.13 70.168 66.548c-18.747 19.414-33.595 42.399-44.54 68.95-10.942 26.553-16.416 54.39-16.416 83.511 0 29.694 5.806 58.054 17.416 85.082 11.613 27.028 27.218 50.344 46.824 69.949 19.604 19.599 42.92 35.207 69.951 46.822 27.028 11.607 55.384 17.415 85.075 17.415 42.64 0 81.987-11.563 118.054-34.69 36.069-23.124 63.05-54.006 80.944-92.645 1.524-3.423 1.951-7.036 1.28-10.838z"/></svg><svg data-icon="light" hidden xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302.4 302.4" width="20" height="20"><circle cx="151.2" cy="151.2" r="48" fill="none" stroke="#252519" stroke-width="16"/><g stroke="#252519" stroke-width="12" stroke-linecap="round"><path d="M151.2 20 v32M151.2 250 v32M20 151.2 h32M250 151.2 h32M55 55 l22 22M225 225 l22 22M55 247 l22 -22M225 77 l22 -22"/></g></svg></button>
+      </header>
+      <div class="children">
+        
+    <article class="article">
+      <div class="article-content">
+        <h2>Uniswap V2 Swap</h2>
+        <div class="en-link">英文原页：<a href="https://solidity-by-example.org/defi/uniswap-v2" target="_blank" rel="noreferrer">https://solidity-by-example.org/defi/uniswap-v2</a></div>
+        <p><code>swapExactTokensForTokens</code> 将全部代币卖出，换为另一种代币。</p>
+<p><code>swapTokensForExactTokens</code> 买入调用者指定数量的代币。</p>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract UniswapV2SwapExamples {
+    address private constant UNISWAP_V2_ROUTER =
+        0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+
+    address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    address private constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+    address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+
+    IUniswapV2Router private router = IUniswapV2Router(UNISWAP_V2_ROUTER);
+    IERC20 private weth = IERC20(WETH);
+    IERC20 private dai = IERC20(DAI);
+
+    // 将 WETH 兑换为 DAI
+    function swapSingleHopExactAmountIn(uint256 amountIn, uint256 amountOutMin)
+        external
+        returns (uint256 amountOut)
+    {
+        weth.transferFrom(msg.sender, address(this), amountIn);
+        weth.approve(address(router), amountIn);
+
+        address[] memory path;
+        path = new address[](2);
+        path[0] = WETH;
+        path[1] = DAI;
+
+        uint256[] memory amounts = router.swapExactTokensForTokens(
+            amountIn, amountOutMin, path, msg.sender, block.timestamp
+        );
+
+        // amounts[0] = WETH 数量，amounts[1] = DAI 数量
+        return amounts[1];
+    }
+
+    // 兑换 DAI -&gt; WETH -&gt; USDC
+    function swapMultiHopExactAmountIn(uint256 amountIn, uint256 amountOutMin)
+        external
+        returns (uint256 amountOut)
+    {
+        dai.transferFrom(msg.sender, address(this), amountIn);
+        dai.approve(address(router), amountIn);
+
+        address[] memory path;
+        path = new address[](3);
+        path[0] = DAI;
+        path[1] = WETH;
+        path[2] = USDC;
+
+        uint256[] memory amounts = router.swapExactTokensForTokens(
+            amountIn, amountOutMin, path, msg.sender, block.timestamp
+        );
+
+        // amounts[0] = DAI 数量
+        // amounts[1] = WETH 数量
+        // amounts[2] = USDC 数量
+        return amounts[2];
+    }
+
+    // 将 WETH 兑换为 DAI
+    function swapSingleHopExactAmountOut(
+        uint256 amountOutDesired,
+        uint256 amountInMax
+    ) external returns (uint256 amountOut) {
+        weth.transferFrom(msg.sender, address(this), amountInMax);
+        weth.approve(address(router), amountInMax);
+
+        address[] memory path;
+        path = new address[](2);
+        path[0] = WETH;
+        path[1] = DAI;
+
+        uint256[] memory amounts = router.swapTokensForExactTokens(
+            amountOutDesired, amountInMax, path, msg.sender, block.timestamp
+        );
+
+        // 将剩余 WETH 退还给 msg.sender
+        if (amounts[0] &lt; amountInMax) {
+            weth.transfer(msg.sender, amountInMax - amounts[0]);
+        }
+
+        return amounts[1];
+    }
+
+    // 兑换 DAI -&gt; WETH -&gt; USDC
+    function swapMultiHopExactAmountOut(
+        uint256 amountOutDesired,
+        uint256 amountInMax
+    ) external returns (uint256 amountOut) {
+        dai.transferFrom(msg.sender, address(this), amountInMax);
+        dai.approve(address(router), amountInMax);
+
+        address[] memory path;
+        path = new address[](3);
+        path[0] = DAI;
+        path[1] = WETH;
+        path[2] = USDC;
+
+        uint256[] memory amounts = router.swapTokensForExactTokens(
+            amountOutDesired, amountInMax, path, msg.sender, block.timestamp
+        );
+
+        // 将剩余 DAI 退还给 msg.sender
+        if (amounts[0] &lt; amountInMax) {
+            dai.transfer(msg.sender, amountInMax - amounts[0]);
+        }
+
+        return amounts[2];
+    }
+}
+
+interface IUniswapV2Router {
+    function swapExactTokensForTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+
+    function swapTokensForExactTokens(
+        uint256 amountOut,
+        uint256 amountInMax,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+}
+
+interface IERC20 {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount)
+        external
+        returns (bool);
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount)
+        external
+        returns (bool);
+}
+
+interface IWETH is IERC20 {
+    function deposit() external payable;
+    function withdraw(uint256 amount) external;
+}
+</code></pre>
+<h3>使用 Foundry 测试</h3>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import {Test, console2} from &quot;forge-std/Test.sol&quot;;
+import {
+    UniswapV2SwapExamples,
+    IERC20,
+    IWETH
+} from &quot;../../../src/defi/uniswap-v2/UniswapV2SwapExamples.sol&quot;;
+
+address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+address constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+
+contract UniswapV2SwapExamplesTest is Test {
+    IWETH private weth = IWETH(WETH);
+    IERC20 private dai = IERC20(DAI);
+    IERC20 private usdc = IERC20(USDC);
+
+    UniswapV2SwapExamples private uni = new UniswapV2SwapExamples();
+
+    function setUp() public {}
+
+    // 兑换 WETH -&gt; DAI
+    function testSwapSingleHopExactAmountIn() public {
+        uint256 wethAmount = 1e18;
+        weth.deposit{value: wethAmount}();
+        weth.approve(address(uni), wethAmount);
+
+        uint256 daiAmountMin = 1;
+        uint256 daiAmountOut =
+            uni.swapSingleHopExactAmountIn(wethAmount, daiAmountMin);
+
+        console2.log(&quot;DAI&quot;, daiAmountOut);
+        assertGe(daiAmountOut, daiAmountMin, &quot;amount out &lt; min&quot;);
+    }
+
+    // 兑换 DAI -&gt; WETH -&gt; USDC
+    function testSwapMultiHopExactAmountIn() public {
+        // 兑换 WETH -&gt; DAI
+        uint256 wethAmount = 1e18;
+        weth.deposit{value: wethAmount}();
+        weth.approve(address(uni), wethAmount);
+
+        uint256 daiAmountMin = 1;
+        uni.swapSingleHopExactAmountIn(wethAmount, daiAmountMin);
+
+        // 兑换 DAI -&gt; WETH -&gt; USDC
+        uint256 daiAmountIn = 1e18;
+        dai.approve(address(uni), daiAmountIn);
+
+        uint256 usdcAmountOutMin = 1;
+        uint256 usdcAmountOut =
+            uni.swapMultiHopExactAmountIn(daiAmountIn, usdcAmountOutMin);
+
+        console2.log(&quot;USDC&quot;, usdcAmountOut);
+        assertGe(usdcAmountOut, usdcAmountOutMin, &quot;amount out &lt; min&quot;);
+    }
+
+    // 兑换 WETH -&gt; DAI
+    function testSwapSingleHopExactAmountOut() public {
+        uint256 wethAmount = 1e18;
+        weth.deposit{value: wethAmount}();
+        weth.approve(address(uni), wethAmount);
+
+        uint256 daiAmountDesired = 1e18;
+        uint256 daiAmountOut =
+            uni.swapSingleHopExactAmountOut(daiAmountDesired, wethAmount);
+
+        console2.log(&quot;DAI&quot;, daiAmountOut);
+        assertEq(
+            daiAmountOut, daiAmountDesired, &quot;amount out != amount out desired&quot;
+        );
+    }
+
+    // 兑换 DAI -&gt; WETH -&gt; USDC
+    function testSwapMultiHopExactAmountOut() public {
+        // 兑换 WETH -&gt; DAI
+        uint256 wethAmount = 1e18;
+        weth.deposit{value: wethAmount}();
+        weth.approve(address(uni), wethAmount);
+
+        // 买入 100 DAI
+        uint256 daiAmountOut = 100 * 1e18;
+        uni.swapSingleHopExactAmountOut(daiAmountOut, wethAmount);
+
+        // 兑换 DAI -&gt; WETH -&gt; USDC
+        dai.approve(address(uni), daiAmountOut);
+
+        uint256 amountOutDesired = 1e6;
+        uint256 amountOut =
+            uni.swapMultiHopExactAmountOut(amountOutDesired, daiAmountOut);
+
+        console2.log(&quot;USDC&quot;, amountOut);
+        assertEq(
+            amountOut, amountOutDesired, &quot;amount out != amount out desired&quot;
+        );
+    }
+}
+</code></pre>
+        <div class="prev-next"><a href="../../foundry/vm-store/">&lt; Store</a><a href="../../defi/uniswap-v2-add-remove-liquidity/">Uniswap V2 添加与移除流动性 &gt;</a></div>
+        <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmNvbnRyYWN0IFVuaXN3YXBWMlN3YXBFeGFtcGxlcyB7CiAgICBhZGRyZXNzIHByaXZhdGUgY29uc3RhbnQgVU5JU1dBUF9WMl9ST1VURVIgPQogICAgICAgIDB4N2EyNTBkNTYzMEI0Y0Y1Mzk3MzlkRjJDNWRBY2I0YzY1OUYyNDg4RDsKCiAgICBhZGRyZXNzIHByaXZhdGUgY29uc3RhbnQgV0VUSCA9IDB4QzAyYWFBMzliMjIzRkU4RDBBMGU1QzRGMjdlQUQ5MDgzQzc1NkNjMjsKICAgIGFkZHJlc3MgcHJpdmF0ZSBjb25zdGFudCBEQUkgPSAweDZCMTc1NDc0RTg5MDk0QzQ0RGE5OGI5NTRFZWRlQUM0OTUyNzFkMEY7CiAgICBhZGRyZXNzIGNvbnN0YW50IFVTREMgPSAweEEwYjg2OTkxYzYyMThiMzZjMWQxOUQ0YTJlOUViMGNFMzYwNmVCNDg7CgogICAgSVVuaXN3YXBWMlJvdXRlciBwcml2YXRlIHJvdXRlciA9IElVbmlzd2FwVjJSb3V0ZXIoVU5JU1dBUF9WMl9ST1VURVIpOwogICAgSUVSQzIwIHByaXZhdGUgd2V0aCA9IElFUkMyMChXRVRIKTsKICAgIElFUkMyMCBwcml2YXRlIGRhaSA9IElFUkMyMChEQUkpOwoKICAgIC8vIOWwhiBXRVRIIOWFkeaNouS4uiBEQUkKICAgIGZ1bmN0aW9uIHN3YXBTaW5nbGVIb3BFeGFjdEFtb3VudEluKHVpbnQyNTYgYW1vdW50SW4sIHVpbnQyNTYgYW1vdW50T3V0TWluKQogICAgICAgIGV4dGVybmFsCiAgICAgICAgcmV0dXJucyAodWludDI1NiBhbW91bnRPdXQpCiAgICB7CiAgICAgICAgd2V0aC50cmFuc2ZlckZyb20obXNnLnNlbmRlciwgYWRkcmVzcyh0aGlzKSwgYW1vdW50SW4pOwogICAgICAgIHdldGguYXBwcm92ZShhZGRyZXNzKHJvdXRlciksIGFtb3VudEluKTsKCiAgICAgICAgYWRkcmVzc1tdIG1lbW9yeSBwYXRoOwogICAgICAgIHBhdGggPSBuZXcgYWRkcmVzc1tdKDIpOwogICAgICAgIHBhdGhbMF0gPSBXRVRIOwogICAgICAgIHBhdGhbMV0gPSBEQUk7CgogICAgICAgIHVpbnQyNTZbXSBtZW1vcnkgYW1vdW50cyA9IHJvdXRlci5zd2FwRXhhY3RUb2tlbnNGb3JUb2tlbnMoCiAgICAgICAgICAgIGFtb3VudEluLCBhbW91bnRPdXRNaW4sIHBhdGgsIG1zZy5zZW5kZXIsIGJsb2NrLnRpbWVzdGFtcAogICAgICAgICk7CgogICAgICAgIC8vIGFtb3VudHNbMF0gPSBXRVRIIOaVsOmHj++8jGFtb3VudHNbMV0gPSBEQUkg5pWw6YePCiAgICAgICAgcmV0dXJuIGFtb3VudHNbMV07CiAgICB9CgogICAgLy8g5YWR5o2iIERBSSAtPiBXRVRIIC0+IFVTREMKICAgIGZ1bmN0aW9uIHN3YXBNdWx0aUhvcEV4YWN0QW1vdW50SW4odWludDI1NiBhbW91bnRJbiwgdWludDI1NiBhbW91bnRPdXRNaW4pCiAgICAgICAgZXh0ZXJuYWwKICAgICAgICByZXR1cm5zICh1aW50MjU2IGFtb3VudE91dCkKICAgIHsKICAgICAgICBkYWkudHJhbnNmZXJGcm9tKG1zZy5zZW5kZXIsIGFkZHJlc3ModGhpcyksIGFtb3VudEluKTsKICAgICAgICBkYWkuYXBwcm92ZShhZGRyZXNzKHJvdXRlciksIGFtb3VudEluKTsKCiAgICAgICAgYWRkcmVzc1tdIG1lbW9yeSBwYXRoOwogICAgICAgIHBhdGggPSBuZXcgYWRkcmVzc1tdKDMpOwogICAgICAgIHBhdGhbMF0gPSBEQUk7CiAgICAgICAgcGF0aFsxXSA9IFdFVEg7CiAgICAgICAgcGF0aFsyXSA9IFVTREM7CgogICAgICAgIHVpbnQyNTZbXSBtZW1vcnkgYW1vdW50cyA9IHJvdXRlci5zd2FwRXhhY3RUb2tlbnNGb3JUb2tlbnMoCiAgICAgICAgICAgIGFtb3VudEluLCBhbW91bnRPdXRNaW4sIHBhdGgsIG1zZy5zZW5kZXIsIGJsb2NrLnRpbWVzdGFtcAogICAgICAgICk7CgogICAgICAgIC8vIGFtb3VudHNbMF0gPSBEQUkg5pWw6YePCiAgICAgICAgLy8gYW1vdW50c1sxXSA9IFdFVEgg5pWw6YePCiAgICAgICAgLy8gYW1vdW50c1syXSA9IFVTREMg5pWw6YePCiAgICAgICAgcmV0dXJuIGFtb3VudHNbMl07CiAgICB9CgogICAgLy8g5bCGIFdFVEgg5YWR5o2i5Li6IERBSQogICAgZnVuY3Rpb24gc3dhcFNpbmdsZUhvcEV4YWN0QW1vdW50T3V0KAogICAgICAgIHVpbnQyNTYgYW1vdW50T3V0RGVzaXJlZCwKICAgICAgICB1aW50MjU2IGFtb3VudEluTWF4CiAgICApIGV4dGVybmFsIHJldHVybnMgKHVpbnQyNTYgYW1vdW50T3V0KSB7CiAgICAgICAgd2V0aC50cmFuc2ZlckZyb20obXNnLnNlbmRlciwgYWRkcmVzcyh0aGlzKSwgYW1vdW50SW5NYXgpOwogICAgICAgIHdldGguYXBwcm92ZShhZGRyZXNzKHJvdXRlciksIGFtb3VudEluTWF4KTsKCiAgICAgICAgYWRkcmVzc1tdIG1lbW9yeSBwYXRoOwogICAgICAgIHBhdGggPSBuZXcgYWRkcmVzc1tdKDIpOwogICAgICAgIHBhdGhbMF0gPSBXRVRIOwogICAgICAgIHBhdGhbMV0gPSBEQUk7CgogICAgICAgIHVpbnQyNTZbXSBtZW1vcnkgYW1vdW50cyA9IHJvdXRlci5zd2FwVG9rZW5zRm9yRXhhY3RUb2tlbnMoCiAgICAgICAgICAgIGFtb3VudE91dERlc2lyZWQsIGFtb3VudEluTWF4LCBwYXRoLCBtc2cuc2VuZGVyLCBibG9jay50aW1lc3RhbXAKICAgICAgICApOwoKICAgICAgICAvLyDlsIbliankvZkgV0VUSCDpgIDov5jnu5kgbXNnLnNlbmRlcgogICAgICAgIGlmIChhbW91bnRzWzBdIDwgYW1vdW50SW5NYXgpIHsKICAgICAgICAgICAgd2V0aC50cmFuc2Zlcihtc2cuc2VuZGVyLCBhbW91bnRJbk1heCAtIGFtb3VudHNbMF0pOwogICAgICAgIH0KCiAgICAgICAgcmV0dXJuIGFtb3VudHNbMV07CiAgICB9CgogICAgLy8g5YWR5o2iIERBSSAtPiBXRVRIIC0+IFVTREMKICAgIGZ1bmN0aW9uIHN3YXBNdWx0aUhvcEV4YWN0QW1vdW50T3V0KAogICAgICAgIHVpbnQyNTYgYW1vdW50T3V0RGVzaXJlZCwKICAgICAgICB1aW50MjU2IGFtb3VudEluTWF4CiAgICApIGV4dGVybmFsIHJldHVybnMgKHVpbnQyNTYgYW1vdW50T3V0KSB7CiAgICAgICAgZGFpLnRyYW5zZmVyRnJvbShtc2cuc2VuZGVyLCBhZGRyZXNzKHRoaXMpLCBhbW91bnRJbk1heCk7CiAgICAgICAgZGFpLmFwcHJvdmUoYWRkcmVzcyhyb3V0ZXIpLCBhbW91bnRJbk1heCk7CgogICAgICAgIGFkZHJlc3NbXSBtZW1vcnkgcGF0aDsKICAgICAgICBwYXRoID0gbmV3IGFkZHJlc3NbXSgzKTsKICAgICAgICBwYXRoWzBdID0gREFJOwogICAgICAgIHBhdGhbMV0gPSBXRVRIOwogICAgICAgIHBhdGhbMl0gPSBVU0RDOwoKICAgICAgICB1aW50MjU2W10gbWVtb3J5IGFtb3VudHMgPSByb3V0ZXIuc3dhcFRva2Vuc0ZvckV4YWN0VG9rZW5zKAogICAgICAgICAgICBhbW91bnRPdXREZXNpcmVkLCBhbW91bnRJbk1heCwgcGF0aCwgbXNnLnNlbmRlciwgYmxvY2sudGltZXN0YW1wCiAgICAgICAgKTsKCiAgICAgICAgLy8g5bCG5Ymp5L2ZIERBSSDpgIDov5jnu5kgbXNnLnNlbmRlcgogICAgICAgIGlmIChhbW91bnRzWzBdIDwgYW1vdW50SW5NYXgpIHsKICAgICAgICAgICAgZGFpLnRyYW5zZmVyKG1zZy5zZW5kZXIsIGFtb3VudEluTWF4IC0gYW1vdW50c1swXSk7CiAgICAgICAgfQoKICAgICAgICByZXR1cm4gYW1vdW50c1syXTsKICAgIH0KfQoKaW50ZXJmYWNlIElVbmlzd2FwVjJSb3V0ZXIgewogICAgZnVuY3Rpb24gc3dhcEV4YWN0VG9rZW5zRm9yVG9rZW5zKAogICAgICAgIHVpbnQyNTYgYW1vdW50SW4sCiAgICAgICAgdWludDI1NiBhbW91bnRPdXRNaW4sCiAgICAgICAgYWRkcmVzc1tdIGNhbGxkYXRhIHBhdGgsCiAgICAgICAgYWRkcmVzcyB0bywKICAgICAgICB1aW50MjU2IGRlYWRsaW5lCiAgICApIGV4dGVybmFsIHJldHVybnMgKHVpbnQyNTZbXSBtZW1vcnkgYW1vdW50cyk7CgogICAgZnVuY3Rpb24gc3dhcFRva2Vuc0ZvckV4YWN0VG9rZW5zKAogICAgICAgIHVpbnQyNTYgYW1vdW50T3V0LAogICAgICAgIHVpbnQyNTYgYW1vdW50SW5NYXgsCiAgICAgICAgYWRkcmVzc1tdIGNhbGxkYXRhIHBhdGgsCiAgICAgICAgYWRkcmVzcyB0bywKICAgICAgICB1aW50MjU2IGRlYWRsaW5lCiAgICApIGV4dGVybmFsIHJldHVybnMgKHVpbnQyNTZbXSBtZW1vcnkgYW1vdW50cyk7Cn0KCmludGVyZmFjZSBJRVJDMjAgewogICAgZnVuY3Rpb24gdG90YWxTdXBwbHkoKSBleHRlcm5hbCB2aWV3IHJldHVybnMgKHVpbnQyNTYpOwogICAgZnVuY3Rpb24gYmFsYW5jZU9mKGFkZHJlc3MgYWNjb3VudCkgZXh0ZXJuYWwgdmlldyByZXR1cm5zICh1aW50MjU2KTsKICAgIGZ1bmN0aW9uIHRyYW5zZmVyKGFkZHJlc3MgcmVjaXBpZW50LCB1aW50MjU2IGFtb3VudCkKICAgICAgICBleHRlcm5hbAogICAgICAgIHJldHVybnMgKGJvb2wpOwogICAgZnVuY3Rpb24gYWxsb3dhbmNlKGFkZHJlc3Mgb3duZXIsIGFkZHJlc3Mgc3BlbmRlcikKICAgICAgICBleHRlcm5hbAogICAgICAgIHZpZXcKICAgICAgICByZXR1cm5zICh1aW50MjU2KTsKICAgIGZ1bmN0aW9uIGFwcHJvdmUoYWRkcmVzcyBzcGVuZGVyLCB1aW50MjU2IGFtb3VudCkgZXh0ZXJuYWwgcmV0dXJucyAoYm9vbCk7CiAgICBmdW5jdGlvbiB0cmFuc2ZlckZyb20oYWRkcmVzcyBzZW5kZXIsIGFkZHJlc3MgcmVjaXBpZW50LCB1aW50MjU2IGFtb3VudCkKICAgICAgICBleHRlcm5hbAogICAgICAgIHJldHVybnMgKGJvb2wpOwp9CgppbnRlcmZhY2UgSVdFVEggaXMgSUVSQzIwIHsKICAgIGZ1bmN0aW9uIGRlcG9zaXQoKSBleHRlcm5hbCBwYXlhYmxlOwogICAgZnVuY3Rpb24gd2l0aGRyYXcodWludDI1NiBhbW91bnQpIGV4dGVybmFsOwp9Cg==" target="_blank" rel="noreferrer">Example1.sol</a></li><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmltcG9ydCB7VGVzdCwgY29uc29sZTJ9IGZyb20gImZvcmdlLXN0ZC9UZXN0LnNvbCI7CmltcG9ydCB7CiAgICBVbmlzd2FwVjJTd2FwRXhhbXBsZXMsCiAgICBJRVJDMjAsCiAgICBJV0VUSAp9IGZyb20gIi4uLy4uLy4uL3NyYy9kZWZpL3VuaXN3YXAtdjIvVW5pc3dhcFYyU3dhcEV4YW1wbGVzLnNvbCI7CgphZGRyZXNzIGNvbnN0YW50IFdFVEggPSAweEMwMmFhQTM5YjIyM0ZFOEQwQTBlNUM0RjI3ZUFEOTA4M0M3NTZDYzI7CmFkZHJlc3MgY29uc3RhbnQgREFJID0gMHg2QjE3NTQ3NEU4OTA5NEM0NERhOThiOTU0RWVkZUFDNDk1MjcxZDBGOwphZGRyZXNzIGNvbnN0YW50IFVTREMgPSAweEEwYjg2OTkxYzYyMThiMzZjMWQxOUQ0YTJlOUViMGNFMzYwNmVCNDg7Cgpjb250cmFjdCBVbmlzd2FwVjJTd2FwRXhhbXBsZXNUZXN0IGlzIFRlc3QgewogICAgSVdFVEggcHJpdmF0ZSB3ZXRoID0gSVdFVEgoV0VUSCk7CiAgICBJRVJDMjAgcHJpdmF0ZSBkYWkgPSBJRVJDMjAoREFJKTsKICAgIElFUkMyMCBwcml2YXRlIHVzZGMgPSBJRVJDMjAoVVNEQyk7CgogICAgVW5pc3dhcFYyU3dhcEV4YW1wbGVzIHByaXZhdGUgdW5pID0gbmV3IFVuaXN3YXBWMlN3YXBFeGFtcGxlcygpOwoKICAgIGZ1bmN0aW9uIHNldFVwKCkgcHVibGljIHt9CgogICAgLy8g5YWR5o2iIFdFVEggLT4gREFJCiAgICBmdW5jdGlvbiB0ZXN0U3dhcFNpbmdsZUhvcEV4YWN0QW1vdW50SW4oKSBwdWJsaWMgewogICAgICAgIHVpbnQyNTYgd2V0aEFtb3VudCA9IDFlMTg7CiAgICAgICAgd2V0aC5kZXBvc2l0e3ZhbHVlOiB3ZXRoQW1vdW50fSgpOwogICAgICAgIHdldGguYXBwcm92ZShhZGRyZXNzKHVuaSksIHdldGhBbW91bnQpOwoKICAgICAgICB1aW50MjU2IGRhaUFtb3VudE1pbiA9IDE7CiAgICAgICAgdWludDI1NiBkYWlBbW91bnRPdXQgPQogICAgICAgICAgICB1bmkuc3dhcFNpbmdsZUhvcEV4YWN0QW1vdW50SW4od2V0aEFtb3VudCwgZGFpQW1vdW50TWluKTsKCiAgICAgICAgY29uc29sZTIubG9nKCJEQUkiLCBkYWlBbW91bnRPdXQpOwogICAgICAgIGFzc2VydEdlKGRhaUFtb3VudE91dCwgZGFpQW1vdW50TWluLCAiYW1vdW50IG91dCA8IG1pbiIpOwogICAgfQoKICAgIC8vIOWFkeaNoiBEQUkgLT4gV0VUSCAtPiBVU0RDCiAgICBmdW5jdGlvbiB0ZXN0U3dhcE11bHRpSG9wRXhhY3RBbW91bnRJbigpIHB1YmxpYyB7CiAgICAgICAgLy8g5YWR5o2iIFdFVEggLT4gREFJCiAgICAgICAgdWludDI1NiB3ZXRoQW1vdW50ID0gMWUxODsKICAgICAgICB3ZXRoLmRlcG9zaXR7dmFsdWU6IHdldGhBbW91bnR9KCk7CiAgICAgICAgd2V0aC5hcHByb3ZlKGFkZHJlc3ModW5pKSwgd2V0aEFtb3VudCk7CgogICAgICAgIHVpbnQyNTYgZGFpQW1vdW50TWluID0gMTsKICAgICAgICB1bmkuc3dhcFNpbmdsZUhvcEV4YWN0QW1vdW50SW4od2V0aEFtb3VudCwgZGFpQW1vdW50TWluKTsKCiAgICAgICAgLy8g5YWR5o2iIERBSSAtPiBXRVRIIC0+IFVTREMKICAgICAgICB1aW50MjU2IGRhaUFtb3VudEluID0gMWUxODsKICAgICAgICBkYWkuYXBwcm92ZShhZGRyZXNzKHVuaSksIGRhaUFtb3VudEluKTsKCiAgICAgICAgdWludDI1NiB1c2RjQW1vdW50T3V0TWluID0gMTsKICAgICAgICB1aW50MjU2IHVzZGNBbW91bnRPdXQgPQogICAgICAgICAgICB1bmkuc3dhcE11bHRpSG9wRXhhY3RBbW91bnRJbihkYWlBbW91bnRJbiwgdXNkY0Ftb3VudE91dE1pbik7CgogICAgICAgIGNvbnNvbGUyLmxvZygiVVNEQyIsIHVzZGNBbW91bnRPdXQpOwogICAgICAgIGFzc2VydEdlKHVzZGNBbW91bnRPdXQsIHVzZGNBbW91bnRPdXRNaW4sICJhbW91bnQgb3V0IDwgbWluIik7CiAgICB9CgogICAgLy8g5YWR5o2iIFdFVEggLT4gREFJCiAgICBmdW5jdGlvbiB0ZXN0U3dhcFNpbmdsZUhvcEV4YWN0QW1vdW50T3V0KCkgcHVibGljIHsKICAgICAgICB1aW50MjU2IHdldGhBbW91bnQgPSAxZTE4OwogICAgICAgIHdldGguZGVwb3NpdHt2YWx1ZTogd2V0aEFtb3VudH0oKTsKICAgICAgICB3ZXRoLmFwcHJvdmUoYWRkcmVzcyh1bmkpLCB3ZXRoQW1vdW50KTsKCiAgICAgICAgdWludDI1NiBkYWlBbW91bnREZXNpcmVkID0gMWUxODsKICAgICAgICB1aW50MjU2IGRhaUFtb3VudE91dCA9CiAgICAgICAgICAgIHVuaS5zd2FwU2luZ2xlSG9wRXhhY3RBbW91bnRPdXQoZGFpQW1vdW50RGVzaXJlZCwgd2V0aEFtb3VudCk7CgogICAgICAgIGNvbnNvbGUyLmxvZygiREFJIiwgZGFpQW1vdW50T3V0KTsKICAgICAgICBhc3NlcnRFcSgKICAgICAgICAgICAgZGFpQW1vdW50T3V0LCBkYWlBbW91bnREZXNpcmVkLCAiYW1vdW50IG91dCAhPSBhbW91bnQgb3V0IGRlc2lyZWQiCiAgICAgICAgKTsKICAgIH0KCiAgICAvLyDlhZHmjaIgREFJIC0+IFdFVEggLT4gVVNEQwogICAgZnVuY3Rpb24gdGVzdFN3YXBNdWx0aUhvcEV4YWN0QW1vdW50T3V0KCkgcHVibGljIHsKICAgICAgICAvLyDlhZHmjaIgV0VUSCAtPiBEQUkKICAgICAgICB1aW50MjU2IHdldGhBbW91bnQgPSAxZTE4OwogICAgICAgIHdldGguZGVwb3NpdHt2YWx1ZTogd2V0aEFtb3VudH0oKTsKICAgICAgICB3ZXRoLmFwcHJvdmUoYWRkcmVzcyh1bmkpLCB3ZXRoQW1vdW50KTsKCiAgICAgICAgLy8g5Lmw5YWlIDEwMCBEQUkKICAgICAgICB1aW50MjU2IGRhaUFtb3VudE91dCA9IDEwMCAqIDFlMTg7CiAgICAgICAgdW5pLnN3YXBTaW5nbGVIb3BFeGFjdEFtb3VudE91dChkYWlBbW91bnRPdXQsIHdldGhBbW91bnQpOwoKICAgICAgICAvLyDlhZHmjaIgREFJIC0+IFdFVEggLT4gVVNEQwogICAgICAgIGRhaS5hcHByb3ZlKGFkZHJlc3ModW5pKSwgZGFpQW1vdW50T3V0KTsKCiAgICAgICAgdWludDI1NiBhbW91bnRPdXREZXNpcmVkID0gMWU2OwogICAgICAgIHVpbnQyNTYgYW1vdW50T3V0ID0KICAgICAgICAgICAgdW5pLnN3YXBNdWx0aUhvcEV4YWN0QW1vdW50T3V0KGFtb3VudE91dERlc2lyZWQsIGRhaUFtb3VudE91dCk7CgogICAgICAgIGNvbnNvbGUyLmxvZygiVVNEQyIsIGFtb3VudE91dCk7CiAgICAgICAgYXNzZXJ0RXEoCiAgICAgICAgICAgIGFtb3VudE91dCwgYW1vdW50T3V0RGVzaXJlZCwgImFtb3VudCBvdXQgIT0gYW1vdW50IG91dCBkZXNpcmVkIgogICAgICAgICk7CiAgICB9Cn0K" target="_blank" rel="noreferrer">Example2.sol</a></li></ul>
+      </div>
+    </article>
+    
+        <footer class="footer">
+          <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
+          <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
+          <div class="footer-row">
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <div class="bar">|</div>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <div class="bar">|</div>
+            <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+          <div class="footer-row">v 0.8.26</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/solidity.min.js"></script>
+  <script src="../../js/app.js"></script>
+  <script>
+    document.querySelectorAll("[data-logo]").forEach(function (el) {
+      function paint() {
+        el.setAttribute("fill", document.body.classList.contains("dark") ? "rgb(0, 255, 0)" : "currentColor");
+      }
+      paint();
+      new MutationObserver(paint).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    });
+  </script>
+</body>
+</html>
