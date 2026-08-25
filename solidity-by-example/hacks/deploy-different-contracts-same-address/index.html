@@ -305,6 +305,17 @@ contract Deployer {
 }</code></pre>
         <div class="prev-next"><a href="../../hacks/contract-size/">&lt; 绕过合约大小检查</a><a href="../../hacks/vault-inflation/">金库通货膨胀攻击 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8qCueUsSBBbGljZSDosIPnlKgKMC4g6YOo572yIERBTwoK55Sx5pS75Ye76ICF6LCD55SoCjEuIOmDqOe9siBEZXBsb3llckRlcGxveWVyCjIuIOiwg+eUqCBEZXBsb3llckRlcGxveWVyLmRlcGxveSgpCjMuIOiwg+eUqCBEZXBsb3llci5kZXBsb3lQcm9wb3NhbCgpCgrnlLEgQWxpY2Ug6LCD55SoCjQuIOiuqSBEQU8g5om55YeGIFByb3Bvc2FsCgrnlLHmlLvlh7vogIXosIPnlKgKNS4g5Yig6ZmkIFByb3Bvc2FsIOWSjCBEZXBsb3llcgo2LiDph43mlrDpg6jnvbIgRGVwbG95ZXIKNy4g6LCD55SoIERlcGxveWVyLmRlcGxveUF0dGFjaygpCjguIOiwg+eUqCBEQU8uZXhlY3V0ZQo5LiDmo4Dmn6UgREFPLm93bmVyIOaYr+WQpuS4uuaUu+WHu+iAheWcsOWdgAoKREFPIC0tIOW3suaJueWHhiAtLT4gUHJvcG9zYWwKRGVwbG95ZXJEZXBsb3llciAtLSBjcmVhdGUyIC0tPiBEZXBsb3llciAtLSBjcmVhdGUgLS0+IFByb3Bvc2FsCkRlcGxveWVyRGVwbG95ZXIgLS0gY3JlYXRlMiAtLT4gRGVwbG95ZXIgLS0gY3JlYXRlIC0tPiBBdHRhY2sKKi8KCmNvbnRyYWN0IERBTyB7CiAgICBzdHJ1Y3QgUHJvcG9zYWwgewogICAgICAgIGFkZHJlc3MgdGFyZ2V0OwogICAgICAgIGJvb2wgYXBwcm92ZWQ7CiAgICAgICAgYm9vbCBleGVjdXRlZDsKICAgIH0KCiAgICBhZGRyZXNzIHB1YmxpYyBvd25lciA9IG1zZy5zZW5kZXI7CiAgICBQcm9wb3NhbFtdIHB1YmxpYyBwcm9wb3NhbHM7CgogICAgZnVuY3Rpb24gYXBwcm92ZShhZGRyZXNzIHRhcmdldCkgZXh0ZXJuYWwgewogICAgICAgIHJlcXVpcmUobXNnLnNlbmRlciA9PSBvd25lciwgIm5vdCBhdXRob3JpemVkIik7CgogICAgICAgIHByb3Bvc2Fscy5wdXNoKAogICAgICAgICAgICBQcm9wb3NhbCh7dGFyZ2V0OiB0YXJnZXQsIGFwcHJvdmVkOiB0cnVlLCBleGVjdXRlZDogZmFsc2V9KQogICAgICAgICk7CiAgICB9CgogICAgZnVuY3Rpb24gZXhlY3V0ZSh1aW50MjU2IHByb3Bvc2FsSWQpIGV4dGVybmFsIHBheWFibGUgewogICAgICAgIFByb3Bvc2FsIHN0b3JhZ2UgcHJvcG9zYWwgPSBwcm9wb3NhbHNbcHJvcG9zYWxJZF07CiAgICAgICAgcmVxdWlyZShwcm9wb3NhbC5hcHByb3ZlZCwgIm5vdCBhcHByb3ZlZCIpOwogICAgICAgIHJlcXVpcmUoIXByb3Bvc2FsLmV4ZWN1dGVkLCAiZXhlY3V0ZWQiKTsKCiAgICAgICAgcHJvcG9zYWwuZXhlY3V0ZWQgPSB0cnVlOwoKICAgICAgICAoYm9vbCBvaywpID0gcHJvcG9zYWwudGFyZ2V0LmRlbGVnYXRlY2FsbCgKICAgICAgICAgICAgYWJpLmVuY29kZVdpdGhTaWduYXR1cmUoImV4ZWN1dGVQcm9wb3NhbCgpIikKICAgICAgICApOwogICAgICAgIHJlcXVpcmUob2ssICJkZWxlZ2F0ZWNhbGwgZmFpbGVkIik7CiAgICB9Cn0KCmNvbnRyYWN0IFByb3Bvc2FsIHsKICAgIGV2ZW50IExvZyhzdHJpbmcgbWVzc2FnZSk7CgogICAgZnVuY3Rpb24gZXhlY3V0ZVByb3Bvc2FsKCkgZXh0ZXJuYWwgewogICAgICAgIGVtaXQgTG9nKCJFeGVjdXRlZCBjb2RlIGFwcHJvdmVkIGJ5IERBTyIpOwogICAgfQoKICAgIGZ1bmN0aW9uIGVtZXJnZW5jeVN0b3AoKSBleHRlcm5hbCB7CiAgICAgICAgc2VsZmRlc3RydWN0KHBheWFibGUoYWRkcmVzcygwKSkpOwogICAgfQp9Cgpjb250cmFjdCBBdHRhY2sgewogICAgZXZlbnQgTG9nKHN0cmluZyBtZXNzYWdlKTsKCiAgICBhZGRyZXNzIHB1YmxpYyBvd25lcjsKCiAgICBmdW5jdGlvbiBleGVjdXRlUHJvcG9zYWwoKSBleHRlcm5hbCB7CiAgICAgICAgZW1pdCBMb2coIkV4ZWN1dGVkIGNvZGUgbm90IGFwcHJvdmVkIGJ5IERBTyA6KSIpOwogICAgICAgIC8vIOS+i+WmgiAtIOaKiiBEQU8g55qEIG93bmVyIOiuvuS4uuaUu+WHu+iAhQogICAgICAgIG93bmVyID0gbXNnLnNlbmRlcjsKICAgIH0KfQoKY29udHJhY3QgRGVwbG95ZXJEZXBsb3llciB7CiAgICBldmVudCBMb2coYWRkcmVzcyBhZGRyKTsKCiAgICBmdW5jdGlvbiBkZXBsb3koKSBleHRlcm5hbCB7CiAgICAgICAgYnl0ZXMzMiBzYWx0ID0ga2VjY2FrMjU2KGFiaS5lbmNvZGUodWludDI1NigxMjMpKSk7CiAgICAgICAgYWRkcmVzcyBhZGRyID0gYWRkcmVzcyhuZXcgRGVwbG95ZXJ7c2FsdDogc2FsdH0oKSk7CiAgICAgICAgZW1pdCBMb2coYWRkcik7CiAgICB9Cn0KCmNvbnRyYWN0IERlcGxveWVyIHsKICAgIGV2ZW50IExvZyhhZGRyZXNzIGFkZHIpOwoKICAgIGZ1bmN0aW9uIGRlcGxveVByb3Bvc2FsKCkgZXh0ZXJuYWwgewogICAgICAgIGFkZHJlc3MgYWRkciA9IGFkZHJlc3MobmV3IFByb3Bvc2FsKCkpOwogICAgICAgIGVtaXQgTG9nKGFkZHIpOwogICAgfQoKICAgIGZ1bmN0aW9uIGRlcGxveUF0dGFjaygpIGV4dGVybmFsIHsKICAgICAgICBhZGRyZXNzIGFkZHIgPSBhZGRyZXNzKG5ldyBBdHRhY2soKSk7CiAgICAgICAgZW1pdCBMb2coYWRkcik7CiAgICB9CgogICAgZnVuY3Rpb24ga2lsbCgpIGV4dGVybmFsIHsKICAgICAgICBzZWxmZGVzdHJ1Y3QocGF5YWJsZShhZGRyZXNzKDApKSk7CiAgICB9Cn0=" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -312,9 +323,12 @@ contract Deployer {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

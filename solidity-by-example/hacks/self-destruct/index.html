@@ -283,6 +283,17 @@ contract EtherGame {
 }</code></pre>
         <div class="prev-next"><a href="../../hacks/overflow/">&lt; 算术溢出与下溢</a><a href="../../hacks/accessing-private-data/">访问私有数据 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8vIOi/measvua4uOaIj+eahOebruagh+aYr+aIkOS4uuesrCA3IOS9jeWtmOWFpSAxIEV0aGVyIOeahOeOqeWutuOAggovLyDnjqnlrrbmr4/mrKHlj6rog73lrZjlhaUgMSBFdGhlcuOAggovLyDojrfog5zogIXlsIbog73lpJ/mj5Dlj5blhajpg6ggRXRoZXLjgIIKCi8qCjEuIOmDqOe9siBFdGhlckdhbWUKMi4g546p5a6277yI5q+U5aaCIEFsaWNlIOWSjCBCb2LvvInlhrPlrprlj4LkuI7vvIzlkITlrZjlhaUgMSBFdGhlcuOAggoyLiDkvb/nlKggRXRoZXJHYW1lIOeahOWcsOWdgOmDqOe9siBBdHRhY2sKMy4g6LCD55SoIEF0dGFjay5hdHRhY2sg5bm25Y+R6YCBIDUgZXRoZXLjgILov5nlsIbnoLTlnY/muLjmiI8KICAg5rKh5pyJ5Lq66IO95oiQ5Li66I636IOc6ICF44CCCgrlj5HnlJ/kuobku4DkuYjvvJ8KQXR0YWNrIOi/q+S9vyBFdGhlckdhbWUg55qE5L2Z6aKd562J5LqOIDcgZXRoZXLjgIIK546w5Zyo5rKh5pyJ5Lq66IO95YaN5a2Y5qy+77yM5Lmf5peg5rOV6K6+572u6I636IOc6ICF44CCCiovCgpjb250cmFjdCBFdGhlckdhbWUgewogICAgdWludDI1NiBwdWJsaWMgY29uc3RhbnQgVEFSR0VUX0FNT1VOVCA9IDcgZXRoZXI7CiAgICBhZGRyZXNzIHB1YmxpYyB3aW5uZXI7CgogICAgZnVuY3Rpb24gZGVwb3NpdCgpIHB1YmxpYyBwYXlhYmxlIHsKICAgICAgICByZXF1aXJlKG1zZy52YWx1ZSA9PSAxIGV0aGVyLCAiWW91IGNhbiBvbmx5IHNlbmQgMSBFdGhlciIpOwoKICAgICAgICB1aW50MjU2IGJhbGFuY2UgPSBhZGRyZXNzKHRoaXMpLmJhbGFuY2U7CiAgICAgICAgcmVxdWlyZShiYWxhbmNlIDw9IFRBUkdFVF9BTU9VTlQsICJHYW1lIGlzIG92ZXIiKTsKCiAgICAgICAgaWYgKGJhbGFuY2UgPT0gVEFSR0VUX0FNT1VOVCkgewogICAgICAgICAgICB3aW5uZXIgPSBtc2cuc2VuZGVyOwogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiBjbGFpbVJld2FyZCgpIHB1YmxpYyB7CiAgICAgICAgcmVxdWlyZShtc2cuc2VuZGVyID09IHdpbm5lciwgIk5vdCB3aW5uZXIiKTsKCiAgICAgICAgKGJvb2wgc2VudCwpID0gbXNnLnNlbmRlci5jYWxse3ZhbHVlOiBhZGRyZXNzKHRoaXMpLmJhbGFuY2V9KCIiKTsKICAgICAgICByZXF1aXJlKHNlbnQsICJGYWlsZWQgdG8gc2VuZCBFdGhlciIpOwogICAgfQp9Cgpjb250cmFjdCBBdHRhY2sgewogICAgRXRoZXJHYW1lIGV0aGVyR2FtZTsKCiAgICBjb25zdHJ1Y3RvcihFdGhlckdhbWUgX2V0aGVyR2FtZSkgewogICAgICAgIGV0aGVyR2FtZSA9IEV0aGVyR2FtZShfZXRoZXJHYW1lKTsKICAgIH0KCiAgICBmdW5jdGlvbiBhdHRhY2soKSBwdWJsaWMgcGF5YWJsZSB7CiAgICAgICAgLy8g5Y+q6ZyA5Y+R6YCBIGV0aGVy77yM5L2/5ri45oiP5L2Z6aKdID49IDcgZXRoZXLvvIwKICAgICAgICAvLyDlsLHlj6/ku6XnoLTlnY/muLjmiI8KCiAgICAgICAgLy8g5bCG5Zyw5Z2A6L2s5o2i5Li6IHBheWFibGUKICAgICAgICBhZGRyZXNzIHBheWFibGUgYWRkciA9IHBheWFibGUoYWRkcmVzcyhldGhlckdhbWUpKTsKICAgICAgICBzZWxmZGVzdHJ1Y3QoYWRkcik7CiAgICB9Cn0=" target="_blank" rel="noreferrer">Example1.sol</a></li><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmNvbnRyYWN0IEV0aGVyR2FtZSB7CiAgICB1aW50MjU2IHB1YmxpYyBjb25zdGFudCBUQVJHRVRfQU1PVU5UID0gNyBldGhlcjsKICAgIHVpbnQyNTYgcHVibGljIGJhbGFuY2U7CiAgICBhZGRyZXNzIHB1YmxpYyB3aW5uZXI7CgogICAgZnVuY3Rpb24gZGVwb3NpdCgpIHB1YmxpYyBwYXlhYmxlIHsKICAgICAgICByZXF1aXJlKG1zZy52YWx1ZSA9PSAxIGV0aGVyLCAiWW91IGNhbiBvbmx5IHNlbmQgMSBFdGhlciIpOwoKICAgICAgICBiYWxhbmNlICs9IG1zZy52YWx1ZTsKICAgICAgICByZXF1aXJlKGJhbGFuY2UgPD0gVEFSR0VUX0FNT1VOVCwgIkdhbWUgaXMgb3ZlciIpOwoKICAgICAgICBpZiAoYmFsYW5jZSA9PSBUQVJHRVRfQU1PVU5UKSB7CiAgICAgICAgICAgIHdpbm5lciA9IG1zZy5zZW5kZXI7CiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIGNsYWltUmV3YXJkKCkgcHVibGljIHsKICAgICAgICByZXF1aXJlKG1zZy5zZW5kZXIgPT0gd2lubmVyLCAiTm90IHdpbm5lciIpOwogICAgICAgIHVpbnQyNTYgYW1vdW50ID0gYmFsYW5jZTsKICAgICAgICBiYWxhbmNlID0gMDsKICAgICAgICAoYm9vbCBzZW50LCkgPSBtc2cuc2VuZGVyLmNhbGx7dmFsdWU6IGFtb3VudH0oIiIpOwogICAgICAgIHJlcXVpcmUoc2VudCwgIkZhaWxlZCB0byBzZW5kIEV0aGVyIik7CiAgICB9Cn0=" target="_blank" rel="noreferrer">Example2.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -290,9 +301,12 @@ contract EtherGame {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

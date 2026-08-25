@@ -258,6 +258,17 @@ contract VaultTest is Test {
 }</code></pre>
         <div class="prev-next"><a href="../../hacks/deploy-different-contracts-same-address/">&lt; 在同一地址部署不同合约</a><a href="../../hacks/weth-permit/">WETH Permit &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgMC44LjI2OwoKaW1wb3J0IHtUZXN0LCBjb25zb2xlMn0gZnJvbSAiZm9yZ2Utc3RkL1Rlc3Quc29sIjsKaW1wb3J0IHsKICAgIElFUkMyMCwKICAgIFZhdWx0LAogICAgVG9rZW4KfSBmcm9tICIuLi8uLi8uLi9zcmMvaGFja3MvdmF1bHQtaW5mbGF0aW9uL1ZhdWx0SW5mbGF0aW9uLnNvbCI7Cgp1aW50OCBjb25zdGFudCBERUNJTUFMUyA9IDE4OwoKY29udHJhY3QgVmF1bHRUZXN0IGlzIFRlc3QgewogICAgVmF1bHQgcHJpdmF0ZSB2YXVsdDsKICAgIFRva2VuIHByaXZhdGUgdG9rZW47CgogICAgYWRkcmVzc1tdIHByaXZhdGUgdXNlcnMgPSBbYWRkcmVzcygxMSksIGFkZHJlc3MoMTIpXTsKCiAgICBmdW5jdGlvbiBzZXRVcCgpIHB1YmxpYyB7CiAgICAgICAgdG9rZW4gPSBuZXcgVG9rZW4oKTsKICAgICAgICB2YXVsdCA9IG5ldyBWYXVsdChhZGRyZXNzKHRva2VuKSk7CgogICAgICAgIGZvciAodWludDI1NiBpID0gMDsgaSA8IHVzZXJzLmxlbmd0aDsgaSsrKSB7CiAgICAgICAgICAgIHRva2VuLm1pbnQodXNlcnNbaV0sIDEwMDAwICogKDEwICoqIERFQ0lNQUxTKSk7CiAgICAgICAgICAgIHZtLnByYW5rKHVzZXJzW2ldKTsKICAgICAgICAgICAgdG9rZW4uYXBwcm92ZShhZGRyZXNzKHZhdWx0KSwgdHlwZSh1aW50MjU2KS5tYXgpOwogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiBwcmludCgpIHByaXZhdGUgewogICAgICAgIGNvbnNvbGUyLmxvZygidmF1bHQgdG90YWwgc3VwcGx5IiwgdmF1bHQudG90YWxTdXBwbHkoKSk7CiAgICAgICAgY29uc29sZTIubG9nKCJ2YXVsdCBiYWxhbmNlIiwgdG9rZW4uYmFsYW5jZU9mKGFkZHJlc3ModmF1bHQpKSk7CiAgICAgICAgdWludDI1NiBzaGFyZXMwID0gdmF1bHQuYmFsYW5jZU9mKHVzZXJzWzBdKTsKICAgICAgICB1aW50MjU2IHNoYXJlczEgPSB2YXVsdC5iYWxhbmNlT2YodXNlcnNbMV0pOwogICAgICAgIGNvbnNvbGUyLmxvZygidXNlcnNbMF0gc2hhcmVzIiwgc2hhcmVzMCk7CiAgICAgICAgY29uc29sZTIubG9nKCJ1c2Vyc1sxXSBzaGFyZXMiLCBzaGFyZXMxKTsKICAgICAgICBjb25zb2xlMi5sb2coInVzZXJzWzBdIHJlZGVlbWFibGUiLCB2YXVsdC5wcmV2aWV3UmVkZWVtKHNoYXJlczApKTsKICAgICAgICBjb25zb2xlMi5sb2coInVzZXJzWzFdIHJlZGVlbWFibGUiLCB2YXVsdC5wcmV2aWV3UmVkZWVtKHNoYXJlczEpKTsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0KCkgcHVibGljIHsKICAgICAgICAvLyB1c2Vyc1swXSDlrZjlhaUgMQogICAgICAgIGNvbnNvbGUyLmxvZygiLS0tIHVzZXJzWzBdIGRlcG9zaXQgLS0tIik7CiAgICAgICAgdm0ucHJhbmsodXNlcnNbMF0pOwogICAgICAgIHZhdWx0LmRlcG9zaXQoMSk7CiAgICAgICAgcHJpbnQoKTsKCiAgICAgICAgLy8gdXNlcnNbMF0g5o2Q6LWgIDEwMAogICAgICAgIGNvbnNvbGUyLmxvZygiLS0tIHVzZXJzWzBdIGRvbmF0ZSAtLS0iKTsKICAgICAgICB2bS5wcmFuayh1c2Vyc1swXSk7CiAgICAgICAgdG9rZW4udHJhbnNmZXIoYWRkcmVzcyh2YXVsdCksIDEwMCAqICgxMCAqKiBERUNJTUFMUykpOwogICAgICAgIHByaW50KCk7CgogICAgICAgIC8vIHVzZXJzWzFdIOWtmOWFpSAxMDAKICAgICAgICBjb25zb2xlMi5sb2coIi0tLSB1c2Vyc1sxXSBkZXBvc2l0IC0tLSIpOwogICAgICAgIHZtLnByYW5rKHVzZXJzWzFdKTsKICAgICAgICB2YXVsdC5kZXBvc2l0KDEwMCAqICgxMCAqKiBERUNJTUFMUykpOwogICAgICAgIHByaW50KCk7CiAgICB9Cn0=" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -265,9 +276,12 @@ contract VaultTest is Test {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

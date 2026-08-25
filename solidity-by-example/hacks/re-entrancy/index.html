@@ -288,6 +288,17 @@ contract ReEntrancyGuard {
 }</code></pre>
         <div class="prev-next"><a href="../../app/airdrop/">&lt; 默克尔空投</a><a href="../../hacks/overflow/">算术溢出与下溢 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8qCkV0aGVyU3RvcmUg5piv5LiA5Liq5Y+v5Lul5a2Y5YWl5ZKM5o+Q5Y+WIEVUSCDnmoTlkIjnuqbjgIIK6K+l5ZCI57qm5a655piT5Y+X5Yiw6YeN5YWl5pS75Ye744CCCuiuqeaIkeS7rOeci+eci+WOn+WboOOAggoKMS4g6YOo572yIEV0aGVyU3RvcmUKMi4g5LuO6LSm5oi3IDHvvIhBbGljZe+8ieWSjOi0puaItyAy77yIQm9i77yJ5ZCE5ZCRIEV0aGVyU3RvcmUg5a2Y5YWlIDEgRXRoZXIKMy4g5L2/55SoIEV0aGVyU3RvcmUg55qE5Zyw5Z2A6YOo572yIEF0dGFjawo0LiDosIPnlKggQXR0YWNrLmF0dGFjayDlubblj5HpgIEgMSBldGhlcu+8iOS9v+eUqOi0puaItyAz77yIRXZl77yJ77yJ44CCCiAgIOS9oOWwhuaLv+WbniAzIEV0aGVy77yI5LuOIEFsaWNlIOWSjCBCb2Ig6YKj6YeM5YG35p2l55qEIDIgRXRoZXLvvIwKICAg5YaN5Yqg5LiK5LuO5pys5ZCI57qm5Y+R6YCB55qEIDEgRXRoZXLvvInjgIIKCuWPkeeUn+S6huS7gOS5iO+8nwpBdHRhY2sg6IO95aSf5ZyoIEV0aGVyU3RvcmUud2l0aGRyYXcg5omn6KGM57uT5p2f5LmL5YmNCuWkmuasoeiwg+eUqCBFdGhlclN0b3JlLndpdGhkcmF344CCCgrlh73mlbDnmoTosIPnlKjov4fnqIvlpoLkuIsKLSBBdHRhY2suYXR0YWNrCi0gRXRoZXJTdG9yZS5kZXBvc2l0Ci0gRXRoZXJTdG9yZS53aXRoZHJhdwotIEF0dGFjayBmYWxsYmFja++8iOaUtuWIsCAxIEV0aGVy77yJCi0gRXRoZXJTdG9yZS53aXRoZHJhdwotIEF0dGFjay5mYWxsYmFja++8iOaUtuWIsCAxIEV0aGVy77yJCi0gRXRoZXJTdG9yZS53aXRoZHJhdwotIEF0dGFjayBmYWxsYmFja++8iOaUtuWIsCAxIEV0aGVy77yJCiovCgpjb250cmFjdCBFdGhlclN0b3JlIHsKICAgIG1hcHBpbmcoYWRkcmVzcyA9PiB1aW50MjU2KSBwdWJsaWMgYmFsYW5jZXM7CgogICAgZnVuY3Rpb24gZGVwb3NpdCgpIHB1YmxpYyBwYXlhYmxlIHsKICAgICAgICBiYWxhbmNlc1ttc2cuc2VuZGVyXSArPSBtc2cudmFsdWU7CiAgICB9CgogICAgZnVuY3Rpb24gd2l0aGRyYXcoKSBwdWJsaWMgewogICAgICAgIHVpbnQyNTYgYmFsID0gYmFsYW5jZXNbbXNnLnNlbmRlcl07CiAgICAgICAgcmVxdWlyZShiYWwgPiAwKTsKCiAgICAgICAgKGJvb2wgc2VudCwpID0gbXNnLnNlbmRlci5jYWxse3ZhbHVlOiBiYWx9KCIiKTsKICAgICAgICByZXF1aXJlKHNlbnQsICJGYWlsZWQgdG8gc2VuZCBFdGhlciIpOwoKICAgICAgICBiYWxhbmNlc1ttc2cuc2VuZGVyXSA9IDA7CiAgICB9CgogICAgLy8g55So5LqO5qOA5p+l5pys5ZCI57qm5L2Z6aKd55qE6L6F5Yqp5Ye95pWwCiAgICBmdW5jdGlvbiBnZXRCYWxhbmNlKCkgcHVibGljIHZpZXcgcmV0dXJucyAodWludDI1NikgewogICAgICAgIHJldHVybiBhZGRyZXNzKHRoaXMpLmJhbGFuY2U7CiAgICB9Cn0KCmNvbnRyYWN0IEF0dGFjayB7CiAgICBFdGhlclN0b3JlIHB1YmxpYyBldGhlclN0b3JlOwogICAgdWludDI1NiBwdWJsaWMgY29uc3RhbnQgQU1PVU5UID0gMSBldGhlcjsKCiAgICBjb25zdHJ1Y3RvcihhZGRyZXNzIF9ldGhlclN0b3JlQWRkcmVzcykgewogICAgICAgIGV0aGVyU3RvcmUgPSBFdGhlclN0b3JlKF9ldGhlclN0b3JlQWRkcmVzcyk7CiAgICB9CgogICAgLy8g5b2TIEV0aGVyU3RvcmUg5ZCR5pys5ZCI57qm5Y+R6YCBIEV0aGVyIOaXtu+8jOS8muiwg+eUqCBmYWxsYmFja+OAggogICAgZmFsbGJhY2soKSBleHRlcm5hbCBwYXlhYmxlIHsKICAgICAgICBpZiAoYWRkcmVzcyhldGhlclN0b3JlKS5iYWxhbmNlID49IEFNT1VOVCkgewogICAgICAgICAgICBldGhlclN0b3JlLndpdGhkcmF3KCk7CiAgICAgICAgfQogICAgfQoKICAgIGZ1bmN0aW9uIGF0dGFjaygpIGV4dGVybmFsIHBheWFibGUgewogICAgICAgIHJlcXVpcmUobXNnLnZhbHVlID49IEFNT1VOVCk7CiAgICAgICAgZXRoZXJTdG9yZS5kZXBvc2l0e3ZhbHVlOiBBTU9VTlR9KCk7CiAgICAgICAgZXRoZXJTdG9yZS53aXRoZHJhdygpOwogICAgfQoKICAgIC8vIOeUqOS6juajgOafpeacrOWQiOe6puS9memineeahOi+heWKqeWHveaVsAogICAgZnVuY3Rpb24gZ2V0QmFsYW5jZSgpIHB1YmxpYyB2aWV3IHJldHVybnMgKHVpbnQyNTYpIHsKICAgICAgICByZXR1cm4gYWRkcmVzcyh0aGlzKS5iYWxhbmNlOwogICAgfQp9" target="_blank" rel="noreferrer">Example1.sol</a></li><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmNvbnRyYWN0IFJlRW50cmFuY3lHdWFyZCB7CiAgICBib29sIGludGVybmFsIGxvY2tlZDsKCiAgICBtb2RpZmllciBub1JlZW50cmFudCgpIHsKICAgICAgICByZXF1aXJlKCFsb2NrZWQsICJObyByZS1lbnRyYW5jeSIpOwogICAgICAgIGxvY2tlZCA9IHRydWU7CiAgICAgICAgXzsKICAgICAgICBsb2NrZWQgPSBmYWxzZTsKICAgIH0KfQ==" target="_blank" rel="noreferrer">Example2.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -295,9 +306,12 @@ contract ReEntrancyGuard {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

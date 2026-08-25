@@ -260,6 +260,17 @@ contract Child is Base {
 }</code></pre>
         <div class="prev-next"><a href="../super/">&lt; 调用父合约</a><a href="../interface/">接口 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmNvbnRyYWN0IEJhc2UgewogICAgLy8g56eB5pyJ5Ye95pWw5Y+q6IO96KKr6LCD55So77yaCiAgICAvLyAtIOWcqOacrOWQiOe6puWGhemDqAogICAgLy8g57un5om/5pys5ZCI57qm55qE5ZCI57qm5peg5rOV6LCD55So5q2k5Ye95pWw44CCCiAgICBmdW5jdGlvbiBwcml2YXRlRnVuYygpIHByaXZhdGUgcHVyZSByZXR1cm5zIChzdHJpbmcgbWVtb3J5KSB7CiAgICAgICAgcmV0dXJuICJwcml2YXRlIGZ1bmN0aW9uIGNhbGxlZCI7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdFByaXZhdGVGdW5jKCkgcHVibGljIHB1cmUgcmV0dXJucyAoc3RyaW5nIG1lbW9yeSkgewogICAgICAgIHJldHVybiBwcml2YXRlRnVuYygpOwogICAgfQoKICAgIC8vIOWGhemDqOWHveaVsOWPr+S7peiiq+iwg+eUqO+8mgogICAgLy8gLSDlnKjmnKzlkIjnuqblhoXpg6gKICAgIC8vIC0g5Zyo57un5om/5pys5ZCI57qm55qE5ZCI57qm5YaF6YOoCiAgICBmdW5jdGlvbiBpbnRlcm5hbEZ1bmMoKSBpbnRlcm5hbCBwdXJlIHJldHVybnMgKHN0cmluZyBtZW1vcnkpIHsKICAgICAgICByZXR1cm4gImludGVybmFsIGZ1bmN0aW9uIGNhbGxlZCI7CiAgICB9CgogICAgZnVuY3Rpb24gdGVzdEludGVybmFsRnVuYygpIHB1YmxpYyBwdXJlIHZpcnR1YWwgcmV0dXJucyAoc3RyaW5nIG1lbW9yeSkgewogICAgICAgIHJldHVybiBpbnRlcm5hbEZ1bmMoKTsKICAgIH0KCiAgICAvLyDlhazlvIDlh73mlbDlj6/ku6XooqvosIPnlKjvvJoKICAgIC8vIC0g5Zyo5pys5ZCI57qm5YaF6YOoCiAgICAvLyAtIOWcqOe7p+aJv+acrOWQiOe6pueahOWQiOe6puWGhemDqAogICAgLy8gLSDnlLHlhbbku5blkIjnuqblkozotKbmiLcKICAgIGZ1bmN0aW9uIHB1YmxpY0Z1bmMoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChzdHJpbmcgbWVtb3J5KSB7CiAgICAgICAgcmV0dXJuICJwdWJsaWMgZnVuY3Rpb24gY2FsbGVkIjsKICAgIH0KCiAgICAvLyDlpJbpg6jlh73mlbDlj6rog73ooqvosIPnlKjvvJoKICAgIC8vIC0g55Sx5YW25LuW5ZCI57qm5ZKM6LSm5oi3CiAgICBmdW5jdGlvbiBleHRlcm5hbEZ1bmMoKSBleHRlcm5hbCBwdXJlIHJldHVybnMgKHN0cmluZyBtZW1vcnkpIHsKICAgICAgICByZXR1cm4gImV4dGVybmFsIGZ1bmN0aW9uIGNhbGxlZCI7CiAgICB9CgogICAgLy8g5q2k5Ye95pWw5peg5rOV57yW6K+R77yM5Zug5Li65oiR5Lus6K+V5Zu+5Zyo6L+Z6YeM6LCD55SoCiAgICAvLyDkuIDkuKrlpJbpg6jlh73mlbDjgIIKICAgIC8vIGZ1bmN0aW9uIHRlc3RFeHRlcm5hbEZ1bmMoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChzdHJpbmcgbWVtb3J5KSB7CiAgICAvLyAgICAgcmV0dXJuIGV4dGVybmFsRnVuYygpOwogICAgLy8gfQoKICAgIC8vIOeKtuaAgeWPmOmHjwogICAgc3RyaW5nIHByaXZhdGUgcHJpdmF0ZVZhciA9ICJteSBwcml2YXRlIHZhcmlhYmxlIjsKICAgIHN0cmluZyBpbnRlcm5hbCBpbnRlcm5hbFZhciA9ICJteSBpbnRlcm5hbCB2YXJpYWJsZSI7CiAgICBzdHJpbmcgcHVibGljIHB1YmxpY1ZhciA9ICJteSBwdWJsaWMgdmFyaWFibGUiOwogICAgLy8g54q25oCB5Y+Y6YeP5LiN6IO95pivIGV4dGVybmFs77yM5Zug5q2k6L+Z5q615Luj56CB5peg5rOV57yW6K+R44CCCiAgICAvLyBzdHJpbmcgZXh0ZXJuYWwgZXh0ZXJuYWxWYXIgPSAibXkgZXh0ZXJuYWwgdmFyaWFibGUiOwp9Cgpjb250cmFjdCBDaGlsZCBpcyBCYXNlIHsKICAgIC8vIOe7p+aJv+eahOWQiOe6puaXoOazleiuv+mXruengeacieWHveaVsAogICAgLy8g5ZKM54q25oCB5Y+Y6YeP44CCCiAgICAvLyBmdW5jdGlvbiB0ZXN0UHJpdmF0ZUZ1bmMoKSBwdWJsaWMgcHVyZSByZXR1cm5zIChzdHJpbmcgbWVtb3J5KSB7CiAgICAvLyAgICAgcmV0dXJuIHByaXZhdGVGdW5jKCk7CiAgICAvLyB9CgogICAgLy8g5YaF6YOo5Ye95pWw5Y+v5Lul5Zyo5a2Q5ZCI57qm5YaF6YOo6KKr6LCD55So44CCCiAgICBmdW5jdGlvbiB0ZXN0SW50ZXJuYWxGdW5jKCkgcHVibGljIHB1cmUgb3ZlcnJpZGUgcmV0dXJucyAoc3RyaW5nIG1lbW9yeSkgewogICAgICAgIHJldHVybiBpbnRlcm5hbEZ1bmMoKTsKICAgIH0KfQ==" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -267,9 +278,12 @@ contract Child is Base {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

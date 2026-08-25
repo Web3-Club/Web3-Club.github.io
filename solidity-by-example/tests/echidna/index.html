@@ -315,6 +315,17 @@ contract EchidnaTestTimeAndCaller {
 </code></pre>
         <div class="prev-next"><a href="../../evm/memory/">&lt; EVM 内存布局</a><a href="../../foundry/basic/">Foundry 基础 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8qCmVjaGlkbmEgVGVzdEVjaGlkbmEuc29sIC0tY29udHJhY3QgVGVzdENvdW50ZXIKKi8KY29udHJhY3QgQ291bnRlciB7CiAgICB1aW50MjU2IHB1YmxpYyBjb3VudDsKCiAgICBmdW5jdGlvbiBpbmMoKSBleHRlcm5hbCB7CiAgICAgICAgY291bnQgKz0gMTsKICAgIH0KCiAgICBmdW5jdGlvbiBkZWMoKSBleHRlcm5hbCB7CiAgICAgICAgY291bnQgLT0gMTsKICAgIH0KfQoKY29udHJhY3QgVGVzdENvdW50ZXIgaXMgQ291bnRlciB7CiAgICBmdW5jdGlvbiBlY2hpZG5hX3Rlc3RfdHJ1ZSgpIHB1YmxpYyB2aWV3IHJldHVybnMgKGJvb2wpIHsKICAgICAgICByZXR1cm4gdHJ1ZTsKICAgIH0KCiAgICBmdW5jdGlvbiBlY2hpZG5hX3Rlc3RfZmFsc2UoKSBwdWJsaWMgdmlldyByZXR1cm5zIChib29sKSB7CiAgICAgICAgcmV0dXJuIGZhbHNlOwogICAgfQoKICAgIGZ1bmN0aW9uIGVjaGlkbmFfdGVzdF9jb3VudCgpIHB1YmxpYyB2aWV3IHJldHVybnMgKGJvb2wpIHsKICAgICAgICAvLyDov5nph4zmiJHku6zmtYvor5UgQ291bnRlci5jb3VudCDlupTlp4vnu4ggPD0gNeOAggogICAgICAgIC8vIOa1i+ivleS8muWksei0peOAgkVjaGlkbmEg6Laz5aSf6IGq5piO77yM5Lya6LCD55SoIENvdW50ZXIuaW5jKCkKICAgICAgICAvLyDotoXov4cgNSDmrKHjgIIKICAgICAgICByZXR1cm4gY291bnQgPD0gNTsKICAgIH0KfQoKLyoKZWNoaWRuYSBUZXN0RWNoaWRuYS5zb2wgLS1jb250cmFjdCBUZXN0QXNzZXJ0IC0tdGVzdC1tb2RlIGFzc2VydGlvbgoqLwpjb250cmFjdCBUZXN0QXNzZXJ0IHsKICAgIGZ1bmN0aW9uIHRlc3RfYXNzZXJ0KHVpbnQyNTYgX2kpIGV4dGVybmFsIHsKICAgICAgICBhc3NlcnQoX2kgPCAxMCk7CiAgICB9CgogICAgLy8g5pu05aSN5p2C55qE56S65L6LCiAgICBmdW5jdGlvbiBhYnModWludDI1NiB4LCB1aW50MjU2IHkpIHByaXZhdGUgcHVyZSByZXR1cm5zICh1aW50MjU2KSB7CiAgICAgICAgaWYgKHggPj0geSkgewogICAgICAgICAgICByZXR1cm4geCAtIHk7CiAgICAgICAgfQogICAgICAgIHJldHVybiB5IC0geDsKICAgIH0KCiAgICBmdW5jdGlvbiB0ZXN0X2Ficyh1aW50MjU2IHgsIHVpbnQyNTYgeSkgZXh0ZXJuYWwgewogICAgICAgIHVpbnQyNTYgeiA9IGFicyh4LCB5KTsKICAgICAgICBpZiAoeCA+PSB5KSB7CiAgICAgICAgICAgIGFzc2VydCh6IDw9IHgpOwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGFzc2VydCh6IDw9IHkpOwogICAgICAgIH0KICAgIH0KfQo=" target="_blank" rel="noreferrer">Example1.sol</a></li><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8qCmRvY2tlciBydW4gLWl0IC0tcm0gLXYgJFBXRDovY29kZSB0cmFpbG9mYml0cy9ldGgtc2VjdXJpdHktdG9vbGJveAplY2hpZG5hIEVjaGlkbmFUZXN0VGltZUFuZENhbGxlci5zb2wgLS1jb250cmFjdCBFY2hpZG5hVGVzdFRpbWVBbmRDYWxsZXIKKi8KY29udHJhY3QgRWNoaWRuYVRlc3RUaW1lQW5kQ2FsbGVyIHsKICAgIGJvb2wgcHJpdmF0ZSBwYXNzID0gdHJ1ZTsKICAgIHVpbnQyNTYgcHJpdmF0ZSBjcmVhdGVkQXQgPSBibG9jay50aW1lc3RhbXA7CgogICAgLyoKICAgIOWmguaenCBFY2hpZG5hIOiDveiwg+eUqCBzZXRGYWlsKCnvvIzmtYvor5XkvJrlpLHotKUKICAgIOWQpuWImea1i+ivleS8mumAmui/hwogICAgKi8KICAgIGZ1bmN0aW9uIGVjaGlkbmFfdGVzdF9wYXNzKCkgcHVibGljIHZpZXcgcmV0dXJucyAoYm9vbCkgewogICAgICAgIHJldHVybiBwYXNzOwogICAgfQoKICAgIGZ1bmN0aW9uIHNldEZhaWwoKSBleHRlcm5hbCB7CiAgICAgICAgLyoKICAgICAgICDlpoLmnpwgZGVsYXkgPD0g5pyA5aSn5Yy65Z2X5bu26L+f77yMRWNoaWRuYSDlj6/ku6XosIPnlKjmraTlh73mlbAKICAgICAgICDlkKbliJkgRWNoaWRuYSDlsIbml6Dms5XosIPnlKjmraTlh73mlbDjgIIKICAgICAgICDlj6/ku6XpgJrov4fphY3nva7mlofku7bmjIflrprmnaXlu7bplb/mnIDlpKfljLrlnZflu7bov5/jgIIKICAgICAgICAqLwogICAgICAgIHVpbnQyNTYgZGVsYXkgPSA3IGRheXM7CiAgICAgICAgcmVxdWlyZShibG9jay50aW1lc3RhbXAgPj0gY3JlYXRlZEF0ICsgZGVsYXkpOwogICAgICAgIHBhc3MgPSBmYWxzZTsKICAgIH0KCiAgICAvLyDpu5jorqTlj5HpgIHogIUKICAgIC8vIOabtOaUuei/meS6m+WcsOWdgOS7peafpeeci+a1i+ivleWksei0pQogICAgYWRkcmVzc1szXSBwcml2YXRlIHNlbmRlcnMgPQogICAgICAgIFthZGRyZXNzKDB4MTAwMDApLCBhZGRyZXNzKDB4MjAwMDApLCBhZGRyZXNzKDB4MzAwMDApXTsKCiAgICBhZGRyZXNzIHByaXZhdGUgc2VuZGVyID0gbXNnLnNlbmRlcjsKCiAgICAvLyDlsIYgX3NlbmRlciDkvZzkuLrovpPlhaXvvIzlubbopoHmsYIgbXNnLnNlbmRlciA9PSBfc2VuZGVyCiAgICAvLyDku6Xkvr/lnKjlj43kvovkuK3nnIvliLAgX3NlbmRlcgogICAgZnVuY3Rpb24gc2V0U2VuZGVyKGFkZHJlc3MgX3NlbmRlcikgZXh0ZXJuYWwgewogICAgICAgIHJlcXVpcmUoX3NlbmRlciA9PSBtc2cuc2VuZGVyKTsKICAgICAgICBzZW5kZXIgPSBtc2cuc2VuZGVyOwogICAgfQoKICAgIC8vIOajgOafpem7mOiupOWPkemAgeiAheOAguWPkemAgeiAheW6lOS4uiAzIOS4qum7mOiupOi0puaIt+S5i+S4gOOAggogICAgZnVuY3Rpb24gZWNoaWRuYV90ZXN0X3NlbmRlcigpIHB1YmxpYyB2aWV3IHJldHVybnMgKGJvb2wpIHsKICAgICAgICBmb3IgKHVpbnQyNTYgaTsgaSA8IDM7IGkrKykgewogICAgICAgICAgICBpZiAoc2VuZGVyID09IHNlbmRlcnNbaV0pIHsKICAgICAgICAgICAgICAgIHJldHVybiB0cnVlOwogICAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHJldHVybiBmYWxzZTsKICAgIH0KfQo=" target="_blank" rel="noreferrer">Example2.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -322,9 +333,12 @@ contract EchidnaTestTimeAndCaller {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

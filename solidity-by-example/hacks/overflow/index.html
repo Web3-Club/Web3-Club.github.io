@@ -265,6 +265,17 @@ contract Attack {
 <ul><li>Solidity 0.8 默认会在溢出 / 下溢时抛出错误</li></ul>
         <div class="prev-next"><a href="../../hacks/re-entrancy/">&lt; 重入攻击</a><a href="../../hacks/self-destruct/">自毁函数 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuNy42OwoKLy8g6K+l5ZCI57qm6KKr6K6+6K6h5oiQ5LiA5Liq5pe26Ze06YeR5bqT44CCCi8vIOeUqOaIt+WPr+S7peWQkeivpeWQiOe6puWtmOasvu+8jOS9huiHs+WwkeS4gOWRqOWGheS4jeiDveaPkOWPluOAggovLyDnlKjmiLfov5jlj6/ku6XmiornrYnlvoXml7bpl7Tlu7bplb/liLDotoXov4fkuIDlkajjgIIKCi8qCjEuIOmDqOe9siBUaW1lTG9jawoyLiDkvb/nlKggVGltZUxvY2sg55qE5Zyw5Z2A6YOo572yIEF0dGFjawozLiDosIPnlKggQXR0YWNrLmF0dGFjayDlubblj5HpgIEgMSBldGhlcuOAguS9oOWwhuiDveWkn+eri+WNswogICDmj5Dlj5bkvaDnmoQgZXRoZXLjgIIKCuWPkeeUn+S6huS7gOS5iO+8nwpBdHRhY2sg5L2/IFRpbWVMb2NrLmxvY2tUaW1lIOa6ouWHuu+8jOS7juiAjOiDveWkn+WcqArkuIDlkajnrYnlvoXmnJ/nu5PmnZ/liY3mj5Dlj5bjgIIKKi8KCmNvbnRyYWN0IFRpbWVMb2NrIHsKICAgIG1hcHBpbmcoYWRkcmVzcyA9PiB1aW50MjU2KSBwdWJsaWMgYmFsYW5jZXM7CiAgICBtYXBwaW5nKGFkZHJlc3MgPT4gdWludDI1NikgcHVibGljIGxvY2tUaW1lOwoKICAgIGZ1bmN0aW9uIGRlcG9zaXQoKSBleHRlcm5hbCBwYXlhYmxlIHsKICAgICAgICBiYWxhbmNlc1ttc2cuc2VuZGVyXSArPSBtc2cudmFsdWU7CiAgICAgICAgbG9ja1RpbWVbbXNnLnNlbmRlcl0gPSBibG9jay50aW1lc3RhbXAgKyAxIHdlZWtzOwogICAgfQoKICAgIGZ1bmN0aW9uIGluY3JlYXNlTG9ja1RpbWUodWludDI1NiBfc2Vjb25kc1RvSW5jcmVhc2UpIHB1YmxpYyB7CiAgICAgICAgbG9ja1RpbWVbbXNnLnNlbmRlcl0gKz0gX3NlY29uZHNUb0luY3JlYXNlOwogICAgfQoKICAgIGZ1bmN0aW9uIHdpdGhkcmF3KCkgcHVibGljIHsKICAgICAgICByZXF1aXJlKGJhbGFuY2VzW21zZy5zZW5kZXJdID4gMCwgIkluc3VmZmljaWVudCBmdW5kcyIpOwogICAgICAgIHJlcXVpcmUoYmxvY2sudGltZXN0YW1wID4gbG9ja1RpbWVbbXNnLnNlbmRlcl0sICJMb2NrIHRpbWUgbm90IGV4cGlyZWQiKTsKCiAgICAgICAgdWludDI1NiBhbW91bnQgPSBiYWxhbmNlc1ttc2cuc2VuZGVyXTsKICAgICAgICBiYWxhbmNlc1ttc2cuc2VuZGVyXSA9IDA7CgogICAgICAgIChib29sIHNlbnQsKSA9IG1zZy5zZW5kZXIuY2FsbHt2YWx1ZTogYW1vdW50fSgiIik7CiAgICAgICAgcmVxdWlyZShzZW50LCAiRmFpbGVkIHRvIHNlbmQgRXRoZXIiKTsKICAgIH0KfQoKY29udHJhY3QgQXR0YWNrIHsKICAgIFRpbWVMb2NrIHRpbWVMb2NrOwoKICAgIGNvbnN0cnVjdG9yKFRpbWVMb2NrIF90aW1lTG9jaykgewogICAgICAgIHRpbWVMb2NrID0gVGltZUxvY2soX3RpbWVMb2NrKTsKICAgIH0KCiAgICBmYWxsYmFjaygpIGV4dGVybmFsIHBheWFibGUge30KCiAgICBmdW5jdGlvbiBhdHRhY2soKSBwdWJsaWMgcGF5YWJsZSB7CiAgICAgICAgdGltZUxvY2suZGVwb3NpdHt2YWx1ZTogbXNnLnZhbHVlfSgpOwogICAgICAgIC8qCiAgICAgICAg6IulIHQgPSDlvZPliY3plIHlrprml7bpl7TvvIzliJnpnIDopoHmib7liLAgeCDkvb/lvpcKICAgICAgICB4ICsgdCA9IDIqKjI1NiA9IDAKICAgICAgICDlm6DmraQgeCA9IC10CiAgICAgICAgMioqMjU2ID0gdHlwZSh1aW50KS5tYXggKyAxCiAgICAgICAg5Zug5q2kIHggPSB0eXBlKHVpbnQpLm1heCArIDEgLSB0CiAgICAgICAgKi8KICAgICAgICB0aW1lTG9jay5pbmNyZWFzZUxvY2tUaW1lKAogICAgICAgICAgICB0eXBlKHVpbnQyNTYpLm1heCArIDEgLSB0aW1lTG9jay5sb2NrVGltZShhZGRyZXNzKHRoaXMpKQogICAgICAgICk7CiAgICAgICAgdGltZUxvY2sud2l0aGRyYXcoKTsKICAgIH0KfQ==" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -272,9 +283,12 @@ contract Attack {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

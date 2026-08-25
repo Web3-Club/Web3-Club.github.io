@@ -266,6 +266,17 @@ g0 - g1 - g1/63 &gt;= g0 - g1 - 1/64 g* &gt;= g0 - g1 - 1/63 g0 = 62/63 g0 - g1
 */</code></pre>
         <div class="prev-next"><a href="../../hacks/weth-permit/">&lt; WETH Permit</a><a href="../../evm/storage/">EVM 存储布局 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCmNvbnRyYWN0IEEgewogICAgZnVuY3Rpb24gZihhZGRyZXNzIGIpIGV4dGVybmFsIHsKICAgICAgICB1aW50MjU2IGdhc1N0YXJ0ID0gZ2FzbGVmdCgpOwogICAgICAgIEIocGF5YWJsZShiKSkuZyhtc2cuc2VuZGVyLCBnYXNTdGFydCk7CiAgICB9Cn0KCmNvbnRyYWN0IEIgewogICAgZXZlbnQgTG9nKHVpbnQyNTYgZ2FzKTsKCiAgICBtYXBwaW5nKGFkZHJlc3MgPT4gYm9vbCkgcHVibGljIGF1dGhvcml6ZWQ7CgogICAgY29uc3RydWN0b3IoKSB7CiAgICAgICAgYXV0aG9yaXplZFttc2cuc2VuZGVyXSA9IHRydWU7CiAgICB9CgogICAgcmVjZWl2ZSgpIGV4dGVybmFsIHBheWFibGUge30KCiAgICBmdW5jdGlvbiBzZXRBdXRoKGFkZHJlc3MgYWRkciwgYm9vbCBhdXRoKSBleHRlcm5hbCB7CiAgICAgICAgcmVxdWlyZShhdXRob3JpemVkW21zZy5zZW5kZXJdLCAibm90IGF1dGhvcml6ZWQiKTsKICAgICAgICBhdXRob3JpemVkW2FkZHJdID0gYXV0aDsKICAgIH0KCiAgICAvLyDlj5HpgIEgOTAwMDAwMDAwMDAwMDAwMDAwMCBnYXMg5Lul5oq95bmyIEVUSAogICAgZnVuY3Rpb24gZyhhZGRyZXNzIHJlY2VpdmVyLCB1aW50MjU2IGdhc1N0YXJ0KSBleHRlcm5hbCB7CiAgICAgICAgcmVxdWlyZShhdXRob3JpemVkW21zZy5zZW5kZXJdLCAibm90IGF1dGhvcml6ZWQiKTsKCiAgICAgICAgdWludDI1NiBnYXNOb3cgPSBnYXNsZWZ0KCk7CiAgICAgICAgdWludDI1NiBnYXNVc2VkID0gZ2FzU3RhcnQgLSBnYXNOb3c7CiAgICAgICAgLy8g5L+u5aSNCiAgICAgICAgLy91aW50MjU2IGdhc1VzZWQgPSBnYXNTdGFydCAtIChnYXNOb3cgLyA2MykgLSBnYXNOb3c7CiAgICAgICAgKGJvb2wgb2ssKSA9IHJlY2VpdmVyLmNhbGx7dmFsdWU6IGdhc1VzZWR9KCIiKTsKICAgICAgICByZXF1aXJlKG9rLCAic2VuZCBmYWlsZWQiKTsKCiAgICAgICAgZW1pdCBMb2coZ2FzVXNlZCk7CiAgICB9Cn0KCi8qCiMgNjMgLyA2NCBnYXMg6KeE5YiZCuWklumDqOiwg+eUqOacgOWkmuWPquiDveiOt+W+l+W9k+WJjeWQiOe6puWJqeS9mSBnYXMg55qEIDYzIC8gNjQK5b2T5YmN5ZCI57qm5Lya5L+d55WZIDEgLyA2NCDnmoQgZ2FzCgpnMCA9IOWcqCBBIOS4reafkOWkhOiwg+eUqCBnYXNsZWZ0KCkKZzEgPSDlnKggQiDkuK3mn5DlpITosIPnlKggZ2FzbGVmdCgpCmcqID0g6LCD55SoIEIg5LmL5YmN5a6e6ZmF5Ymp5L2Z55qEIGdhcwoKICBnKiAgICA2My82NCBnKgpBIHwtLS0tPnwgQgp8ICAgICAgICAgfApnMCAgICAgICAgZzEKCiMg5raI6ICX55qEIGdhcwpkZyA9IGcwIOS4jiBnMSDkuYvpl7TmtojogJfnmoQgZ2FzCiAgID0gZzAgLSBnKiArIDYzLzY0IGcqIC0gZzEKICAgPSBnMCAtIGcxIC0gMS82NCBnKiA+PSAwCgojIOmXrumimAotIOaMiSBnMCAtIGcxIOmAgOasvuS8muWkmuS7mCAxLzY0IGcqCi0g6YCa6L+H5Y+R6YCB5aSn6YePIGdhc++8jGcqIOWPr+S7peWPmOW+l+W+iOWkpwoKIyDkv67lpI0KZzEgPD0gNjMvNjQgZyogPD0gZzAKZzEvNjMgPD0gMS82NCBnKiA8PSBnMC82MwpnMCAtIGcxIC0gZzEvNjMgPj0gZzAgLSBnMSAtIDEvNjQgZyogPj0gZzAgLSBnMSAtIDEvNjMgZzAgPSA2Mi82MyBnMCAtIGcxCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PSAwCgrpgIDmrL4gZzAgLSBnMSAtIGcxLzYzCiov" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -273,9 +284,12 @@ g0 - g1 - g1/63 &gt;= g0 - g1 - 1/64 g* &gt;= g0 - g1 - 1/63 g0 = 62/63 g0 - g1
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

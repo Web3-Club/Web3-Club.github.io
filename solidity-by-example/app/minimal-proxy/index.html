@@ -262,6 +262,17 @@ contract MinimalProxy {
 }</code></pre>
         <div class="prev-next"><a href="../../app/create2/">&lt; 使用 Create2 预计算合约地址</a><a href="../../app/upgradeable-proxy/">可升级代理 &gt;</a></div>
         <h3>Try on Remix</h3><ul><li><a href="https://remix.ethereum.org/?#code=Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IE1JVApwcmFnbWEgc29saWRpdHkgXjAuOC4yNjsKCi8vIOWOn+Wni+S7o+eggQovLyBodHRwczovL2dpdGh1Yi5jb20vb3B0aW9uYWxpdHkvY2xvbmUtZmFjdG9yeS9ibG9iL21hc3Rlci9jb250cmFjdHMvQ2xvbmVGYWN0b3J5LnNvbAoKY29udHJhY3QgTWluaW1hbFByb3h5IHsKICAgIGZ1bmN0aW9uIGNsb25lKGFkZHJlc3MgdGFyZ2V0KSBleHRlcm5hbCByZXR1cm5zIChhZGRyZXNzIHJlc3VsdCkgewogICAgICAgIC8vIOaKiuWcsOWdgOi9rOaNouaIkCAyMCDlrZfoioIKICAgICAgICBieXRlczIwIHRhcmdldEJ5dGVzID0gYnl0ZXMyMCh0YXJnZXQpOwoKICAgICAgICAvLyDlrp7pmYXku6PnoIEgLy8KICAgICAgICAvLyAzZDYwMmQ4MDYwMGEzZDM5ODFmMzM2M2QzZDM3M2QzZDNkMzYzZDczYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZTVhZjQzZDgyODAzZTkwM2Q5MTYwMmI1N2ZkNWJmMwoKICAgICAgICAvLyDliJvlu7rku6PnoIEgLy8KICAgICAgICAvLyDmiorov5DooYzml7bku6PnoIHlpI3liLbliLDlhoXlrZjlubbov5Tlm54KICAgICAgICAvLyAzZDYwMmQ4MDYwMGEzZDM5ODFmMwoKICAgICAgICAvLyDov5DooYzml7bku6PnoIEgLy8KICAgICAgICAvLyDlr7nlnLDlnYDmiafooYwgZGVsZWdhdGVjYWxsIOeahOS7o+eggQogICAgICAgIC8vIDM2M2QzZDM3M2QzZDNkMzYzZDczIGFkZHJlc3MgNWFmNDNkODI4MDNlOTAzZDkxNjAyYjU3ZmQ1YmYzCgogICAgICAgIGFzc2VtYmx5IHsKICAgICAgICAgICAgLyoKICAgICAgICAgICAg6K+75Y+W5LuOIDB4NDAg5Lit5L+d5a2Y55qE5oyH6ZKI5byA5aeL55qEIDMyIOWtl+iKguWGheWtmAoKICAgICAgICAgICAg5ZyoIFNvbGlkaXR5IOS4re+8jOWGheWtmOeahCAweDQwIOanveavlOi+g+eJueauiu+8muWug+S/neWtmOKAnOepuumXsuWGheWtmOaMh+mSiOKAne+8jAogICAgICAgICAgICDmjIflkJHlvZPliY3lt7LliIbphY3lhoXlrZjnmoTmnKvlsL7jgIIKICAgICAgICAgICAgKi8KICAgICAgICAgICAgbGV0IGNsb25lIDo9IG1sb2FkKDB4NDApCiAgICAgICAgICAgIC8vIOS7jiAiY2xvbmUiIOW8gOWni+WQkeWGheWtmOWGmeWFpSAzMiDlrZfoioIKICAgICAgICAgICAgbXN0b3JlKAogICAgICAgICAgICAgICAgY2xvbmUsCiAgICAgICAgICAgICAgICAweDNkNjAyZDgwNjAwYTNkMzk4MWYzMzYzZDNkMzczZDNkM2QzNjNkNzMwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgICAgICAgICAgKQoKICAgICAgICAgICAgLyoKICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAyMCBieXRlcyAgICAgICAgICAgICAgICB8CiAgICAgICAgICAgIDB4M2Q2MDJkODA2MDBhM2QzOTgxZjMzNjNkM2QzNzNkM2QzZDM2M2Q3MzAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvaW50ZXIKICAgICAgICAgICAgKi8KICAgICAgICAgICAgLy8g5LuOICJjbG9uZSIgKyAyMCDlrZfoioLlpITlvIDlp4vlkJHlhoXlrZjlhpnlhaUgMzIg5a2X6IqCCiAgICAgICAgICAgIC8vIDB4MTQgPSAyMAogICAgICAgICAgICBtc3RvcmUoYWRkKGNsb25lLCAweDE0KSwgdGFyZ2V0Qnl0ZXMpCgogICAgICAgICAgICAvKgogICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAyMCBieXRlcyAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgIDIwIGJ5dGVzICAgICAgICAgICAgICB8CiAgICAgICAgICAgIDB4M2Q2MDJkODA2MDBhM2QzOTgxZjMzNjNkM2QzNzNkM2QzZDM2M2Q3M2JlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmUKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvaW50ZXIKICAgICAgICAgICAgKi8KICAgICAgICAgICAgLy8g5LuOICJjbG9uZSIgKyA0MCDlrZfoioLlpITlvIDlp4vlkJHlhoXlrZjlhpnlhaUgMzIg5a2X6IqCCiAgICAgICAgICAgIC8vIDB4MjggPSA0MAogICAgICAgICAgICBtc3RvcmUoCiAgICAgICAgICAgICAgICBhZGQoY2xvbmUsIDB4MjgpLAogICAgICAgICAgICAgICAgMHg1YWY0M2Q4MjgwM2U5MDNkOTE2MDJiNTdmZDViZjMwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICAgICAgICAgICkKCiAgICAgICAgICAgIC8qCiAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgIDIwIGJ5dGVzICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgMjAgYnl0ZXMgICAgICAgICAgICAgIHwgICAgICAgICAgIDE1IGJ5dGVzICAgICAgICAgIHwKICAgICAgICAgICAgMHgzZDYwMmQ4MDYwMGEzZDM5ODFmMzM2M2QzZDM3M2QzZDNkMzYzZDczYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZWJlYmViZTVhZjQzZDgyODAzZTkwM2Q5MTYwMmI1N2ZkNWJmMwogICAgICAgICAgICAqLwogICAgICAgICAgICAvLyDliJvlu7rmlrDlkIjnuqYKICAgICAgICAgICAgLy8g5Y+R6YCBIDAgRXRoZXIKICAgICAgICAgICAgLy8g5Luj56CB5LuOICJjbG9uZSIg5Lit5L+d5a2Y55qE5oyH6ZKI5byA5aeLCiAgICAgICAgICAgIC8vIOS7o+eggeWkp+WwjyAweDM377yINTUg5a2X6IqC77yJCiAgICAgICAgICAgIHJlc3VsdCA6PSBjcmVhdGUoMCwgY2xvbmUsIDB4MzcpCiAgICAgICAgfQogICAgfQp9" target="_blank" rel="noreferrer">Example.sol</a></li></ul>
+        
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    
       </div>
     </article>
     
@@ -269,9 +280,12 @@ contract MinimalProxy {
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>

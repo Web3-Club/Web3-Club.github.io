@@ -363,9 +363,12 @@ def chrome(title: str, body: str, slug: str | None) -> str:
           <div class="footer-row"><a href="https://github.com/Web3-Club/Solidity-by-example_Chinese" target="_blank" rel="noreferrer">中文翻译源码</a></div>
           <div class="footer-row"><a href="https://solidity-by-example.org/" target="_blank" rel="noreferrer">英文原站 solidity-by-example.org</a></div>
           <div class="footer-row">
-            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo</a>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
             <div class="bar">|</div>
-            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3-Club</a>
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </div>
+          <div class="footer-row">
+            <a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a>
             <div class="bar">|</div>
             <a href="https://github.com/Web3-Club" target="_blank" rel="noreferrer">GitHub</a>
           </div>
@@ -415,6 +418,17 @@ def home_body() -> str:
                 f'<li class="list-item" data-route="{html.escape(hay)}"><a href="./{slug}/">{html.escape(title)}</a></li>'
             )
         parts.append("</ul>")
+    parts.append(
+        """<section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>"""
+    )
     parts.append("</div>")
     return "\n".join(parts)
 
@@ -440,6 +454,17 @@ def article_body(idx: int, html_body: str, codes: list[tuple[str, str]], en_url:
     remix = ""
     if remix_items:
         remix = "<h3>Try on Remix</h3><ul>" + "".join(remix_items) + "</ul>"
+    follow = """
+        <section class="follow-us">
+          <h3>关注我们</h3>
+          <p>
+            <a href="https://x.com/Yanbo2004" target="_blank" rel="noreferrer">Yanbo的Twitter</a>
+            ｜
+            <a href="https://twitter.com/Web3ClubCN" target="_blank" rel="noreferrer">Web3Club的Twitter</a>
+          </p>
+          <p><a href="https://github.com/Web3-Club/Intro./blob/main/Join%20club.md" target="_blank" rel="noreferrer">加入我们</a></p>
+        </section>
+    """
     return f"""
     <article class="article">
       <div class="article-content">
@@ -448,6 +473,7 @@ def article_body(idx: int, html_body: str, codes: list[tuple[str, str]], en_url:
         {html_body}
         <div class="prev-next">{prev_html}{next_html}</div>
         {remix}
+        {follow}
       </div>
     </article>
     """
